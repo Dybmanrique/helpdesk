@@ -48,4 +48,13 @@ class User extends Authenticatable
         ];
     }
     
+    public function person()
+    {
+        return $this->belongsTo(Person::class, 'person_id', 'id');
+    }
+
+    public function legal_person()
+    {
+        return $this->hasOne(LegalPerson::class, 'user_id', 'id');
+    }
 }

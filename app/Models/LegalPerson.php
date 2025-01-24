@@ -9,4 +9,7 @@ class LegalPerson extends Model
     protected $table = "legal_persons";
     protected $fillable = ['ruc','razon_social','person_id'];
 
+    public function person(){
+        return $this->belongsTo(Person::class,'person_id','id');
+    }
 }
