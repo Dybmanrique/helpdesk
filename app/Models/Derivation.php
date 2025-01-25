@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Derivation extends Model
 {
     protected $table = "derivations";
-    protected $fillable = ['comentario','office_id','procedure_id'];
+    protected $fillable = ['comment','procedure_id','office_id'];
 
-    public function office(){
-        return $this->belongsTo(Office::class,'office_id','id');
-    }
     public function procedure(){
         return $this->belongsTo(Procedure::class,'procedure_id','id');
+    }
+    public function office(){
+        return $this->belongsTo(Office::class,'office_id','id');
     }
 }

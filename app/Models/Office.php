@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Office extends Model
 {
     protected $table = "offices";
-    protected $fillable = ['nombre','descripcion'];
+    protected $fillable = ['name','description'];
 
     public function administrative_users(){
         return $this->hasMany(AdministrativeUser::class,'office_id','id');

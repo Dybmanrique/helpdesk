@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Procedure extends Model
 {
     protected $table = "procedures";
-    protected $fillable = ['asunto','descripcion','ticket','user_id','procedure_prioriy_id','procedure_category_id','procedure_state_id','document_type_id'];
+    protected $fillable = ['reason','description','ticket','user_id','procedure_prioriy_id','procedure_category_id','procedure_state_id','document_type_id'];
 
     public function user(){
         return $this->belongsTo(DocumentType::class,'user_id','id');

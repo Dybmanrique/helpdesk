@@ -18,7 +18,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
         'celular',
@@ -56,5 +55,9 @@ class User extends Authenticatable
     public function legal_person()
     {
         return $this->hasOne(LegalPerson::class, 'user_id', 'id');
+    }
+
+    public function procedures(){
+        return $this->hasMany(Procedure::class,'user_id','id');
     }
 }
