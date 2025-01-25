@@ -18,9 +18,10 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'celular',
+        'person_id',
     ];
 
     /**
@@ -44,5 +45,19 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    
+    public function person()
+    {
+        return $this->belongsTo(Person::class, 'person_id', 'id');
+    }
+
+    public function legal_person()
+    {
+        return $this->hasOne(LegalPerson::class, 'user_id', 'id');
+    }
+
+    public function procedures(){
+        return $this->hasMany(Procedure::class,'user_id','id');
     }
 }
