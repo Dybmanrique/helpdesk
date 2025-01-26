@@ -11,5 +11,12 @@
   if (urlParams.get('theme') && ['auto', 'dark', 'light'].includes(urlParams.get('theme'))) {
     localStorage.setItem(THEME, urlParams.get('theme'));
   }
+  const header = document.querySelector('header.header');
+
+        document.addEventListener('scroll', () => {
+            if (header) {
+                header.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0);
+            }
+        });
 })();
 //# sourceMappingURL=config.js.map
