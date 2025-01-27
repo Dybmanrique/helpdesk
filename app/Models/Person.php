@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
 {
-    protected $table = "person";
-    protected $fillable = ['name','last_name','second_last_name','phone','address','identity_number','identity_type'];
+    protected $table = "people";
+    protected $fillable = ['name','last_name','second_last_name','phone','address','identity_number','identity_type_id'];
 
     public function legal_person(){
         return $this->hasOne(LegalPerson::class,'person_id','id');
