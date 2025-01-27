@@ -1,13 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Prueba 2 - 2</title>
-</head>
-<body>
-    <h1>Prueba 2 - 2</h1>
-    <p>agregando un párrafo</p>
-</body>
-</html>
+@extends('layouts.dashboard')
+
+@section('title', 'Dashboard Home')
+
+@section('content')
+    <h2>TÍTULO DE SECCIÓN</h2>
+    <div class="card">
+        <div class="card-header">
+            Hola
+        </div>
+        <div class="card-body">
+            
+        </div>
+    </div>
+@endsection
+
+@section('css')
+
+@endsection
+
+@section('js')
+
+@endsection

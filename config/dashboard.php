@@ -8,9 +8,9 @@ return [
         ],
         [
             'text' => 'Dashboard',
-            'route' => 'dashboard',
+            'route' => 'admin.dashboard',
             'icon' => 'cil-speedometer',
-            'active' => 'ejemplo-dashboard*',
+            'active' => 'admin/dashboard*',
             // 'can' => ['view-colors'],
         ],
         [
