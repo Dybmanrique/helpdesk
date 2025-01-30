@@ -81,3 +81,8 @@
 }
 
 /* END PRELOADER SECTION */
+
+/* BUTTONS */
+.btn-success, .btn-danger{
+    color: white;
+}
