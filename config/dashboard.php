@@ -14,6 +14,13 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'text' => 'Tipos de documentos',
+            'route' => 'admin.document_types.index',
+            'icon' => 'cil-speedometer',
+            'active' => 'admin/tipos-de-documentos*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Buttons',
             'icon' => 'cil-cursor',
             // 'can' => ['view-buttons'],
