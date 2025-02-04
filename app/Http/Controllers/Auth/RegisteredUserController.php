@@ -40,14 +40,14 @@ class RegisteredUserController extends Controller
             'phone' => ['required', 'numeric', 'digits:9'],
             'identity_number' => ['required', 'numeric'],
             'address' => ['required', 'string'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'regex:/(.*)@(gmail\.com|outlook\.com|universidad\.edu\.pe)$/i', 'unique:' . User::class],
             'identity_type_id' => ['required'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [], [
             'last_name' => 'apellido paterno',
             'second_last_name' => 'apellido materno',
         ]);
-        
+
         $identity_type = IdentityType::find($request->identity_type_id);
         if ($identity_type->name === "Persona Jurídica") {
             $request->validate([
@@ -90,6 +90,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('helpdesk.dashboard', absolute: false));
     }
 }
