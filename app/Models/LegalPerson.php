@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegalPerson extends Model
 {
-    protected $table = "legal_person";
+    protected $table = "legal_people";
     protected $fillable = ['ruc','company_name','person_id'];
 
     public function person(){
