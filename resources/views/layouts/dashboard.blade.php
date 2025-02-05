@@ -21,6 +21,8 @@
     <!-- Local Styles -->
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
     @yield('css')
+    <!-- Livewire Styles -->
+    @livewireStyles
 </head>
 
 <body>
@@ -61,9 +63,12 @@
     <!-- Local scripts-->
     <script src="{{ asset('js/helpers.js') }}"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
-
+    
     <!-- Section to include additional scripts -->
     @yield('js')
+    
+    <!-- Livewire Scripts -->
+    @livewireScripts
 </body>
 
 </html>
