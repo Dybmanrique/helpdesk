@@ -44,5 +44,9 @@ return [
                 ],
             ],
         ],
+        [
+            'title' => 'DASHBOARD 2',
+            // 'can' => ['manage-theme', 'view-dashboard'],
+        ],
     ]
 ];
