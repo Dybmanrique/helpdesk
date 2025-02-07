@@ -60,7 +60,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.all.min.js"></script>
     <!-- DataTables-->
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
-    <script src="https:/cdn.datatables.net/2.0.2/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap4.min.js"></script>
     <!-- Local scripts-->
     <script src="{{ asset('js/helpers.js') }}"></script>
     <script src="{{ asset('js/admin/dashboard.js') }}"></script>
