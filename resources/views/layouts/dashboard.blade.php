@@ -23,6 +23,7 @@
     <!-- Livewire Styles -->
     @livewireStyles
     @yield('css')
+    @stack('css')
 </head>
 
 <body>
@@ -68,6 +69,7 @@
     
     <!-- Section to include additional scripts -->
     @yield('js')
+    @stack('js')
     
 </body>
 
