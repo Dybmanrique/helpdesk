@@ -24,11 +24,9 @@
                         <!-- Menú desplegable -->
                         <li class="nav-group">
                             <a class="nav-link nav-group-toggle" href="#">
-                                <svg class="nav-icon">
-                                    <use
-                                        xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#' . $item['icon']) }}">
-                                    </use>
-                                </svg>
+                                <div class="nav-icon">
+                                    <i class="{{ $item['icon'] }}"></i>
+                                </div>
                                 {{ $item['text'] }}
                             </a>
                             <ul class="nav-group-items">
@@ -58,11 +56,9 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is($item['active']) ? 'active' : '' }}"
                                 href="{{ isset($item['route']) ? route($item['route']) : url($item['url']) }}">
-                                <svg class="nav-icon">
-                                    <use
-                                        xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#' . $item['icon']) }}">
-                                    </use>
-                                </svg>
+                                <div class="nav-icon">
+                                    <i class="{{ $item['icon'] }}"></i>
+                                </div>
                                 {{ $item['text'] }}
                             </a>
                         </li>

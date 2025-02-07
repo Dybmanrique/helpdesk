@@ -9,20 +9,20 @@ return [
         [
             'text' => 'Dashboard',
             'route' => 'admin.dashboard',
-            'icon' => 'cil-speedometer',
+            'icon' => 'fa-solid fa-gauge-high',
             'active' => 'admin/dashboard*',
             // 'can' => ['view-colors'],
         ],
         [
             'text' => 'Tipos de documentos',
             'route' => 'admin.document_types.index',
-            'icon' => 'cil-speedometer',
+            'icon' => 'fa-solid fa-file-signature',
             'active' => 'admin/tipos-de-documentos*',
             // 'can' => ['view-colors'],
         ],
         [
             'text' => 'Buttons',
-            'icon' => 'cil-cursor',
+            'icon' => 'fa-regular fa-file',
             // 'can' => ['view-buttons'],
             'submenu' => [
                 [
