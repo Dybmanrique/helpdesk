@@ -84,5 +84,15 @@
 
 /* BUTTONS */
 .btn-success, .btn-danger{
-    color: white;
+    --cui-btn-color: white;
+    --cui-btn-hover-color: white;
+    --cui-btn-active-color: white;
+    --cui-btn-disabled-color: white;
+}
+
+[data-coreui-theme=dark] .btn-danger, [data-coreui-theme=dark] .btn-success {
+    --cui-btn-color: white;
+    --cui-btn-hover-color: white;
+    --cui-btn-active-color: white;
+    --cui-btn-disabled-color: white;
 }

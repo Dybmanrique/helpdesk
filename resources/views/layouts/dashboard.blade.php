@@ -19,7 +19,7 @@
     <!-- Main styles for this application-->
     <link href="{{ asset('coreui/css/style.css') }}" rel="stylesheet">
     <!-- Local Styles -->
-    <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/admin/dashboard.css') }}" rel="stylesheet">
     <!-- Livewire Styles -->
     @livewireStyles
     @yield('css')
@@ -63,7 +63,7 @@
     <script src="https:/cdn.datatables.net/2.0.2/js/dataTables.bootstrap4.min.js"></script>
     <!-- Local scripts-->
     <script src="{{ asset('js/helpers.js') }}"></script>
-    <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="{{ asset('js/admin/dashboard.js') }}"></script>
     <!-- Livewire Scripts -->
     @livewireScripts
     
