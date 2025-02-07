@@ -83,16 +83,48 @@
 /* END PRELOADER SECTION */
 
 /* BUTTONS */
-.btn-success, .btn-danger{
+.btn-success,
+.btn-danger {
     --cui-btn-color: white;
     --cui-btn-hover-color: white;
     --cui-btn-active-color: white;
     --cui-btn-disabled-color: white;
 }
 
-[data-coreui-theme=dark] .btn-danger, [data-coreui-theme=dark] .btn-success {
+[data-coreui-theme=dark] .btn-danger,
+[data-coreui-theme=dark] .btn-success {
     --cui-btn-color: white;
     --cui-btn-hover-color: white;
     --cui-btn-active-color: white;
     --cui-btn-disabled-color: white;
+}
+
+/* Estilos para el modo oscuro de Sweet Alert */
+.swal2-dark {
+    background-color: var(--cui-body-bg);
+    /* Fondo oscuro de CoreUI */
+    color: var(--cui-body-color) !important;
+    /* Color de texto claro de CoreUI */
+}
+
+.swal2-dark .swal2-modal{
+    background-color: var(--cui-body-bg);
+    color: var(--cui-body-color);
+
+}
+
+/* Estilos para el modo oscuro de Toast Sweet Alert */
+.custom-toast {
+    background-color: var(--cui-body-bg) !important;
+    color: var(--cui-body-color);
+}
+
+/* Cambia el color del título */
+.custom-title {
+    color: var(--cui-body-color); /* Un verde neón */
+}
+
+/* Personaliza la barra de tiempo */
+.custom-progress {
+    background-color: var(--cui-body-bg);
 }

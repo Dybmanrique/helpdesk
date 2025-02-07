@@ -2,7 +2,12 @@ var Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
-    timer: 3000
+    timer: 3000,
+    customClass: {
+        popup: 'custom-toast',
+        title: 'custom-title',
+        timerProgressBar: 'custom-progress'
+    }
 });
 
 document.addEventListener('livewire:initialized', () => {
@@ -29,8 +34,11 @@ function confirmationMessage(title = "¿Está seguro?", text = "Esta operación 
         icon: icon,
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33", 
+        cancelButtonColor: "#d33",
         confirmButtonText: "SÍ, ELIMINAR!",
-        cancelButtonText: "CANCELAR"
+        cancelButtonText: "CANCELAR",
+        customClass: {
+            container: 'swal2-dark'
+        }
     }).then((result) => result.isConfirmed);
- }
+}
