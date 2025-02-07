@@ -99,12 +99,12 @@
     --cui-btn-disabled-color: white;
 }
 
-/* Estilos para el modo oscuro de Sweet Alert */
+/* END BUTTONS */
+
+/* DARK MODE SWEET ALERT */
 .swal2-dark {
     background-color: var(--cui-body-bg);
-    /* Fondo oscuro de CoreUI */
     color: var(--cui-body-color) !important;
-    /* Color de texto claro de CoreUI */
 }
 
 .swal2-dark .swal2-modal{
@@ -113,18 +113,18 @@
 
 }
 
-/* Estilos para el modo oscuro de Toast Sweet Alert */
+/* Custom toast */
 .custom-toast {
     background-color: var(--cui-body-bg) !important;
     color: var(--cui-body-color);
 }
 
-/* Cambia el color del título */
 .custom-title {
-    color: var(--cui-body-color); /* Un verde neón */
+    color: var(--cui-body-color);
 }
 
-/* Personaliza la barra de tiempo */
 .custom-progress {
     background-color: var(--cui-body-bg);
 }
+
+/* END DARK MODE SWEET ALERT */
