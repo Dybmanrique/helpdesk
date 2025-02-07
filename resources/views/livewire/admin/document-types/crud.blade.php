@@ -68,6 +68,6 @@
 </div>
 
 @push('js')
-    <script src="{{ asset('js/admin/toast.js') }}"></script>
-    <script src="{{ asset('js/admin/document-types/crud.js') }}"></script>
+    <script src="{{ asset('js/admin/toast.js') }}?v={{ env('APP_VERSION')}}"></script>
+    <script src="{{ asset('js/admin/document-types/crud.js') }}?v={{ env('APP_VERSION')}}"></script>
 @endpush
