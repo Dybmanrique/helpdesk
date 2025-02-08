@@ -62,8 +62,9 @@
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap4.min.js"></script>
     <!-- Local scripts-->
-    <script src="{{ asset('js/helpers.js') }}"></script>
-    <script src="{{ asset('js/admin/dashboard.js') }}"></script>
+    <script src="{{ asset('js/helpers.js') }}?v={{ env('APP_VERSION')}}"></script>
+    <script src="{{ asset('js/admin/dashboard.js') }}?v={{ env('APP_VERSION')}}"></script>
+    <script src="{{ asset('js/admin/toast.js') }}?v={{ env('APP_VERSION')}}"></script>
     <!-- Livewire Scripts -->
     @livewireScripts
     
