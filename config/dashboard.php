@@ -21,6 +21,13 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'text' => 'Categorías de trámites',
+            'route' => 'admin.procedure_categories.index',
+            'icon' => 'fa-solid fa-layer-group',
+            'active' => 'admin/categorias-de-tramites*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Buttons',
             'icon' => 'fa-regular fa-file',
             // 'can' => ['view-buttons'],
