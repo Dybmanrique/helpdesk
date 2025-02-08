@@ -61,7 +61,7 @@ document.addEventListener('livewire:initialized', () => {
         document.getElementById('modalTitle').textContent = "MODIFICAR TIPO DE DOCUMENTO";
 
         let data = table.row($(this).parents('tr')).data();
-        Livewire.dispatch('editUser', {
+        Livewire.dispatch('editItem', {
             id: data['id'],
             name: data['name'],
         });
@@ -70,7 +70,7 @@ document.addEventListener('livewire:initialized', () => {
     $(`#table tbody`).on('click', '.btn-delete', async function () {
         let data = table.row($(this).parents('tr')).data();
         if (await confirmationMessage()) {
-            Livewire.dispatch('deleteUser', {
+            Livewire.dispatch('deleteItem', {
                 id: data['id']
             });
         }

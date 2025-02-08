@@ -35,7 +35,7 @@ class Crud extends Component
         $this->name = null;
     }
 
-    #[On('deleteUser')] 
+    #[On('deleteItem')] 
     public function delete($id)
     {
         DocumentType::find($id)->delete();
@@ -43,7 +43,7 @@ class Crud extends Component
         $this->dispatch('refreshTable');
     }
 
-    #[On('editUser')] 
+    #[On('editItem')] 
     public function edit($id, $name)
     {
         $this->document_type_id = $id;
