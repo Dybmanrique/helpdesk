@@ -28,6 +28,13 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'text' => 'Prioridades de trámites',
+            'route' => 'admin.procedure_priorities.index',
+            'icon' => 'fa-solid fa-arrow-up-wide-short',
+            'active' => 'admin/prioridades-de-tramites*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Buttons',
             'icon' => 'fa-regular fa-file',
             // 'can' => ['view-buttons'],
