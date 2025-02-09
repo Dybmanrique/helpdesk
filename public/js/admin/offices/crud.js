@@ -53,10 +53,10 @@ document.addEventListener('livewire:initialized', () => {
             },
             columnDefs: [{
                 className: 'dt-body-left dt-head-left text-nowrap',
-                targets: [0, 1]
+                targets: [0, 1, 2]
             }, {
                 className: 'dt-body-center dt-head-center text-nowrap',
-                targets: [2]
+                targets: [3]
             },]
         });
     }
