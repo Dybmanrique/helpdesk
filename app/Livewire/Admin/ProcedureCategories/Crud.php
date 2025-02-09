@@ -8,14 +8,14 @@ use Livewire\Component;
 
 class Crud extends Component
 {
-    public $document_type_id, $name;
+    public $id, $name;
 
     public function save(){
         $this->validate([
             'name' => 'required|string|max:255'
         ]);
-        if($this->document_type_id){
-            $documentType = ProcedureCategory::find($this->document_type_id);
+        if($this->id){
+            $documentType = ProcedureCategory::find($this->id);
             $documentType->update([
                 'name' => $this->name
             ]);
@@ -31,7 +31,7 @@ class Crud extends Component
 
     #[On('resetInputs')]
     public function resetInputs(){
-        $this->document_type_id = null;
+        $this->id = null;
         $this->name = null;
     }
 
@@ -46,7 +46,7 @@ class Crud extends Component
     #[On('editItem')] 
     public function edit($id, $name)
     {
-        $this->document_type_id = $id;
+        $this->id = $id;
         $this->name = $name;
     }
 
