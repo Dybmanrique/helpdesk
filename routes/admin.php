@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\ProcedureCategoryController;
 use App\Http\Controllers\Admin\ProcedurePriorityController;
+use App\Http\Controllers\Admin\ProcedureStateController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/dashboard', function () {
@@ -17,3 +18,6 @@ Route::get('/categorias-de-tramites/data', [ProcedureCategoryController::class, 
 
 Route::get('/prioridades-de-tramites', [ProcedurePriorityController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.procedure_priorities.index');
 Route::get('/prioridades-de-tramites/data', [ProcedurePriorityController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.procedure_priorities.data');
+
+Route::get('/estados-de-tramites', [ProcedureStateController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.procedure_states.index');
+Route::get('/estados-de-tramites/data', [ProcedureStateController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.procedure_states.data');

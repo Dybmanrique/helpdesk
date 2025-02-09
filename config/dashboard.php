@@ -35,6 +35,13 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'text' => 'Estados de trámites',
+            'route' => 'admin.procedure_states.index',
+            'icon' => 'fa-solid fa-file-circle-question',
+            'active' => 'admin/estados-de-tramites*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Buttons',
             'icon' => 'fa-regular fa-file',
             // 'can' => ['view-buttons'],
