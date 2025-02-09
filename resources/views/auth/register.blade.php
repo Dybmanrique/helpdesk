@@ -3,21 +3,21 @@
         @csrf
         
         <div class="md:flex">
-            <!-- Nombre -->
+            {{-- Nombre --}}
             <div>
                 <x-input-label for="name" :value="__('Nombre')" />
                 <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
             
-            <!-- Apellido Paterno -->
+            {{-- Apellido Paterno --}}
             <div>
                 <x-input-label for="last_name" :value="__('Apellido Paterno')" />
                 <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autocomplete="last_name" />
                 <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
             </div>
     
-            <!-- Apellido Materno -->
+            {{-- Apellido Materno --}}
             <div>
                 <x-input-label for="second_last_name" :value="__('Apellido Materno')" />
                 <x-text-input id="second_last_name" class="block mt-1 w-full" type="text" name="second_last_name" :value="old('second_last_name')" required autocomplete="second_last_name" />
@@ -25,15 +25,15 @@
             </div>
         </div>
           
-        <div class="grid grid-cols-2">
-            <!-- Celular -->
+        <div class="grid lg:grid-cols-2">
+            {{-- Celular --}}
             <div class="mt-3">
                 <x-input-label for="phone" :value="__('Celular')" />
                 <x-number-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required autocomplete="phone" maxlength="9"/>
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
     
-            <!-- Número de identificación -->
+            {{-- Número de identificación --}}
             <div class="mt-3">
                 <x-input-label for="identity_number" :value="__('Núm. Identificación')" />
                 <x-number-input id="identity_number" class="block mt-1 w-full" type="text" name="identity_number" :value="old('identity_number')" required autocomplete="identity_number" />
@@ -41,14 +41,14 @@
             </div>
         </div>
 
-        <!-- Dirección -->
+        {{-- Dirección --}}
         <div class="mt-3">
             <x-input-label for="address" :value="__('Dirección')" />
             <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required autocomplete="address" />
             <x-input-error :messages="$errors->get('address')" class="mt-2" />
         </div>
         
-        <!-- Email Address -->
+        {{-- Email Address --}}
         <div class="mt-3">
             <div class="flex">
                 <x-input-label for="email" :value="__('Email')" />
@@ -59,7 +59,7 @@
         </div>
 
         <div x-data="{ identity_type_id: @js(old('identity_type_id','')) }" class="mt-3">
-            <!-- Tipo de Identificación -->
+            {{-- Tipo de Identificación --}}
             <x-input-label for="identity_type_id" :value="__('Tipo Identificación')" />
             <x-select x-model="identity_type_id" id="identity_type_id" class="block mt-1 w-full" name="identity_type_id" :value="old('identity_type_id')" required>
                 @foreach ($identity_types as $identity)
@@ -68,7 +68,7 @@
             </x-select>
             <template x-if="identity_type_id == 2 || identity_type_id === 'Persona Jurídica'">
                 <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 10)" x-show="show" x-transition>
-                    <!-- Número de RUC -->
+                    {{-- Número de RUC --}}
                     <div class="mt-3">
                         <div class="flex">
                             <x-input-label for="ruc" :value="__('RUC')" />
@@ -77,7 +77,7 @@
                         <x-number-input id="ruc" class="block mt-1 w-full" type="text" name="ruc" :value="old('ruc')" required autocomplete="ruc" maxlength="11"/>
                         <x-input-error :messages="$errors->get('ruc')" class="mt-2" />
                     </div>
-                    <!-- Razón Social -->
+                    {{-- Razón Social --}}
                     <div class="mt-3">
                         <div class="flex">
                             <x-input-label for="company_name" :value="__('Razón Social')" />
@@ -90,7 +90,7 @@
             </template>
         </div>
 
-        <!-- Password -->
+        {{-- Password --}}
         <div class="mt-3">
             <div class="flex">
                 <x-input-label for="password" :value="__('Password')" />
@@ -103,7 +103,7 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Confirm Password -->
+        {{-- Confirm Password --}}
         <div class="mt-3">
             <div class="flex">
                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
