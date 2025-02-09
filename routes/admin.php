@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DocumentTypeController;
+use App\Http\Controllers\Admin\OfficeController;
 use App\Http\Controllers\Admin\ProcedureCategoryController;
 use App\Http\Controllers\Admin\ProcedurePriorityController;
 use App\Http\Controllers\Admin\ProcedureStateController;
@@ -21,3 +22,6 @@ Route::get('/prioridades-de-tramites/data', [ProcedurePriorityController::class,
 
 Route::get('/estados-de-tramites', [ProcedureStateController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.procedure_states.index');
 Route::get('/estados-de-tramites/data', [ProcedureStateController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.procedure_states.data');
+
+Route::get('/oficinas', [OfficeController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.offices.index');
+Route::get('/oficinas/data', [OfficeController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.offices.data');
