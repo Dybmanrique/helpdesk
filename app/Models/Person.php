@@ -18,4 +18,7 @@ class Person extends Model
     public function identity_type(){
         return $this->belongsTo(IdentityType::class,'identity_type_id','id');
     }
+    public function procedures(){
+        return $this->belongsToMany(Procedure::class,'procedure_person','person_id','procedure_id');
+    }
 }
