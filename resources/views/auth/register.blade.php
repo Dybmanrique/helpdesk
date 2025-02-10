@@ -36,7 +36,7 @@
             {{-- Número de identificación --}}
             <div class="mt-3">
                 <x-input-label for="identity_number" :value="__('Núm. Identificación')" />
-                <x-number-input id="identity_number" class="block mt-1 w-full" type="text" name="identity_number" :value="old('identity_number')" required autocomplete="identity_number" />
+                <x-number-input id="identity_number" class="block mt-1 w-full" type="text" name="identity_number" :value="old('identity_number')" required autocomplete="identity_number" maxlength="12"/>
                 <x-input-error :messages="$errors->get('identity_number')" class="mt-2" />
             </div>
         </div>
@@ -66,7 +66,7 @@
                     <option value="{{$identity->id}}">{{$identity->name}}</option>
                 @endforeach
             </x-select>
-            <template x-if="identity_type_id == 2 || identity_type_id === 'Persona Jurídica'">
+            <template x-if="identity_type_id == 2 || identity_type_id === 'RUC'">
                 <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 10)" x-show="show" x-transition>
                     {{-- Número de RUC --}}
                     <div class="mt-3">

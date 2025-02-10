@@ -49,7 +49,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $identity_type = IdentityType::find($request->identity_type_id);
-        if ($identity_type->name === "Persona Jurídica") {
+        if ($identity_type->name === "RUC") {
             $request->validate([
                 'ruc' => ['required', 'numeric', 'digits:11'],
                 'company_name' => ['required', 'string'],
