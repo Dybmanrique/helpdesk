@@ -19,18 +19,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        // IdentityType::create([
-        //     'name' => 'DNI',
-        // ]);
-
+        
         IdentityType::create([
-            'name' => 'Persona Natural',
+            'name' => 'DNI',
         ]);
         IdentityType::create([
-            'name' => 'Persona Jurídica',
+            'name' => 'RUC',
+        ]);
+        IdentityType::create([
+            'name' => 'Carnet Extranjería',
         ]);
 
-        /*** // Ejemplo seeder usuario administrativo
+        // Ejemplo seeder usuario administrativo
+        /***
         $office = Office::create([
             'name' => 'Administración',
             'description' => 'Oficina de administración',
@@ -49,6 +50,7 @@ class DatabaseSeeder extends Seeder
         $user = User::create([
             'email' => 'ever@gmail.com',
             'password' => Hash::make('12345678'),
+            // 'is_active' => 1,
             'person_id' => $person->id,
         ]);
 
