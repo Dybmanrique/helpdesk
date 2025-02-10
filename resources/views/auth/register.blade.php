@@ -2,7 +2,7 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
         
-        <div class="md:flex">
+        <div class="md:flex gap-2">
             {{-- Nombre --}}
             <div>
                 <x-input-label for="name" :value="__('Nombre')" />
@@ -25,7 +25,7 @@
             </div>
         </div>
           
-        <div class="grid lg:grid-cols-2">
+        <div class="grid lg:grid-cols-2 gap-2">
             {{-- Celular --}}
             <div class="mt-3">
                 <x-input-label for="phone" :value="__('Celular')" />
