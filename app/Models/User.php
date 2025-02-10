@@ -20,7 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
         'password',
-        'celular',
+        'is_active',
         'person_id',
     ];
 
@@ -52,12 +52,16 @@ class User extends Authenticatable
         return $this->belongsTo(Person::class, 'person_id', 'id');
     }
 
-    public function legal_person()
-    {
-        return $this->hasOne(LegalPerson::class, 'user_id', 'id');
+    public function offices(){
+        return $this->belongsToMany(Office::class,'administrative_users','user_id','office_id');
     }
 
     public function procedures(){
-        return $this->hasMany(Procedure::class,'user_id','id');
+        return $this->belongsToMany(Procedure::class,'procedure_user','user_id','procedure_id');
     }
+
+    public function isAdmin(){
+        return $this->offices->exist();
+    }
+
 }

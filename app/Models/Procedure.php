@@ -7,11 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Procedure extends Model
 {
     protected $table = "procedures";
-    protected $fillable = ['reason','description','ticket','user_id','procedure_prioriy_id','procedure_category_id','procedure_state_id','document_type_id'];
-
-    public function user(){
-        return $this->belongsTo(DocumentType::class,'user_id','id');
-    }
+    protected $fillable = ['reason','description','ticket','procedure_priority_id','procedure_category_id','procedure_state_id','document_type_id'];
+    
     public function document_type(){
         return $this->belongsTo(DocumentType::class,'document_type_id','id');
     }
@@ -32,5 +29,11 @@ class Procedure extends Model
     }
     public function comments(){
         return $this->hasMany(Comment::class,'procedure_id','id');
+    }
+    public function users(){
+        return $this->belongsToMany(User::class,'procedure_user','procedure_id','user_id');
+    }
+    public function people(){
+        return $this->belongsToMany(Person::class,'procedure_person','procedure_id','person_id');
     }
 }

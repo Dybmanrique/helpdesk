@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\IdentityType;
+use App\Models\LegalPerson;
+use App\Models\Person;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -19,7 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $identity_types = IdentityType::all();
+        return view('auth.register', compact('identity_types'));
     }
 
     /**
@@ -30,21 +34,62 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'second_last_name' => ['required', 'string'],
+            'phone' => ['required', 'numeric', 'digits:9'],
+            'identity_number' => ['required', 'numeric'],
+            'address' => ['required', 'string'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'regex:/(.*)@(gmail\.com|outlook\.com|universidad\.edu\.pe)$/i', 'unique:' . User::class],
+            'identity_type_id' => ['required'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [], [
+            'last_name' => 'apellido paterno',
+            'second_last_name' => 'apellido materno',
         ]);
 
+        $identity_type = IdentityType::find($request->identity_type_id);
+        if ($identity_type->name === "RUC") {
+            $request->validate([
+                'ruc' => ['required', 'numeric', 'digits:11'],
+                'company_name' => ['required', 'string'],
+            ], [], ['company_name' => 'razón social',]);
+            $person = Person::create([
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'second_last_name' => $request->second_last_name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'identity_number' => $request->identity_number,
+                'identity_type_id' => $request->identity_type_id,
+            ]);
+            LegalPerson::create([
+                'ruc' => $request->ruc,
+                'company_name' => $request->company_name,
+                'person_id' => $person->id,
+            ]);
+        } else {
+            $person = Person::create([
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'second_last_name' => $request->second_last_name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'identity_number' => $request->identity_number,
+                'identity_type_id' => $request->identity_type_id,
+            ]);
+        }
+
         $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'person_id' => $person->id,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('helpdesk.dashboard', absolute: false));
     }
 }
