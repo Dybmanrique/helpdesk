@@ -61,7 +61,7 @@ class User extends Authenticatable
     }
 
     public function isAdmin(){
-        return $this->offices->exist();
+        return $this->offices()->exists();
     }
 
 }
