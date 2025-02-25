@@ -50,13 +50,15 @@
             </li>
             <li class="nav-item dropdown"><a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#"
                     role="button" aria-haspopup="true" aria-expanded="false">
-                    <div class="avatar avatar-md"><img class="avatar-img"
-                            src="{{ asset('coreui/assets/img/avatars/8.jpg') }}" alt="user@email.com">
+                    <div class="avatar avatar-md">
+                        {{-- <img class="avatar-img"
+                            src="{{ asset('coreui/assets/img/avatars/8.jpg') }}" alt="user@email.com"> --}}
+                        {{ strtoupper(substr(auth()->user()->person->name, 0, 1)) }}{{ strtoupper(substr(auth()->user()->person->last_name, 0, 1)) }}
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end pt-0">
                     <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold rounded-top mb-2">
-                        Nombre del usuario
+                        {{ auth()->user()->person->name }}
                     </div>
                     <a class="dropdown-item" href="#">
                         <svg class="icon me-2">

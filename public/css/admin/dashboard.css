@@ -1,3 +1,9 @@
+/*AVATAR SECTION*/
+.avatar{
+    border: 1px solid;
+}
+/*END AVATAR SECTION*/
+
 /* PRELOADER SECTION */
 #preloader {
     position: fixed;
