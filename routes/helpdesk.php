@@ -9,6 +9,6 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::view('/','helpdesk.dashboard')->name('helpdesk.dashboard');
-    Route::get('tramites/search', [ProcedureController::class, 'search'])->name('tramites.search');
-    Route::resource('tramites', ProcedureController::class);
+    Route::get('tramites/consulta/{code?}', [ProcedureController::class, 'consult'])->name('procedures.consult');
+    Route::get('tramites/registro', [ProcedureController::class, 'create'])->name('procedures.create');
 });

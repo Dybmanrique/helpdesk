@@ -12,10 +12,10 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('tramites.create')" :active="request()->routeIs('tramites.create')">
+                    <x-nav-link :href="route('procedures.create')" :active="request()->routeIs('procedures.create')">
                         {{ __('Registro de Trámites') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('tramites.search')" :active="request()->routeIs('tramites.search')">
+                    <x-nav-link :href="route('procedures.consult')" :active="request()->routeIs('procedures.consult')">
                         {{ __('Seguimiento de Trámites') }}
                     </x-nav-link>
                 </div>
@@ -71,10 +71,10 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('tramites.create')" :active="request()->routeIs('tramites.create')">
+            <x-responsive-nav-link :href="route('procedures.create')" :active="request()->routeIs('procedures.create')">
                 {{ __('Registro de Trámites') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('tramites.search')" :active="request()->routeIs('tramites.search')">
+            <x-responsive-nav-link :href="route('procedures.consult')" :active="request()->routeIs('procedures.consult')">
                 {{ __('Seguimiento de Trámites') }}
             </x-responsive-nav-link>
         </div>
