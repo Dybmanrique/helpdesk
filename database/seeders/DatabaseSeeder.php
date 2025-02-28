@@ -3,9 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\AdministrativeUser;
+use App\Models\DocumentType;
 use App\Models\IdentityType;
 use App\Models\Office;
 use App\Models\Person;
+use App\Models\ProcedureCategory;
+use App\Models\ProcedurePriority;
+use App\Models\ProcedureState;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,15 +24,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         
-        IdentityType::create([
-            'name' => 'DNI',
-        ]);
-        IdentityType::create([
-            'name' => 'RUC',
-        ]);
-        IdentityType::create([
-            'name' => 'Carnet Extranjería',
-        ]);
+        // IdentityType::create([
+        //     'name' => 'DNI',
+        // ]);
+        // IdentityType::create([
+        //     'name' => 'RUC',
+        // ]);
+        // IdentityType::create([
+        //     'name' => 'Carnet Extranjería',
+        // ]);
 
         // Ejemplo seeder usuario administrativo
         /***
@@ -43,7 +47,7 @@ class DatabaseSeeder extends Seeder
             'second_last_name' => 'Romero',
             'phone' => '987654321',
             'address' => 'Ancash',
-            'identity_number' => '1234567890',
+            'identity_number' => '12345678',
             'identity_type_id' => 1,
         ]);
 
@@ -76,6 +80,47 @@ class DatabaseSeeder extends Seeder
         // 'person_id' => 1,
         // ]);
         
+        DocumentType::create([
+            'name' => 'Carta',
+        ]);
+        DocumentType::create([
+            'name' => 'Informe',
+        ]);
+        DocumentType::create([
+            'name' => 'Oficio',
+        ]);
+
+        ProcedureCategory::create([
+            'name' => 'Tributos Internos',
+        ]);
+        ProcedureCategory::create([
+            'name' => 'Administrativos',
+        ]);
         
+        ProcedurePriority::create([
+            'name' => 'Alta',
+        ]);
+        ProcedurePriority::create([
+            'name' => 'Media',
+        ]);
+        ProcedurePriority::create([
+            'name' => 'Baja',
+        ]);
+
+        ProcedureState::create([
+            'name' => 'Pendiente',
+        ]);
+        ProcedureState::create([
+            'name' => 'Aceptado',
+        ]);
+        ProcedureState::create([
+            'name' => 'Derivado',
+        ]);
+        ProcedureState::create([
+            'name' => 'Rechazado',
+        ]);
+        ProcedureState::create([
+            'name' => 'Finalizado',
+        ]);
     }
 }
