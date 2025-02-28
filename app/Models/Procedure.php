@@ -13,13 +13,13 @@ class Procedure extends Model
         return $this->belongsTo(DocumentType::class,'document_type_id','id');
     }
     public function procedure_category(){
-        return $this->belongsTo(DocumentType::class,'procedure_category_id','id');
+        return $this->belongsTo(ProcedureCategory::class,'procedure_category_id','id');
     }
     public function procedure_priority(){
-        return $this->belongsTo(DocumentType::class,'procedure_priority_id','id');
+        return $this->belongsTo(ProcedurePriority::class,'procedure_priority_id','id');
     }
     public function procedure_state(){
-        return $this->belongsTo(DocumentType::class,'procedure_state_id','id');
+        return $this->belongsTo(ProcedureState::class,'procedure_state_id','id');
     }
     public function files(){
         return $this->hasMany(File::class,'procedure_id','id');
@@ -32,6 +32,10 @@ class Procedure extends Model
     }
     public function users(){
         return $this->belongsToMany(User::class,'procedure_user','procedure_id','user_id');
+    }
+    public function user()
+    {
+        return $this->hasOneThrough(User::class, ProcedureUser::class, 'procedure_id', 'id', 'id', 'user_id');
     }
     public function people(){
         return $this->belongsToMany(Person::class,'procedure_person','procedure_id','person_id');

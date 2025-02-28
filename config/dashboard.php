@@ -49,6 +49,13 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'text' => 'Todos los trámites',
+            'route' => 'admin.all_procedures.index',
+            'icon' => 'fa-solid fa-folder-open',
+            'active' => 'admin/todos-los-tramites*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Buttons',
             'icon' => 'fa-regular fa-file',
             // 'can' => ['view-buttons'],

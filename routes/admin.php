@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AllProceduresController;
 use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\OfficeController;
 use App\Http\Controllers\Admin\ProcedureCategoryController;
@@ -25,3 +26,6 @@ Route::get('/estados-de-tramites/data', [ProcedureStateController::class, 'data'
 
 Route::get('/oficinas', [OfficeController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.offices.index');
 Route::get('/oficinas/data', [OfficeController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.offices.data');
+
+Route::get('/todos-los-tramites', [AllProceduresController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.all_procedures.index');
+Route::get('/todos-los-tramites/data', [AllProceduresController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.all_procedures.data');
