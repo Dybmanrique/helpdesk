@@ -24,7 +24,7 @@ class AllProceduresController extends Controller
                 'user:id,person_id,email',  
                 'user.person:id,name,last_name,second_last_name,phone'
             ])
-            ->select('id','ticket','reason','description', 'document_type_id', 'procedure_category_id', 'procedure_priority_id', 'procedure_state_id', 'user_id')
+            ->select('id','ticket','reason','description', 'document_type_id', 'procedure_category_id', 'procedure_priority_id', 'procedure_state_id')
             ->get();
 
 
