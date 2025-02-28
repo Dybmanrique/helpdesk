@@ -24,15 +24,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         
-        // IdentityType::create([
-        //     'name' => 'DNI',
-        // ]);
-        // IdentityType::create([
-        //     'name' => 'RUC',
-        // ]);
-        // IdentityType::create([
-        //     'name' => 'Carnet Extranjería',
-        // ]);
+        IdentityType::create([
+            'name' => 'DNI',
+        ]);
+        IdentityType::create([
+            'name' => 'RUC',
+        ]);
+        IdentityType::create([
+            'name' => 'Carnet Extranjería',
+        ]);
 
         // Ejemplo seeder usuario administrativo
         /***
