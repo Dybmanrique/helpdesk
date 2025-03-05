@@ -28,7 +28,7 @@ class ProcedureCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('ugelasuncion@test.com', 'UGEL Asunción'),
+            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
             subject: 'Su Trámite ha sido Registrado',
         );
     }
