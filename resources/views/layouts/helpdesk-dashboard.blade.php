@@ -19,7 +19,17 @@
     @stack('css')
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" x-data="{
+    theme: localStorage.getItem('theme') || 'auto',
+    updateTheme(theme) {
+        const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', isDark);
+    }
+}" x-init=" updateTheme(theme);
+ $watch('theme', value => {
+     localStorage.setItem('theme', value);
+     updateTheme(value);
+ });" x-cloak>
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.helpdesk-navigation')
 
