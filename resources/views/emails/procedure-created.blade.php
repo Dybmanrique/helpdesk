@@ -1,4 +1,4 @@
-<div style="background-color:#e5e7eb; color:#111827; font-family: ui-sans-serif, system-ui, sans-serif">
+<div style="background-color:#e5e7eb; color:#111827; padding: 1.5rem; font-family: ui-sans-serif, system-ui, sans-serif">
     <div style="max-width:42rem; margin:auto; background-color:#fff; padding:1.5rem; border-radius:0.5rem">
         <h1 style="font-size:1.5rem; text-align:center; color:#0891b2">¡Su trámite fue registrado correctamente!</h1>
 
@@ -6,7 +6,8 @@
             darle seguimiento en cualquier momento para conocer su estado actual.</p>
 
         <p><strong>Su trámite fue registrado con el siguiente ticket:</strong>
-            <code style="background-color:#f3f5f6; padding:0.25rem; border-radius:0.25rem">{{ $ticket }}</code>
+            <code
+                style="background-color:#f3f5f6; padding:0.25rem; border-radius:0.25rem; display:block; word-wrap: break-word;">{{ $ticket }}</code>
         </p>
         <p style="font-size:12px; color:#6b7280; margin-top:-10px">(Use este código para referirse a su trámite cuando
             necesite más información, darle seguimiento o al contactar con nosotros).</p>
