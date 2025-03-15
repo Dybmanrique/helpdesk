@@ -5,11 +5,11 @@
             {{-- Tipo de identificación --}}
             <div>
                 <x-input-label for="identity_type_id" :value="__('Tipo de documento de identidad:')" />
-                @foreach ($identity_types as $identity_type)
-                    @if ($user->person->identity_type_id == $identity_type->id)
+                @foreach ($identityTypes as $identityType)
+                    @if ($user->person->identity_type_id == $identityType->id)
                         <p
                             class="block mt-1 w-full border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md p-2">
-                            {{ $user->person->identity_type->name === 'RUC' ? 'DNI' : $identity_type->name }}
+                            {{ $user->person->identity_type->name === 'RUC' ? 'DNI' : $identityType->name }}
                             {{-- si el usuario se registró con la opción RUC, entonces el documento de identidad es DNI (representante legal) --}}
                         </p>
                     @endif
@@ -25,13 +25,6 @@
         </div>
 
         <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
-            {{-- Nombre --}}
-            <div>
-                <x-input-label for="name" :value="__('Nombre:')" />
-                <p
-                    class="block mt-1 w-full border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md p-2">
-                    {{ $user->person->name }}</p>
-            </div>
             {{-- Apellido paterno --}}
             <div>
                 <x-input-label for="last_name" :value="__('Apellido paterno:')" />
@@ -46,6 +39,13 @@
                     class="block mt-1 w-full border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md p-2">
                     {{ $user->person->second_last_name }}</p>
             </div>
+            {{-- Nombre --}}
+            <div>
+                <x-input-label for="name" :value="__('Nombre:')" />
+                <p
+                    class="block mt-1 w-full border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md p-2">
+                    {{ $user->person->name }}</p>
+            </div>
         </div>
 
         <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
@@ -54,14 +54,14 @@
                 <x-input-label for="ruc" :value="__('RUC:')" />
                 <p
                     class="block mt-1 w-full border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md p-2">
-                    {{ $legal_person ? $legal_person->ruc : '-' }}</p>
+                    {{ $legalPerson ? $legalPerson->ruc : '-' }}</p>
             </div>
             {{-- Razón social --}}
             <div class="lg:col-span-2 ">
                 <x-input-label for="company_name" :value="__('Razón social:')" />
                 <p
                     class="block mt-1 w-full border-2 border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md p-2">
-                    {{ $legal_person ? $legal_person->company_name : '-' }}</p>
+                    {{ $legalPerson ? $legalPerson->company_name : '-' }}</p>
             </div>
         </div>
 
@@ -91,39 +91,27 @@
             <div class="grid lg:grid-cols-3 gap-2 mt-3">
                 {{-- Tipo de documento de trámite --}}
                 <div>
-                    <x-input-label for="document_type_id" :value="__('Tipo de documento de trámite:') . ' (*)'" />
-                    <x-select id="document_type_id" class="block mt-1 w-full" wire:model="document_type_id"
-                        name="document_type_id" :value="old('document_type_id')" required>
+                    <x-input-label for="documentTypeId" :value="__('Tipo de documento de trámite:') . ' (*)'" />
+                    <x-select id="documentTypeId" class="block mt-1 w-full" wire:model="documentTypeId"
+                        name="documentTypeId" :value="old('documentTypeId')" required>
                         <option value="">Seleccione...</option>
-                        @foreach ($document_types as $document_type)
-                            <option value="{{ $document_type->id }}">{{ $document_type->name }}</option>
+                        @foreach ($documentTypes as $documentType)
+                            <option value="{{ $documentType->id }}">{{ $documentType->name }}</option>
                         @endforeach
                     </x-select>
-                    <x-input-error :messages="$errors->get('document_type_id')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('documentTypeId')" class="mt-2" />
                 </div>
                 {{-- Categoría de trámite --}}
                 <div>
-                    <x-input-label for="procedure_category_id" :value="__('Categoría:') . ' (*)'" />
-                    <x-select id="procedure_category_id" class="block mt-1 w-full" wire:model="procedure_category_id"
-                        name="procedure_category_id" :value="old('procedure_category_id')" required>
+                    <x-input-label for="procedureCategoryId" :value="__('Categoría:') . ' (*)'" />
+                    <x-select id="procedureCategoryId" class="block mt-1 w-full" wire:model="procedureCategoryId"
+                        name="procedureCategoryId" :value="old('procedureCategoryId')" required>
                         <option value="">Seleccione...</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </x-select>
-                    <x-input-error :messages="$errors->get('procedure_category_id')" class="mt-2" />
-                </div>
-                {{-- Prioridad de trámite --}}
-                <div>
-                    <x-input-label for="procedure_priority_id" :value="__('Prioridad:') . ' (*)'" />
-                    <x-select id="procedure_priority_id" class="block mt-1 w-full" wire:model="procedure_priority_id"
-                        name="procedure_priority_id" :value="old('procedure_priority_id')" required>
-                        <option value="">Seleccione...</option>
-                        @foreach ($priorities as $priority)
-                            <option value="{{ $priority->id }}">{{ $priority->name }}</option>
-                        @endforeach
-                    </x-select>
-                    <x-input-error :messages="$errors->get('procedure_priority_id')" class="mt-2" />
+                    <x-input-error :messages="$errors->get('procedureCategoryId')" class="mt-2" />
                 </div>
             </div>
             {{-- Asunto --}}
@@ -153,24 +141,32 @@
                 x-on:livewire-upload-finish="uploading = false" x-on:livewire-upload-cancel="uploading = false"
                 x-on:livewire-upload-error="uploading = false"
                 x-on:livewire-upload-progress="progress = $event.detail.progress" class="my-3">
-                <!-- File Input -->
+                {{-- Progress Bar --}}
                 <x-input-label for="files" :value="__('Archivo:')" />
-                <x-text-input id="files" class="block mt-1 w-full" type="file" wire:model="files" name="files"
-                    :value="old('files')" accept="application/pdf, image/*" required />
-                <x-input-error :messages="$errors->get('files')" class="mt-2" />
-                <!-- Progress Bar -->
-                <div x-show="uploading" class="flex items-center bg-gray-800 mt-1">
-                    <div class="w-[15rem] rounded-full bg-gray-700">
+                <div x-show="uploading" class="flex items-center mt-1">
+                    <div class="w-[15rem] rounded-full bg-gray-300 dark:bg-gray-700">
                         <div class="bg-blue-500 h-full rounded-full text-white font-medium p-0.5 text-xs text-center"
                             :style="'width:' + progress + '%'">
                             <span x-text="progress + '%'"></span>
                         </div>
                     </div>
                 </div>
+                {{-- File Input --}}
+                <x-text-input id="files" class="block mt-1 w-full" type="file" wire:model="files" name="files"
+                    :value="old('files')" accept="application/pdf, image/*" />
+                <x-input-error :messages="$errors->get('files')" class="mt-2" />
             </div>
         </div>
         <div class="flex items-center justify-end mt-6">
-            <x-primary-button>
+            <x-primary-button wire:loading.class="opacity-50">
+                <span wire:loading wire:target="save" class="animate-spin mr-2">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z"
+                            fill="currentColor" />
+                        <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" fill="currentColor" />
+                    </svg>
+                </span>
                 {{ __('Enviar') }}
             </x-primary-button>
         </div>
