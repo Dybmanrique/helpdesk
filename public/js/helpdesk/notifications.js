@@ -10,7 +10,7 @@ var Toast = Swal.mixin({
     }
 });
 
-document.addEventListener('livewire:init', () => {
+document.addEventListener('livewire:initialized', () => {
     Livewire.on('notify', (eventData) => {
         const data = eventData[0];
         if (data.code == 200) {
