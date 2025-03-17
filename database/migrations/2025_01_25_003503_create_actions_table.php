@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('actions', function (Blueprint $table) {
             $table->id();
             $table->text('comment');
-            $table->foreignId('procedure_id')->constrained()->onDelete('cascade');
-            $table->foreignId('office_id')->constrained();
+            $table->enum('action', ['Visualizar', 'Comentar', 'Derivar', 'Concluir', 'Anular', 'Archivar']);
+            $table->foreignId('derivation_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('actions');
     }
 };

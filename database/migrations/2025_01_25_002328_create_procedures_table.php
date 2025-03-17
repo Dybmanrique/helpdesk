@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('procedures', function (Blueprint $table) {
             $table->id();
+            $table->string('expedient_number')->nullable();
             $table->string('reason');
             $table->text('description');
-            $table->string('ticket');
+            $table->string('ticket')->nullable();
+            $table->boolean('is_juridical')->default(0);
             $table->foreignId('procedure_priority_id')->constrained();
             $table->foreignId('procedure_category_id')->constrained();
             $table->foreignId('procedure_state_id')->constrained();

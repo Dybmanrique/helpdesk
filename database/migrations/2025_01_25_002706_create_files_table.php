@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('storage');
+            $table->string('name');
+            $table->string('path');
             $table->foreignId('procedure_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
