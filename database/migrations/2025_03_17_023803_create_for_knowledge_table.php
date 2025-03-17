@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('derivations', function (Blueprint $table) {
+        Schema::create('for_knowledge', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('procedure_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('procedure_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('derivations');
+        Schema::dropIfExists('for_knowledge');
     }
 };
