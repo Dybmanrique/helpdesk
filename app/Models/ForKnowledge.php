@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProcedureUser extends Model
+class ForKnowledge extends Model
 {
-    protected $table = "procedure_user";
+    protected $table = "for_knowledge";
     protected $fillable = ['user_id','procedure_id'];
 }

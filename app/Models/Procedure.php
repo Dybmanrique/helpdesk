@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Procedure extends Model
 {
     protected $table = "procedures";
-    protected $fillable = ['reason','description','ticket','procedure_priority_id','procedure_category_id','procedure_state_id','document_type_id'];
+    protected $fillable = ['expedient_number','reason','description','ticket','is_juridical','procedure_priority_id','procedure_category_id','procedure_state_id','document_type_id'];
     
     public function document_type(){
         return $this->belongsTo(DocumentType::class,'document_type_id','id');
@@ -30,14 +30,14 @@ class Procedure extends Model
     public function comments(){
         return $this->hasMany(Comment::class,'procedure_id','id');
     }
+    public function people(){
+        return $this->belongsToMany(Person::class,'procedure_person','procedure_id','person_id');
+    }
     public function users(){
-        return $this->belongsToMany(User::class,'procedure_user','procedure_id','user_id');
+        return $this->belongsToMany(User::class,'for_knowledge','procedure_id','user_id');
     }
     public function user()
     {
-        return $this->hasOneThrough(User::class, ProcedureUser::class, 'procedure_id', 'id', 'id', 'user_id');
-    }
-    public function people(){
-        return $this->belongsToMany(Person::class,'procedure_person','procedure_id','person_id');
+        return $this->hasOneThrough(User::class, ForKnowledge::class, 'procedure_id', 'user_id', 'id', 'id');
     }
 }
