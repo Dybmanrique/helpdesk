@@ -15,7 +15,7 @@ class AllProceduresController extends Controller
 
     public function data()
     {
-        $users = Procedure::query()
+        $all_procedures = Procedure::query()
             ->with([
                 'document_type:id,name',  
                 'procedure_category:id,name',  
@@ -24,11 +24,11 @@ class AllProceduresController extends Controller
                 'user:id,person_id,email',  
                 'user.person:id,name,last_name,second_last_name,phone'
             ])
-            ->select('id','ticket','reason','description', 'document_type_id', 'procedure_category_id', 'procedure_priority_id', 'procedure_state_id')
+            ->select('id','ticket','reason','description', 'document_type_id', 'procedure_category_id', 'procedure_priority_id', 'procedure_state_id', 'user_id')
             ->get();
 
 
-        return DataTables::of($users)
+        return DataTables::of($all_procedures)
             ->addColumn('actions', function($row) {
                 return ''; // Las acciones se renderizan en el frontend
             })
