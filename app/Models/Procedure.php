@@ -7,7 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Procedure extends Model
 {
     protected $table = "procedures";
-    protected $fillable = ['expedient_number','reason','description','ticket','is_juridical','procedure_priority_id','procedure_category_id','procedure_state_id','document_type_id'];
+    protected $fillable = [
+        'expedient_number',
+        'reason',
+        'description',
+        'ticket',
+        'is_juridical',
+        'procedure_priority_id',
+        'procedure_category_id',
+        'procedure_state_id',
+        'document_type_id',
+        'user_id',
+    ];
     
     public function document_type(){
         return $this->belongsTo(DocumentType::class,'document_type_id','id');
@@ -38,6 +49,6 @@ class Procedure extends Model
     }
     public function user()
     {
-        return $this->hasOneThrough(User::class, ForKnowledge::class, 'procedure_id', 'user_id', 'id', 'id');
+        return $this->belongsTo(User::class);
     }
 }

@@ -60,6 +60,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Procedure::class,'procedure_user','user_id','procedure_id');
     }
 
+    public function derivations(){
+        return $this->belongsToMany(Procedure::class,'derivations','user_id','procedure_id');
+    }
+
     public function isAdmin(){
         return $this->offices()->exists();
     }

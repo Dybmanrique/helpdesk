@@ -63,9 +63,10 @@ class Create extends Component
                 'procedure_category_id' => $this->procedureCategoryId,
                 'procedure_state_id' => $procedureState->id,
                 'document_type_id' => $this->documentTypeId,
+                'user_id' => $user->id,
             ]);
             //registro de la relación del usuario con el trámite
-            $user->procedures()->attach([$procedure->id]);
+            $user->derivations()->attach([$procedure->id]);
 
             //registro de los archivos del trámite
             if ($this->files) {
@@ -102,7 +103,8 @@ class Create extends Component
         $extension = $file->extension();
         $folder = $extension === 'pdf' ? 'pdfs' : 'images';
         File::create([
-            'storage' => $file->store('helpdesk/procedure_files/auth/' . $userId . '/' . $folder),
+            'path' => $file->store('helpdesk/procedure_files/auth/' . $userId . '/' . $folder),
+            'name' => $file->getClientOriginalName(),
             'procedure_id' => $procedure->id,
         ]);
     }
