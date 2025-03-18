@@ -56,6 +56,13 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'text' => 'Trámites oficina',
+            'route' => 'admin.procedures_office.index',
+            'icon' => 'fa-solid fa-building-circle-arrow-right',
+            'active' => 'admin/tramites-mi-oficina*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Buttons',
             'icon' => 'fa-regular fa-file',
             // 'can' => ['view-buttons'],

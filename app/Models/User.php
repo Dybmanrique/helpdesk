@@ -46,26 +46,53 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function person()
     {
         return $this->belongsTo(Person::class, 'person_id', 'id');
     }
 
-    public function offices(){
-        return $this->belongsToMany(Office::class,'administrative_users','user_id','office_id');
+    public function offices()
+    {
+        return $this->belongsToMany(Office::class, 'administrative_users', 'user_id', 'office_id');
     }
 
-    public function procedures(){
-        return $this->belongsToMany(Procedure::class,'procedure_user','user_id','procedure_id');
+    public function office()
+    {
+        return $this->hasOneThrough(
+            Office::class,
+            AdministrativeUser::class,
+            'user_id',
+            'id',
+            'id',
+            'office_id'
+        );
     }
 
-    public function derivations(){
-        return $this->belongsToMany(Procedure::class,'derivations','user_id','procedure_id');
+    public function procedures()
+    {
+        return $this->belongsToMany(Procedure::class, 'procedure_user', 'user_id', 'procedure_id');
     }
 
-    public function isAdmin(){
+    public function derivations()
+    {
+        return $this->belongsToMany(Procedure::class, 'derivations', 'user_id', 'procedure_id');
+    }
+
+    public function isAdmin()
+    {
         return $this->offices()->exists();
     }
 
+    public function active_procedures()
+    {
+        return $this->hasManyThrough(
+            Procedure::class,
+            Derivation::class,
+            'user_id',
+            'id',
+            'id',
+            'procedure_id'
+        )->where('derivations.is_active', true);
+    }
 }

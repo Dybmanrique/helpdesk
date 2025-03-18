@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('derivations', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_active')->default(true);
             $table->foreignId('procedure_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

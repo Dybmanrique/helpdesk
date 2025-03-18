@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\OfficeController;
 use App\Http\Controllers\Admin\ProcedureCategoryController;
 use App\Http\Controllers\Admin\ProcedurePriorityController;
+use App\Http\Controllers\Admin\ProceduresOfficeController;
 use App\Http\Controllers\Admin\ProcedureStateController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,6 @@ Route::get('/oficinas/data', [OfficeController::class, 'data'])->middleware(['au
 
 Route::get('/todos-los-tramites', [AllProceduresController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.all_procedures.index');
 Route::get('/todos-los-tramites/data', [AllProceduresController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.all_procedures.data');
+
+Route::get('/tramites-mi-oficina', [ProceduresOfficeController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.procedures_office.index');
+Route::get('/tramites-mi-oficina/data', [ProceduresOfficeController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.procedures_office.data');
