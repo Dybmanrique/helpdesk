@@ -24,15 +24,15 @@ class Procedure extends Model
     {
         return $this->belongsTo(DocumentType::class, 'document_type_id', 'id');
     }
-    public function procedure_category()
+    public function category()
     {
         return $this->belongsTo(ProcedureCategory::class, 'procedure_category_id', 'id');
     }
-    public function procedure_priority()
+    public function priority()
     {
         return $this->belongsTo(ProcedurePriority::class, 'procedure_priority_id', 'id');
     }
-    public function procedure_state()
+    public function state()
     {
         return $this->belongsTo(ProcedureState::class, 'procedure_state_id', 'id');
     }
@@ -44,14 +44,6 @@ class Procedure extends Model
     {
         return $this->hasMany(Derivation::class, 'procedure_id', 'id');
     }
-    public function comments()
-    {
-        return $this->hasMany(Comment::class, 'procedure_id', 'id');
-    }
-    public function people()
-    {
-        return $this->belongsToMany(Person::class, 'procedure_person', 'procedure_id', 'person_id');
-    }
     public function users_for_knowledge()
     {
         return $this->belongsToMany(User::class, 'for_knowledge', 'procedure_id', 'user_id');
@@ -59,5 +51,16 @@ class Procedure extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function actions()
+    {
+        return $this->hasManyThrough(
+            Action::class,
+            Derivation::class,
+            'procedure_id', // Foreign key en la tabla `derivations`
+            'derivation_id', // Foreign key en la tabla `actions`
+            'id', // Local key en `procedures`
+            'id'  // Local key en `derivations`
+        )->orderBy('created_at', 'desc');;
     }
 }

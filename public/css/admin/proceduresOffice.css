@@ -1,0 +1,62 @@
+.timeline {
+    margin: 0 0 45px;
+    padding: 0;
+    position: relative;
+}
+
+.timeline>div {
+    padding-bottom: 15px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border-left: 2px solid;
+    position: relative;
+}
+
+.timeline>div::after, .timeline>div::before {
+    content: "";
+    display: table;
+}
+
+.timeline>div>.fa, .timeline>div>.fab, .timeline>div>.fad, .timeline>div>.fal, .timeline>div>.far, .timeline>div>.fas, .timeline>div>.ion, .timeline>div>.svg-inline--fa {
+    background-color: #adb5bd;
+    border-radius: 50%;
+    font-size: 16px;
+    height: 15px;
+    left: -7.5px;
+    line-height: 30px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 15px;
+}
+
+.timeline>div>.timeline-item {
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+    border-radius: .25rem;
+    background-color: #fff;
+    color: #495057;
+    margin-left: 12px;
+    margin-right: 0px;
+    margin-top: 0;
+    padding: 0;
+    position: relative;
+}
+
+.timeline>div>.timeline-item>.timeline-header {
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+    color: #495057;
+    font-size: 14px;
+    line-height: 1.1;
+    margin: 0;
+    padding: 10px;
+}
+
+.timeline>div>.timeline-item>.timeline-body, .timeline>div>.timeline-item>.timeline-footer {
+    padding: 10px;
+}
+
+[data-coreui-theme=dark] .timeline>div>.timeline-item {
+    background-color: #313847;
+    color: var(--cui-body-color);
+}
