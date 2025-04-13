@@ -1,4 +1,4 @@
-var Toast = Swal.mixin({
+window.Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
