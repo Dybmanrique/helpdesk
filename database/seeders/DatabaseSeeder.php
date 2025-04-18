@@ -111,16 +111,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'Pendiente',
         ]);
         ProcedureState::create([
-            'name' => 'Aceptado',
+            'name' => 'En proceso',
         ]);
         ProcedureState::create([
             'name' => 'Derivado',
         ]);
         ProcedureState::create([
+            'name' => 'Concluido',
+        ]);
+        ProcedureState::create([
             'name' => 'Rechazado',
         ]);
         ProcedureState::create([
-            'name' => 'Finalizado',
+            'name' => 'Archivado',
         ]);
     }
 }

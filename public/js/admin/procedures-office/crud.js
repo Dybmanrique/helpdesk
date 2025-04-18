@@ -110,6 +110,8 @@ import { Utils } from '/js/Utils.js';
         derivation_id = data['derivation_id'];
 
         showInfoProcedure(procedure_id);
+        document.getElementById('formSave').reset();
+        document.getElementById('actions_container').classList.add('d-none');
     });
 
     async function showInfoProcedure(procedure_id) {
@@ -156,6 +158,16 @@ import { Utils } from '/js/Utils.js';
         document.getElementById('personPhoneModal').textContent = data.user.phone;
         document.getElementById('personEmailModal').textContent = data.user.email;
         
+        const expedientNumber = document.getElementById('expedientNumber');
+        
+        if (data.expedient_number === null || data.expedient_number === "") {
+            expedientNumber.readOnly = false;
+            showButtonsEditExpedient(true, false);
+        } else {
+            expedientNumber.readOnly = true;
+            showButtonsEditExpedient(false);
+        }
+
         const filesModal = document.getElementById('filesModal');
         filesModal.innerHTML = '';
         data.files.forEach(file => {
@@ -254,7 +266,7 @@ import { Utils } from '/js/Utils.js';
             const comment = document.getElementById('comment');
             comment.required = false;
 
-            switch (event.target.value) {
+            switch (actions_select.value) {
                 case 'derivar':
                     showDerivationSection(true);
                     break;
@@ -286,21 +298,30 @@ import { Utils } from '/js/Utils.js';
 
     const generateExpedientNumber = document.getElementById('generateExpedientNumber');
     generateExpedientNumber.addEventListener('click', async () => {
-        const response = await fetch('/admin/tramites-mi-oficina/generar-numero-expediente');
+        showLoader('expedientNumberLoader', 'expedientNumber');
+        
+        try {
+            const response = await fetch('/admin/tramites-mi-oficina/generar-numero-expediente');
 
-        if(!response.ok){
-            Toast.fire({icon: 'error', title: 'Algo salió mal'});
-            return;
+            if(!response.ok){
+                Toast.fire({icon: 'error', title: 'Ocurrió un error en el servidor'});
+                return;
+            }
+
+            const data = await response.json();
+            if(!data.success){
+                Toast.fire({icon: 'info', title: data.message});
+                return;
+            }
+
+            const expedientNumber = document.getElementById('expedientNumber');
+            expedientNumber.value = data.data;
+        } catch (Exception) {
+            Toast.fire({icon: 'error', title: 'Algo salió mal, intentelo nuevamente'});
+        } finally {
+            showLoader('expedientNumberLoader', 'expedientNumber', false);
         }
-
-        const data = await response.json();
-        if(!data.success){
-            Toast.fire({icon: 'info', title: data.message});
-            return;
-        }
-
-        const expedientNumber = document.getElementById('expedientNumber');
-        expedientNumber.value = data.data;
+        
     })
 
     const office_id = document.getElementById('office_id');
@@ -414,4 +435,86 @@ import { Utils } from '/js/Utils.js';
         }
     }
 
+    let oldExpedientNumber;
+    const expedientNumber = document.getElementById('expedientNumber');
+
+    const editExpedientNumber = document.getElementById('editExpedientNumber');
+    editExpedientNumber.addEventListener('click', () => {
+        showButtonsEditExpedient();
+        oldExpedientNumber = expedientNumber.value;
+    });
+
+    const cancelExpedientNumber = document.getElementById('cancelExpedientNumber');
+    cancelExpedientNumber.addEventListener('click', () => {
+        showButtonsEditExpedient(false);
+        expedientNumber.value = oldExpedientNumber;
+    });
+
+    const buttonsEditExpedientContainer = document.getElementById('buttonsEditExpedientContainer');
+
+    function showButtonsEditExpedient(show = true, includeCancelButton = true){
+        if (show) {
+            editExpedientNumber.classList.add('d-none');
+            buttonsEditExpedientContainer.classList.add('d-flex');
+            buttonsEditExpedientContainer.classList.remove('d-none');
+            expedientNumber.readOnly = false;
+        } else {
+            editExpedientNumber.classList.remove('d-none');
+            buttonsEditExpedientContainer.classList.remove('d-flex');
+            buttonsEditExpedientContainer.classList.add('d-none');
+            expedientNumber.readOnly = true;
+        }
+        if(includeCancelButton){
+            cancelExpedientNumber.classList.remove('d-none');
+        } else {
+            cancelExpedientNumber.classList.add('d-none');
+        }
+    }
+
+    const saveExpedientNumber = document.getElementById('saveExpedientNumber');
+    const formExpedientNumber = document.getElementById('formExpedientNumber');
+    saveExpedientNumber.addEventListener('click', async () => {
+        if(!formExpedientNumber.checkValidity()){
+            formExpedientNumber.reportValidity();
+            return;
+        }
+
+        try{
+            const response = await fetch('/admin/tramites-mi-oficina/guardar-numero-expediente', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ procedure_id: procedure_id, expedient_number: expedientNumber.value })
+            });
+    
+            
+            if(!response.ok){
+                Toast.fire({icon: 'error', title: 'Ocurrió un error en el servidor'});
+                return;
+            }
+            
+            const dataResponse = await response.json();
+    
+            if(!dataResponse.success){
+                Toast.fire({icon: 'info', title: dataResponse.message});
+                return;
+            }
+    
+            Toast.fire({icon: 'success', title: dataResponse.message});
+            showButtonsEditExpedient(false);
+            table.ajax.reload();
+        } catch(Exception){
+            Toast.fire({icon: 'error', title: 'Algo salió mal, inténtelo nuevamente'});
+        }
+    });
+
+    //Prevenir el comportamiento por defecto de los forms
+    document.getElementById('formExpedientNumber').addEventListener('submit', function(event) {
+        event.preventDefault();
+    });
+    document.getElementById('formSave').addEventListener('submit', function(event) {
+        event.preventDefault();
+    });
 })();

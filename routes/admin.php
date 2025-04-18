@@ -37,3 +37,4 @@ Route::post('/tramites-mi-oficina/info-tramite', [ProceduresOfficeController::cl
 Route::get('/tramites-mi-oficina/generar-numero-expediente', [ProceduresOfficeController::class, 'generate_expedient_number'])->middleware(['auth', 'verified'])->name('admin.procedures_office.generate_expedient_number');
 Route::post('/tramites-mi-oficina/usuarios-oficina', [ProceduresOfficeController::class, 'users_office'])->middleware(['auth', 'verified'])->name('admin.procedures_office.users_office');
 Route::post('/tramites-mi-oficina/guardar-accion', [ProceduresOfficeController::class, 'save_action'])->middleware(['auth', 'verified'])->name('admin.procedures_office.save_action');
+Route::post('/tramites-mi-oficina/guardar-numero-expediente', [ProceduresOfficeController::class, 'save_expedient_number'])->middleware(['auth', 'verified'])->name('admin.procedures_office.save_expedient_number');

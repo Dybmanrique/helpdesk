@@ -32,11 +32,30 @@
                                                             <td>N° Expediente</td>
                                                             <td class="fw-light">
                                                                 <div class="d-flex gap-1">
-                                                                    <input type="text" class="form-control px-2" placeholder="N° expediente" id="expedientNumber">
-                                                                    <button class="btn btn-outline-secondary" type="button" id="generateExpedientNumber" title="Generar automáticamente">
-                                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                                    <form id="formExpedientNumber" class="w-100">
+                                                                        <div class="w-100 border rounded p-1 d-none" id="expedientNumberLoader">
+                                                                            <x-admin.spinner />
+                                                                        </div>
+                                                                        <input type="text" class="form-control px-2" placeholder="N° expediente" id="expedientNumber" required autocomplete="off">
+                                                                    </form>
+                                                                    <button id="editExpedientNumber" class="btn btn-sm btn-primary" type="button" title="Cambiar N° expedinete">
+                                                                        <i class="fa-solid fa-pen"></i>
                                                                     </button>
-                                                                  </div>
+                                                                </div>
+                                                                <div id="buttonsEditExpedientContainer" class="d-none gap-1 mt-1">
+                                                                    <button id="generateExpedientNumber" class="btn btn-outline-secondary btn-expand">
+                                                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                                                        <span>Generar</span>
+                                                                    </button>
+                                                                    <button id="saveExpedientNumber" class="btn btn-success btn-expand">
+                                                                        <i class="fa-solid fa-check"></i>
+                                                                        <span>Aceptar</span>
+                                                                    </button>
+                                                                    <button id="cancelExpedientNumber" class="btn btn-danger btn-expand">
+                                                                        <i class="fa-solid fa-xmark"></i>
+                                                                        <span>Cancelar</span>
+                                                                    </button>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -220,6 +239,31 @@
 
 @section('css')
     <link rel="stylesheet" href="{{asset('css/admin/proceduresOffice.css')}}">
+    <style>
+        .btn-expand {
+          display: inline-flex;
+          align-items: center;
+          overflow: hidden;
+          white-space: nowrap;
+          transition: width 0.3s ease;
+          width: 40px; /* solo ícono */
+        }
+        
+        .btn-expand span {
+          opacity: 0;
+          margin-left: 5px;
+          transition: opacity 0.3s;
+        }
+        
+        /* Al hacer hover: expandir y mostrar texto */
+        .btn-expand:hover {
+          width: 110px; /* ajusta según el texto */
+        }
+        
+        .btn-expand:hover span {
+          opacity: 1;
+        }
+    </style>
 @endsection
 
 @section('js')
