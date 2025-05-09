@@ -125,5 +125,9 @@ class DatabaseSeeder extends Seeder
         ProcedureState::create([
             'name' => 'Archivado',
         ]);
+
+        Office::create([
+            'name' => 'Mesa de partes',
+        ]);
     }
 }
