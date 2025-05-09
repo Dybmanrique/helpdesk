@@ -126,8 +126,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Archivado',
         ]);
 
-        Office::create([
-            'name' => 'Mesa de partes',
-        ]);
+        $this->call(HelpdeskUserSeeder::class);
     }
 }
