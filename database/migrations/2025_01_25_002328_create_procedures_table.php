@@ -22,8 +22,7 @@ return new class extends Migration
             $table->foreignId('procedure_category_id')->constrained();
             $table->foreignId('procedure_state_id')->constrained();
             $table->foreignId('document_type_id')->constrained();
-            $table->foreignId('user_id')->nullable()->constrained();
-            $table->foreignId('person_id')->nullable()->constrained();
+            $table->morphs('applicant');
             $table->timestamps();
         });
     }

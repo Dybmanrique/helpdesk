@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('ruc',11);
             $table->string('company_name');
-            $table->foreignId('person_id')->constrained();
             $table->timestamps();
         });
     }

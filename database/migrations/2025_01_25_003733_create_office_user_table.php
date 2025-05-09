@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('administrative_users', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('office_id')->constrained();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }

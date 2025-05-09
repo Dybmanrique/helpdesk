@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('action_files', function (Blueprint $table) {
+        Schema::create('resolutions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('action_id')->constrained()->onDelete('cascade');
-            $table->foreignId('file_id')->constrained();
+            $table->string('resolution_number');
+            $table->string('description')->nullable();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('resolution_type_id')->constrained();
+            $table->foreignId('resolution_state_id')->constrained();
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('action_files');
+        Schema::dropIfExists('resolutions');
     }
 };
