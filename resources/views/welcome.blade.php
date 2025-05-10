@@ -18,27 +18,21 @@
 </head>
 
 <body class="font-sans antialiased" 
-{{-- x-data="{ theme: localStorage.getItem('theme') || 'auto' }" x-init="const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-document.documentElement.classList.toggle('dark', isDark);" x-cloak --}}
+x-data="{ theme: localStorage.getItem('theme') || 'auto' }" x-init="const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+document.documentElement.classList.toggle('dark', isDark);" x-cloak
 >
     <div
         class="absolute top-0 w-screen grid min-h-dvh grid-rows-[auto_1fr_auto] text-black/50 dark:text-white/50 bg-sky-100 dark:bg-gray-900 bg-[radial-gradient(ellipse_80%_80%_at_50%_20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
         <header class="w-full bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700">
-            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav x-data="{ open: false }" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Primary Navigation Menu -->
                 <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <!-- Logo -->
-                        <div class="flex items-center">
-                            <a href="{{ url('/') }}" class="flex items-center gap-2">
-                                <x-application-logo
-                                    class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
-                                <span class="text-xl text-gray-800 dark:text-gray-200 hidden sm:block">Mesa de Partes
-                                    Virtual - UGEL
-                                    Asunción</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex items-center ms-6 gap-6 z-10">
+                    <!-- Logo -->
+                    <a href="{{ url('/') }}" class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
+                        <x-application-logo class="block h-9 w-auto fill-current" />
+                        <span class="text-xl hidden sm:block">Mesa de Partes Virtual - UGEL Asunción</span>
+                    </a>
+                    <div class="hidden sm:flex sm:items-center sm:ms-6 gap-6 z-10">
                         @if (Route::has('login'))
                             @auth
                                 <a href="{{ route('helpdesk.dashboard') }}"
@@ -59,13 +53,32 @@ document.documentElement.classList.toggle('dark', isDark);" x-cloak --}}
                             @endauth
                         @endif
                     </div>
+                    <!-- Hamburger -->
+                    <div class="-me-2 flex items-center sm:hidden">
+                        <button @click="open = ! open"
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                                <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden"
+                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Responsive Navigation Menu -->
+                <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden mb-3 border-2 dark:border-gray-600 rounded-lg">
+                    <a href="{{ route('login') }}" class="block px-2 py-3 text-gray-600 dark:text-gray-200 border-b-2 dark:border-gray-600">{{__('Log in')}}</a>
+                    <a href="{{ route('register') }}" class="block px-2 py-3 text-gray-600 dark:text-gray-200">{{__('Register')}}</a>
                 </div>
             </nav>
         </header>
         <main class="flex flex-col items-center justify-center my-6">
             <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
                 <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                    <a href="#"
+                    <a href="{{ route('procedures.create') }}"
                         class="flex items-start gap-4 rounded-lg bg-white p-6 lg:p-20 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-red-300 focus:outline-none focus-visible:ring-red-400 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-red-400 dark:focus-visible:ring-red-400">
                         <div
                             class="flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-500 sm:size-16">
@@ -93,7 +106,7 @@ document.documentElement.classList.toggle('dark', isDark);" x-cloak --}}
                         </svg>
                     </a>
 
-                    <a href="#"
+                    <a href="{{ route('procedures.consult') }}"
                         class="flex items-start gap-4 rounded-lg bg-white p-6 lg:p-20 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-blue-300 focus:outline-none focus-visible:ring-blue-400 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-blue-400 dark:focus-visible:ring-blue-400">
                         <div
                             class="flex size-12 shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-500 sm:size-16">
