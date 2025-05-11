@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('actions', function (Blueprint $table) {
             $table->id();
-            $table->text('comment');
-            $table->enum('action', ['Visualizar', 'Comentar', 'Derivar', 'Concluir', 'Anular', 'Archivar']);
+            $table->text('comment')->nullable();
+            $table->enum('action', ['iniciar', 'comentar', 'derivar', 'concluir', 'anular', 'archivar']);
             $table->foreignId('derivation_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

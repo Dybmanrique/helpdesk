@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
     <meta name="theme-color" content="#ffffff">
     <!-- Vendors styles-->
@@ -63,6 +64,7 @@
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.bootstrap4.min.js"></script>
     <!-- Local scripts-->
     <script src="{{ asset('js/helpers.js') }}?v={{ env('APP_VERSION')}}"></script>
+    <script type="module" src="{{ asset('js/Utils.js') }}?v={{ env('APP_VERSION')}}"></script>
     <script src="{{ asset('js/admin/dashboard.js') }}?v={{ env('APP_VERSION')}}"></script>
     <script src="{{ asset('js/admin/toast.js') }}?v={{ env('APP_VERSION')}}"></script>
     <!-- Livewire Scripts -->

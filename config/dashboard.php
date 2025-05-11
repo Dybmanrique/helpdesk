@@ -49,6 +49,10 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'title' => 'TRÁMITES',
+            // 'can' => ['manage-theme', 'view-dashboard'],
+        ],
+        [
             'text' => 'Todos los trámites',
             'route' => 'admin.all_procedures.index',
             'icon' => 'fa-solid fa-folder-open',
@@ -56,32 +60,39 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
-            'text' => 'Buttons',
-            'icon' => 'fa-regular fa-file',
-            // 'can' => ['view-buttons'],
-            'submenu' => [
-                [
-                    'text' => 'Buttons',
-                    'route' => 'dashboard',
-                    'active' => 'buttons/index*',
-                    // 'can' => ['view-buttons-simple'],
-                    'badge' => null,
-                ],
-                [
-                    'text' => 'Dropdowns',
-                    'url' => 'https://example.com/dropdowns',
-                    'active' => 'buttons/dropdowns.html',
-                    // 'can' => ['view-dropdowns', 'manage-dropdowns'],
-                    'badge' => [
-                        'text' => 'PRO',
-                        'class' => 'badge-sm bg-danger ms-auto',
-                    ],
-                ],
-            ],
+            'text' => 'Trámites oficina',
+            'route' => 'admin.procedures_office.index',
+            'icon' => 'fa-solid fa-building-circle-arrow-right',
+            'active' => 'admin/tramites-mi-oficina*',
+            // 'can' => ['view-colors'],
         ],
-        [
-            'title' => 'DASHBOARD 2',
-            // 'can' => ['manage-theme', 'view-dashboard'],
-        ],
-    ]
+        // [
+        //     'text' => 'Buttons',
+        //     'icon' => 'fa-regular fa-file',
+        //     // 'can' => ['view-buttons'],
+        //     'submenu' => [
+        //         [
+        //             'text' => 'Buttons',
+        //             'route' => 'dashboard',
+        //             'active' => 'buttons/index*',
+        //             // 'can' => ['view-buttons-simple'],
+        //             'badge' => null,
+        //         ],
+        //         [
+        //             'text' => 'Dropdowns',
+        //             'url' => 'https://example.com/dropdowns',
+        //             'active' => 'buttons/dropdowns.html',
+        //             // 'can' => ['view-dropdowns', 'manage-dropdowns'],
+        //             'badge' => [
+        //                 'text' => 'PRO',
+        //                 'class' => 'badge-sm bg-danger ms-auto',
+        //             ],
+        //         ],
+        //     ],
+        // ],
+        // [
+        //     'title' => 'DASHBOARD 2',
+        //     // 'can' => ['manage-theme', 'view-dashboard'],
+        // ],
+        ]
 ];

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('procedure_person', function (Blueprint $table) {
-            $table->foreignId('person_id')->constrained();
-            $table->foreignId('procedure_id')->constrained()->onDelete('cascade');
+        Schema::create('resolution_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('procedure_person');
+        Schema::dropIfExists('resolution_types');
     }
 };

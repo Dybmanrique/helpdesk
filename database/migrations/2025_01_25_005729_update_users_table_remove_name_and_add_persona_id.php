@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('name');
-            
             $table->foreignId('person_id')->constrained()->onDelete('cascade');
         });
     }

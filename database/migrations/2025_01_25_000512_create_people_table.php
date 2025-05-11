@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('address');
             $table->string('identity_number', 20);
+            $table->string('email');
             $table->foreignId('identity_type_id')->constrained();
             $table->timestamps();
         });
