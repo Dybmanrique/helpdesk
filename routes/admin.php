@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\ProcedurePriorityController;
 use App\Http\Controllers\Admin\ProceduresOfficeController;
 use App\Http\Controllers\Admin\ProcedureStateController;
 use App\Http\Controllers\Admin\ResolutionsController;
+use App\Http\Controllers\Admin\ResolutionStatesController;
+use App\Http\Controllers\Admin\ResolutionTypesController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/dashboard', function () {
@@ -39,6 +41,18 @@ Route::get('/tramites-mi-oficina/generar-numero-expediente', [ProceduresOfficeCo
 Route::post('/tramites-mi-oficina/usuarios-oficina', [ProceduresOfficeController::class, 'users_office'])->middleware(['auth', 'verified'])->name('admin.procedures_office.users_office');
 Route::post('/tramites-mi-oficina/guardar-accion', [ProceduresOfficeController::class, 'save_action'])->middleware(['auth', 'verified'])->name('admin.procedures_office.save_action');
 Route::post('/tramites-mi-oficina/guardar-numero-expediente', [ProceduresOfficeController::class, 'save_expedient_number'])->middleware(['auth', 'verified'])->name('admin.procedures_office.save_expedient_number');
+
+Route::get('/tipos-de-resolucion', [ResolutionTypesController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.resolution_types.index');
+Route::get('/tipos-de-resolucion/data', [ResolutionTypesController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.resolution_types.data');
+Route::post('/tipos-de-resolucion/guardar-tipo-resolucion', [ResolutionTypesController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.resolution_types.store');
+Route::post('/tipos-de-resolucion/actualizar-tipo-resolucion', [ResolutionTypesController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.resolution_types.update');
+Route::delete('/tipos-de-resolucion/eliminar-tipo-resolucion/{id}', [ResolutionTypesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.resolution_types.destroy');
+
+Route::get('/estados-de-resolucion', [ResolutionStatesController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.resolution_states.index');
+Route::get('/estados-de-resolucion/data', [ResolutionStatesController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.resolution_states.data');
+Route::post('/estados-de-resolucion/guardar-estado-resolucion', [ResolutionStatesController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.resolution_states.store');
+Route::post('/estados-de-resolucion/actualizar-estado-resolucion', [ResolutionStatesController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.resolution_states.update');
+Route::delete('/estados-de-resolucion/eliminar-estado-resolucion/{id}', [ResolutionStatesController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.resolution_states.destroy');
 
 Route::get('/resoluciones', [ResolutionsController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.resolutions.index');
 Route::get('/resoluciones/data', [ResolutionsController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.resolutions.data');

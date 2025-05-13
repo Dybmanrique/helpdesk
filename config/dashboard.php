@@ -67,6 +67,24 @@ return [
             // 'can' => ['view-colors'],
         ],
         [
+            'title' => 'RESOLUCIONES',
+            // 'can' => ['manage-theme', 'view-dashboard'],
+        ],
+        [
+            'text' => 'Tipos de resolución',
+            'route' => 'admin.resolution_types.index',
+            'icon' => 'fa-solid fa-layer-group',
+            'active' => 'admin/tipos-de-resolucion*',
+            // 'can' => ['view-colors'],
+        ],
+        [
+            'text' => 'Estados de resolución',
+            'route' => 'admin.resolution_states.index',
+            'icon' => 'fa-solid fa-file-circle-question',
+            'active' => 'admin/estados-de-resolucion*',
+            // 'can' => ['view-colors'],
+        ],
+        [
             'text' => 'Resoluciones',
             'route' => 'admin.resolutions.index',
             'icon' => 'fa-solid fa-file-contract',
