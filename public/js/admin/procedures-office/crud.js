@@ -1,7 +1,7 @@
 'use strict';
 
 let table;
-import { Utils } from '/js/Utils.js';
+import { Utils } from '/js/utils.js';
 
 (function () {
     initDataTable();
