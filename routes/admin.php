@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProcedureCategoryController;
 use App\Http\Controllers\Admin\ProcedurePriorityController;
 use App\Http\Controllers\Admin\ProceduresOfficeController;
 use App\Http\Controllers\Admin\ProcedureStateController;
+use App\Http\Controllers\Admin\ResolutionsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/dashboard', function () {
@@ -38,3 +39,10 @@ Route::get('/tramites-mi-oficina/generar-numero-expediente', [ProceduresOfficeCo
 Route::post('/tramites-mi-oficina/usuarios-oficina', [ProceduresOfficeController::class, 'users_office'])->middleware(['auth', 'verified'])->name('admin.procedures_office.users_office');
 Route::post('/tramites-mi-oficina/guardar-accion', [ProceduresOfficeController::class, 'save_action'])->middleware(['auth', 'verified'])->name('admin.procedures_office.save_action');
 Route::post('/tramites-mi-oficina/guardar-numero-expediente', [ProceduresOfficeController::class, 'save_expedient_number'])->middleware(['auth', 'verified'])->name('admin.procedures_office.save_expedient_number');
+
+Route::get('/resoluciones', [ResolutionsController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.resolutions.index');
+Route::get('/resoluciones/data', [ResolutionsController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.resolutions.data');
+Route::post('/resoluciones/guardar-resolucion', [ResolutionsController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.resolutions.store');
+Route::post('/resoluciones/actualizar-resolucion', [ResolutionsController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.resolutions.update');
+Route::get('/resoluciones/ver-archivo/{uuid}', [ResolutionsController::class, 'view_file'])->middleware(['auth', 'verified'])->name('admin.resolutions.view_file');
+Route::delete('/resoluciones/eliminar-resolucion/{id}', [ResolutionsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.resolutions.destroy');

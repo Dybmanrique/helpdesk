@@ -10,6 +10,8 @@ use App\Models\Person;
 use App\Models\ProcedureCategory;
 use App\Models\ProcedurePriority;
 use App\Models\ProcedureState;
+use App\Models\ResolutionState;
+use App\Models\ResolutionType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -125,6 +127,14 @@ class DatabaseSeeder extends Seeder
         ProcedureState::create([
             'name' => 'Archivado',
         ]);
+
+        ResolutionType::create(['name' => 'Resolucion Judiciales']);
+        ResolutionType::create(['name' => 'Resoluciones Administrativa']);
+        
+        ResolutionState::create(['name' => 'Pendiente']);
+        ResolutionState::create(['name' => 'Firme']);
+        ResolutionState::create(['name' => 'Impugnable']);
+        ResolutionState::create(['name' => 'Anulada']);
 
         $this->call(HelpdeskUserSeeder::class);
     }

@@ -66,6 +66,13 @@ return [
             'active' => 'admin/tramites-mi-oficina*',
             // 'can' => ['view-colors'],
         ],
+        [
+            'text' => 'Resoluciones',
+            'route' => 'admin.resolutions.index',
+            'icon' => 'fa-solid fa-file-contract',
+            'active' => 'admin/resoluciones*',
+            // 'can' => ['view-colors'],
+        ],
         // [
         //     'text' => 'Buttons',
         //     'icon' => 'fa-regular fa-file',
