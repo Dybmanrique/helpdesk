@@ -65,7 +65,7 @@ let table;
     });
 
     $(`#table tbody`).on('click', '.btn-edit', function () {
-        document.getElementById('modalTitle').textContent = "MODIFICAR EXPEDIENTE";
+        document.getElementById('modalTitle').textContent = "MODIFICAR RESOLUCIÓN";
         document.getElementById('file').required = false;
 
         let data = table.row($(this).parents('tr')).data();
@@ -104,7 +104,7 @@ let table;
     });
 
     $('#modal').on('hidden.coreui.modal', function () {
-        document.getElementById('modalTitle').innerText = "REGISTRAR EXPEDIENTE";
+        document.getElementById('modalTitle').innerText = "REGISTRAR RESOLUCIÓN";
     });
 
     const fileInput = document.getElementById('file');
