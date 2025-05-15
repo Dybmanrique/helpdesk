@@ -11,7 +11,7 @@ let table;
         table = $('#table').DataTable({
             processing: true,
             serverSide: false,
-            ajax: "/admin/estados-de-resolucion/data",
+            ajax: "/admin/tipos-de-resolucion/data",
             columns: [{
                 data: null,
                 name: 'id',
@@ -56,7 +56,7 @@ let table;
     const buttonSubmitModal = new Buttons(document.getElementById('buttonSubmitModal'));
 
     $(`#table tbody`).on('click', '.btn-edit', function () {
-        document.getElementById('modalTitle').textContent = "MODIFICAR ESTADO DE RESOLUCIÓN";
+        document.getElementById('modalTitle').textContent = "MODIFICAR TIPO DE RESOLUCIÓN";
 
         let data = table.row($(this).parents('tr')).data();
 
@@ -77,7 +77,7 @@ let table;
     });
 
     $('#modal').on('hidden.coreui.modal', function () {
-        document.getElementById('modalTitle').innerText = "REGISTRAR ESTADO DE RESOLUCIÓN";
+        document.getElementById('modalTitle').innerText = "REGISTRAR TIPO DE RESOLUCIÓN";
     });
 
     let resolution_type_id = null;
@@ -100,7 +100,7 @@ let table;
         formData.append('name', document.getElementById('name').value);
 
         try {
-            const response = await fetch('/admin/estados-de-resolucion/guardar-estado-resolucion', {
+            const response = await fetch('/admin/tipos-de-resolucion/guardar-tipo-resolucion', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -152,7 +152,7 @@ let table;
         formData.append('name', document.getElementById('name').value);
         
         try {
-            const response = await fetch('/admin/estados-de-resolucion/actualizar-estado-resolucion', {
+            const response = await fetch('/admin/tipos-de-resolucion/actualizar-tipo-resolucion', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -195,7 +195,7 @@ let table;
 
     async function remove(resolution_type_id) {
         try {
-            const response = await fetch(`/admin/estados-de-resolucion/eliminar-estado-resolucion/${resolution_type_id}`, {
+            const response = await fetch(`/admin/tipos-de-resolucion/eliminar-tipo-resolucion/${resolution_type_id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
