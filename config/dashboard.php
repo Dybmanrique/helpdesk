@@ -91,6 +91,17 @@ return [
             'active' => 'admin/resoluciones*',
             // 'can' => ['view-colors'],
         ],
+        [
+            'title' => 'USUARIOS',
+            // 'can' => ['manage-theme', 'view-dashboard'],
+        ],
+        [
+            'text' => 'Usuarios administrativos',
+            'route' => 'admin.administrative_users.index',
+            'icon' => 'fa-solid fa-file-contract',
+            'active' => 'admin/usuarios-administrativos*',
+            // 'can' => ['view-colors'],
+        ],
         // [
         //     'text' => 'Buttons',
         //     'icon' => 'fa-regular fa-file',

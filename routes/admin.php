@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdministrativeUsersController;
 use App\Http\Controllers\Admin\AllProceduresController;
 use App\Http\Controllers\Admin\DocumentTypeController;
 use App\Http\Controllers\Admin\OfficeController;
@@ -60,3 +61,9 @@ Route::post('/resoluciones/guardar-resolucion', [ResolutionsController::class, '
 Route::post('/resoluciones/actualizar-resolucion', [ResolutionsController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.resolutions.update');
 Route::get('/resoluciones/ver-archivo/{uuid}', [ResolutionsController::class, 'view_file'])->middleware(['auth', 'verified'])->name('admin.resolutions.view_file');
 Route::delete('/resoluciones/eliminar-resolucion/{id}', [ResolutionsController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.resolutions.destroy');
+
+Route::get('/usuarios-administrativos', [AdministrativeUsersController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.administrative_users.index');
+Route::get('/usuarios-administrativos/data', [AdministrativeUsersController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.administrative_users.data');
+Route::post('/usuarios-administrativos/guardar-usuario', [AdministrativeUsersController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.administrative_users.store');
+Route::post('/usuarios-administrativos/actualizar-usuario', [AdministrativeUsersController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.administrative_users.update');
+Route::delete('/usuarios-administrativos/eliminar-usuario/{id}', [AdministrativeUsersController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.administrative_users.destroy');
