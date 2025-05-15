@@ -65,5 +65,5 @@
 @endsection
 
 @section('js')
-    <script type="module" src="{{ asset('js/admin/resolution-types/crud.js') }}?v={{ env('APP_VERSION')}}"></script>
+    <script type="module" src="{{ asset('js/admin/resolution-states/crud.js') }}?v={{ env('APP_VERSION')}}"></script>
 @endsection
