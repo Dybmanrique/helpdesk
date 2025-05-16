@@ -334,31 +334,37 @@ let table;
         }
     })
 
-    function setupCollapsePassword(){
+    function setupCollapsePassword() {
         const buttonCollapse = document.getElementById('buttonCollapse');
         const collapsePassword = document.getElementById('collapsePassword');
-        if(buttonCollapse && collapsePassword){
-            buttonCollapse.addEventListener('click', () =>{
+        if (buttonCollapse && collapsePassword) {
+            const password = document.getElementById('password');
+            const password_confirmation = document.getElementById('password_confirmation');
+
+            buttonCollapse.addEventListener('click', () => {
                 console.log('click');
-                
-                const password = document.getElementById('password');
-                const password_confirmation = document.getElementById('password_confirmation');
-    
-                if(password && password_confirmation){
+
+                if (password && password_confirmation) {
                     setTimeout(() => {
-                        if(collapsePassword.classList.contains('show')){
-                            console.log('has show');
-                            
-                            password.required = true;
-                            password_confirmation.required = true;
-                        } else {
-                            console.log('dont has show');
-                            password.required = false;
-                            password_confirmation.required = false;
-                        }
+                        applyRequiredToPasswords(collapsePassword, password, password_confirmation);
                     }, 800);
                 }
             });
+
+            applyRequiredToPasswords(collapsePassword, password, password_confirmation);
+        }
+    }
+
+    function applyRequiredToPasswords(collapsePassword, password, password_confirmation) {
+        if (collapsePassword.classList.contains('show')) {
+            console.log('has show');
+
+            password.required = true;
+            password_confirmation.required = true;
+        } else {
+            console.log('dont has show');
+            password.required = false;
+            password_confirmation.required = false;
         }
     }
 
