@@ -27,15 +27,15 @@ let table;
                 }
             },
             {
-                data: 'user.email',
-                name: 'email'
-            },
-            {
                 data: 'user.person',
                 name: 'name',
                 render: function (data, type, row) {
                     return `${data.last_name} ${data.second_last_name} ${data.name}`;
                 }
+            },
+            {
+                data: 'user.email',
+                name: 'email'
             },
             {
                 data: 'office.name',
