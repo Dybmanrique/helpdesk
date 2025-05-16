@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProcedureCategoryController;
 use App\Http\Controllers\Admin\ProcedurePriorityController;
 use App\Http\Controllers\Admin\ProceduresOfficeController;
 use App\Http\Controllers\Admin\ProcedureStateController;
+use App\Http\Controllers\Admin\PublicUsersController;
 use App\Http\Controllers\Admin\ResolutionsController;
 use App\Http\Controllers\Admin\ResolutionStatesController;
 use App\Http\Controllers\Admin\ResolutionTypesController;
@@ -67,3 +68,9 @@ Route::get('/usuarios-administrativos/data', [AdministrativeUsersController::cla
 Route::post('/usuarios-administrativos/guardar-usuario', [AdministrativeUsersController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.administrative_users.store');
 Route::post('/usuarios-administrativos/actualizar-usuario', [AdministrativeUsersController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.administrative_users.update');
 Route::delete('/usuarios-administrativos/eliminar-usuario/{id}', [AdministrativeUsersController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.administrative_users.destroy');
+
+Route::get('/usuarios-publicos', [PublicUsersController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.public_users.index');
+Route::get('/usuarios-publicos/data', [PublicUsersController::class, 'data'])->middleware(['auth', 'verified'])->name('admin.public_users.data');
+Route::post('/usuarios-publicos/guardar-usuario', [PublicUsersController::class, 'store'])->middleware(['auth', 'verified'])->name('admin.public_users.store');
+Route::post('/usuarios-publicos/actualizar-usuario', [PublicUsersController::class, 'update'])->middleware(['auth', 'verified'])->name('admin.public_users.update');
+Route::delete('/usuarios-publicos/eliminar-usuario/{id}', [PublicUsersController::class, 'destroy'])->middleware(['auth', 'verified'])->name('admin.public_users.destroy');

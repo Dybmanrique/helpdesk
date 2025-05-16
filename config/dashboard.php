@@ -102,6 +102,13 @@ return [
             'active' => 'admin/usuarios-administrativos*',
             // 'can' => ['view-colors'],
         ],
+        [
+            'text' => 'Usuarios públicos',
+            'route' => 'admin.public_users.index',
+            'icon' => 'fa-solid fa-file-contract',
+            'active' => 'admin/usuarios-publicos*',
+            // 'can' => ['view-colors'],
+        ],
         // [
         //     'text' => 'Buttons',
         //     'icon' => 'fa-regular fa-file',
