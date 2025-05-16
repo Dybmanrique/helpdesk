@@ -20,7 +20,7 @@ class AdministrativeUsersController extends Controller
     {
         $identity_types = IdentityType::all();
         $offices = Office::all();
-        return view('admin.users.index', compact('identity_types', 'offices'));
+        return view('admin.administrative-users.index', compact('identity_types', 'offices'));
     }
 
     public function data()
