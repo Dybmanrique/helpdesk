@@ -63,4 +63,8 @@ class Procedure extends Model
             'id'  // Local key en `derivations`
         )->orderBy('created_at', 'desc');;
     }
+    public function applicant()
+    {
+        return $this->morphTo();
+    }
 }

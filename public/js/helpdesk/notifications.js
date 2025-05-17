@@ -4,9 +4,7 @@ var Toast = Swal.mixin({
     showConfirmButton: false,
     timer: 3000,
     customClass: {
-        popup: 'custom-toast',
-        title: 'custom-title',
-        timerProgressBar: 'custom-progress'
+        popup: 'rounded-lg dark:bg-gray-700 dark:text-gray-200',
     }
 });
 
@@ -27,8 +25,29 @@ document.addEventListener('livewire:initialized', () => {
             Swal.fire({
                 icon: "info",
                 title: data.title ?? '',
-                html: data.message
+                html: data.message,
+                customClass: {
+                    popup: 'rounded-lg dark:bg-gray-800 dark:text-gray-200 shadow-lg',
+                }
             });
         }
     });
 });
+
+function confirmationMessage(title = "¿Está seguro?", message = "Esta operación es irreversible", icon = "warning") {
+    return Swal.fire({
+        title: title,
+        html: message,
+        icon: icon,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "CONTINUAR",
+        cancelButtonText: "CANCELAR",
+        customClass: {
+            popup: 'rounded-lg dark:bg-gray-800 dark:text-gray-200 shadow-lg',
+            title: 'text-xl',
+            htmlContainer: 'text-left text-sm',
+        }
+    }).then((result) => result.isConfirmed);
+}

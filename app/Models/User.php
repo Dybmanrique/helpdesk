@@ -71,7 +71,7 @@ class User extends Authenticatable
 
     public function procedures()
     {
-        return $this->belongsToMany(Procedure::class, 'procedure_user', 'user_id', 'procedure_id');
+        return $this->morphMany(Procedure::class, 'applicant');
     }
 
     public function derivations()

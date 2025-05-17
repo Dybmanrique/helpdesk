@@ -9,7 +9,7 @@ class File extends Model
 {
     protected $table = "files";
     protected $fillable = ['name', 'path'];
-
+    
     protected static function boot()
     {
         parent::boot();
@@ -57,5 +57,18 @@ class File extends Model
             substr($hex, 16, 4),
             substr($hex, 20, 12),
         ]);
+    }
+
+    public function actions()
+    {
+        return $this->hasMany(Action::class, 'file_id', 'id');
+    }
+    public function procedures()
+    {
+        return $this->hasMany(Procedure::class, 'file_id', 'id');
+    }
+    public function resolutions()
+    {
+        return $this->hasMany(Resolution::class, 'file_id', 'id');
     }
 }
