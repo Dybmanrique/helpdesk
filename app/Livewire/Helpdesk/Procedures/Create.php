@@ -166,25 +166,33 @@ class Create extends Component
         $people = $peopleQuery->get();
         $changeDetectedMessages = [];
         if ($people->isNotEmpty()) {
-            // busco en los registros de personas si hay alguna coincidencia con los apellidos y nombres ingresados
-            // si hay coincidencias, es probable, que no haya errores por el usuario
-            // si los datos no coinciden, podría ser un error del usuario, y, debería notificarlo
-            $peopleQuery->where('name', $this->applicant['name'])
-                ->where('last_name', $this->applicant['lastName'])
-                ->where('second_last_name', $this->applicant['secondLastName']);
-            $personByFullName = $peopleQuery->get();
-            if ($personByFullName->isNotEmpty()) {
-                // en los registros coincidentes, busco si hay coincidencias con los datos de contacto
-                // si los datos de contacto no coinciden, pueden haber cambiado o ser error del usuario; debería notificarlo
-                $personByContactData = $peopleQuery->where('address', $this->applicant['address'])
-                    ->where('phone', $this->applicant['phone'])
-                    ->where('email', $this->applicant['email'])
-                    ->first();
-                if (!$personByContactData) {
-                    $changeDetectedMessages[] = 'Los datos de contacto no coinciden con los que se registraron previamente para esta persona.';
+            // busco en los registros de personas si hay coincidencias entre el número de identificación y el tipo de identificación
+            // si no hay coincidencias puede haber seleccionado una opción erronea; debería notificarlo
+            $peopleQuery->where('identity_type_id', $this->applicant['identityTypeId']);
+            $personByIdentityType = $peopleQuery->get();
+            if ($personByIdentityType->isNotEmpty()) {
+                // busco en los registros de personas si hay alguna coincidencia con los apellidos y nombres ingresados
+                // si hay coincidencias, es probable, que no haya errores por el usuario
+                // si los datos no coinciden, podría ser un error del usuario, y, debería notificarlo
+                $peopleQuery->where('name', $this->applicant['name'])
+                    ->where('last_name', $this->applicant['lastName'])
+                    ->where('second_last_name', $this->applicant['secondLastName']);
+                $personByFullName = $peopleQuery->get();
+                if ($personByFullName->isNotEmpty()) {
+                    // en los registros coincidentes, busco si hay coincidencias con los datos de contacto
+                    // si los datos de contacto no coinciden, pueden haber cambiado o ser error del usuario; debería notificarlo
+                    $personByContactData = $peopleQuery->where('address', $this->applicant['address'])
+                        ->where('phone', $this->applicant['phone'])
+                        ->where('email', $this->applicant['email'])
+                        ->first();
+                    if (!$personByContactData) {
+                        $changeDetectedMessages[] = 'Los datos de contacto no coinciden con los que se registraron previamente para esta persona.';
+                    }
+                } else {
+                    $changeDetectedMessages[] = 'Los nombres y apellidos no coinciden con los de trámites previos asociados a este número de identificación.';
                 }
             } else {
-                $changeDetectedMessages[] = 'Los nombres y apellidos no coinciden con los de trámites previos asociados a este número de identificación.';
+                $changeDetectedMessages[] = 'El tipo de identificación no coincide con el número de identificación de trámites previos asociados.';
             }
         }
         if ($this->applicant['isJuridical']) {
