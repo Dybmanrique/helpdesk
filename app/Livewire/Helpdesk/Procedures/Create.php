@@ -2,9 +2,13 @@
 
 namespace App\Livewire\Helpdesk\Procedures;
 
+use App\Models\AdministrativeUser;
+use App\Models\Derivation;
 use App\Models\DocumentType;
 use App\Models\IdentityType;
 use App\Models\LegalPerson;
+use App\Models\LegalRepresentative;
+use App\Models\Office;
 use App\Models\Person;
 use App\Models\Procedure;
 use App\Models\ProcedureCategory;
@@ -25,6 +29,7 @@ class Create extends Component
     public $procedureCategoryId = "", $documentTypeId = "", $reason, $description, $files;
     public $search, $searchBy;
     public $applicant = [
+        'isJuridical' => false,
         'name' => null,
         'lastName' => null,
         'secondLastName' => null,
@@ -36,6 +41,7 @@ class Create extends Component
         'ruc' => null,
         'companyName' => null,
     ];
+    // public $applicantType = 0;
     public $currentStep = 1;
 
     public function mount()
@@ -55,10 +61,11 @@ class Create extends Component
         return view('livewire.helpdesk.procedures.create', compact('identityTypes', 'categories', 'documentTypes'));
     }
 
-    protected function rules($identityType)
+    protected function rules()
     {
         return [
             1 => [
+                'applicant.isJuridical' => ['nullable', Rule::requiredIf(!Auth::check())],
                 'applicant.name' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
                 'applicant.lastName' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
                 'applicant.secondLastName' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
@@ -67,8 +74,8 @@ class Create extends Component
                 'applicant.address' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
                 'applicant.identityNumber' => ['nullable', Rule::requiredIf(!Auth::check()), 'numeric'],
                 'applicant.identityTypeId' => ['nullable', Rule::requiredIf(!Auth::check())],
-                'applicant.ruc' => ['nullable', Rule::requiredIf(!Auth::check() && $identityType && $identityType->name === "RUC"), 'numeric', 'digits:11'],
-                'applicant.companyName' => ['nullable', Rule::requiredIf(!Auth::check() && $identityType && $identityType->name === "RUC"), 'string'],
+                'applicant.ruc' => ['nullable', Rule::requiredIf(!Auth::check() && $this->applicant['isJuridical']), 'numeric', 'digits:11'],
+                'applicant.companyName' => ['nullable', Rule::requiredIf(!Auth::check() && $this->applicant['isJuridical']), 'string'],
             ],
             2 => [
                 'reason' => ['required'],
@@ -112,13 +119,14 @@ class Create extends Component
     #[On('applicantInformationConfirmed')]
     public function nextStep($isConfirmed = false)
     {
-        $identityType = IdentityType::find($this->applicant['identityTypeId']);
-        // $this->validate($this->rules($identityType)[$this->currentStep], [], $this->attributes());
+        // dd(['applicant' => $this->applicant['isJuridical']]);
+        // $identityType = IdentityType::find($this->applicant['identityTypeId']);
+        $this->validate($this->rules()[$this->currentStep], [], $this->attributes());
         if ($this->currentStep < 3) {
             if ($this->currentStep > 1 || $isConfirmed || Auth::check()) {
                 $this->currentStep++;
             } elseif ($this->currentStep == 1 && !Auth::check()) {
-                $changeDetectedMessages = $this->checkApplicantInformation($identityType);
+                $changeDetectedMessages = $this->checkApplicantInformation();
                 if ($changeDetectedMessages) {
                     $notifyContent = [
                         'title' => '¿Desea continuar con el proceso?',
@@ -135,7 +143,7 @@ class Create extends Component
         }
     }
 
-    public function checkApplicantInformation($identityType)
+    public function checkApplicantInformation()
     {
         // busco si hay registros de personas con el número de identidad ingresado
         $peopleQuery = Person::where('identity_number', $this->applicant['identityNumber']);
@@ -154,6 +162,7 @@ class Create extends Component
                 // si los datos de contacto no coinciden, pueden haber cambiado o ser error del usuario; debería notificarlo
                 $personByContactData = $peopleQuery->where('address', $this->applicant['address'])
                     ->where('phone', $this->applicant['phone'])
+                    ->where('email', $this->applicant['email'])
                     ->first();
                 if (!$personByContactData) {
                     $changeDetectedMessages[] = 'Los datos de contacto no coinciden con los que se registraron previamente para esta persona.';
@@ -162,7 +171,7 @@ class Create extends Component
                 $changeDetectedMessages[] = 'Los nombres y apellidos no coinciden con los de trámites previos asociados a este número de identificación.';
             }
         }
-        if ($identityType->name === "RUC") {
+        if ($this->applicant['isJuridical']) {
             $legalPersonQuery = LegalPerson::where('ruc', $this->applicant['ruc']);
             $legalPeople = $legalPersonQuery->get();
             if ($legalPeople->isNotEmpty()) {
@@ -177,6 +186,10 @@ class Create extends Component
 
     public function save(ProcedureService $procedureService)
     {
+        // dd([
+        //     'office' => $office = Office::where('name', 'Mesa de partes')->first(),
+        //     'user' => AdministrativeUser::where('office_id', $office->id)->where('is_default', true)->first()->user_id,
+        // ]);
         $identityType = IdentityType::find($this->applicant['identityTypeId']);
         $this->validate(collect($this->rules($identityType))->collapse()->toArray(), [], $this->attributes());
         $procedureState = ProcedureState::where('name', 'Pendiente')->first();
@@ -185,34 +198,40 @@ class Create extends Component
             if (Auth::check()) {
                 // si hay un usuario autenticado el solicitante es el usuario autenticado
                 $applicant = Auth::user();
-                $isJuridical = $applicant->person->identity_type->name === "RUC" ? true : false;
+                // $isJuridical = $applicant->person->identity_type->name === "RUC" ? true : false;
                 $applicantEmail = $applicant->email;
             } else {
                 // obtengo el solicitante (persona natural o representante legal) según los datos ingresados en el formulario
                 // pero, primero lo busco, y, si no existe, lo registro (en personas y/o personas jurídicas, de ser el caso)
                 $applicant = $this->findOrCreateApplicant($this->applicant);
-                $isJuridical = $applicant->identity_type->name === "RUC" ? true : false;
+                // $isJuridical = $applicant->identity_type->name === "RUC" ? true : false;
                 $applicantEmail = $this->applicant['email'];
             }
             //registro del trámite
             $procedureTicket = $procedureService->generateUniqueProcedureTicket();
-            $procedure = Procedure::create([
+            $procedure = new Procedure([
                 'reason' => $this->reason,
                 'description' => $this->description,
                 'ticket' => $procedureTicket,
-                'is_juridical' => $isJuridical,
+                'is_juridical' => $this->applicant['isJuridical'],
                 'procedure_priority_id' => $procedurePriority->id,
                 'procedure_category_id' => $this->procedureCategoryId,
                 'procedure_state_id' => $procedureState->id,
                 'document_type_id' => $this->documentTypeId,
             ]);
+            $applicant->procedures()->save($procedure);
+
             //registro de la relación del solicitante (usuario o persona) con el trámite
-            $applicant->procedures()->attach([$procedure->id]);
+            // $applicant->procedures()->attach([$procedure->id]); ❌
 
             //registro de los archivos del trámite
             if ($this->files) {
                 $procedureService->saveProcedureFiles($this->files, $applicant->id, $procedure);
             }
+
+            // registrar la derivación del trámite a mesa de partes
+            $procedureService->saveFirstProcedureDerivation($procedure);
+
             //mandar el correo con la información del trámite registrado
             $emailStatusMessage = $procedureService->sendProcedureCreatedEmail($applicantEmail, $procedure);
 
@@ -235,22 +254,28 @@ class Create extends Component
     public function findOrCreateApplicant($data)
     {
         // si los datos existen, se recupera el registro; si no, se crea uno nuevo
-        $person = Person::firstOrCreate([
+        $applicant = Person::firstOrCreate([
             'name' => $data['name'],
             'last_name' => $data['lastName'],
             'second_last_name' => $data['secondLastName'],
             'phone' => $data['phone'],
             'address' => $data['address'],
+            'email' => $data['email'],
             'identity_number' => $data['identityNumber'],
             'identity_type_id' => $data['identityTypeId'],
         ]);
-        if (IdentityType::find($data['identityTypeId'])->name === "RUC") {
-            LegalPerson::updateOrCreate(
+        if ($data['isJuridical']) {
+            $legalPerson = LegalPerson::updateOrCreate(
                 ['ruc' => $data['ruc']],
-                ['company_name' => $data['companyName'], 'person_id' => $person->id],
+                ['company_name' => $data['companyName']],
             );
+            // $applicant = LegalRepresentative::firstOrCreate([
+            //     'person_id' => $person->id,
+            //     'legal_person_id' => $legalPerson->id,
+            // ]);
+            $applicant = $legalPerson->people()->attach([$applicant->id]);
         }
-        return $person;
+        return $applicant;
     }
 
     public function searchApplicant()

@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '987654321',
             'address' => 'Ancash',
             'identity_number' => '12345678',
+            'email' => 'ever@gmail.com',
             'identity_type_id' => 1,
         ]);
 

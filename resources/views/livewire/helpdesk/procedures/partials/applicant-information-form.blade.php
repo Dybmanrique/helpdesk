@@ -80,7 +80,7 @@
             </div>
         </div>
     @else
-        <div x-data="{ identityTypeId: $wire.entangle('applicant.identityTypeId') }" class="p-3">
+        <div x-data="{ isJuridical: $wire.entangle('applicant.isJuridical') }" class="p-3">
             {{-- Campo de búsqueda --}}
             <div class="mx-4 mb-5">
                 <div class="flex relative">
@@ -116,11 +116,56 @@
                 <x-input-error :messages="$errors->get('search')" class="mt-2" />
             </div>
 
+            {{-- <div class="">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
+                    <label>
+                        <input wire:model.live="applicantType" type="radio" value="0" class="peer hidden">
+                        <div
+                            class="flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-300 group peer-checked:border-blue-500">
+                            <p class="font-medium text-gray-700 dark:text-gray-300">Persona Natural</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor"
+                                class="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </label>
+                    <label>
+                        <input wire:model.live="applicantType" type="radio" value="1" class="peer hidden">
+                        <div
+                            class="flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-300 group peer-checked:border-blue-500">
+                            <p class="font-medium text-gray-700 dark:text-gray-300">Persona Jurídica</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor"
+                                class="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </label>
+                </div>
+            </div> --}}
+
+            <div class="mt-3 space-y-2">
+                <x-input-label for="applicantType" :value="__('Tipo de solicitante: (*)')" />
+                <div class="">
+                    <input wire:model.live="applicant.isJuridical" x-model="isJuridical" type="radio" value="false" id="person">
+                    <label for="person">Persona Natural</label>
+                </div>
+                <div class="">
+                    <input wire:model.live="applicant.isJuridical" x-model="isJuridical" type="radio" value="true" id="legalPerson">
+                    <label for="legalPerson">Persona Jurídica</label>
+                </div>
+                <x-input-error :messages="$errors->get('applicant.isJuridical')" class="mt-2" />
+            </div>
+            {{-- <p>{{ $applicant['isJuridical'] }}</p> --}}
+
             <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                 {{-- Tipo de identificación --}}
                 <div>
                     <x-input-label for="identityTypeId" :value="__('Tipo de documento de identidad: (*)')" />
-                    <x-select wire:model="applicant.identityTypeId" x-model="identityTypeId" id="identityTypeId"
+                    <x-select wire:model="applicant.identityTypeId" id="identityTypeId"
                         class="block mt-1 w-full">
                         <option value="" selected disabled>Seleccione...</option>
                         @foreach ($identityTypes as $identityType)
@@ -133,7 +178,7 @@
                 <div>
                     <x-input-label for="identityNumber" :value="__('Num. Identificación: (*)')" />
                     <x-number-input model="applicant.identityNumber" id="identityNumber" class="block mt-1 w-full"
-                        type="text" placeholder="Número de identificación" maxlength="12"/>
+                        type="text" placeholder="Número de identificación" maxlength="12" />
                     <x-input-error :messages="$errors->get('applicant.identityNumber')" class="mt-2" />
                 </div>
             </div>
@@ -186,7 +231,7 @@
             </div>
 
             {{-- Identidad persona jurídica --}}
-            <template x-if="identityTypeId == 2 || identityTypeId === 'RUC'">
+            <template x-if="isJuridical === 'true'">
                 <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 10)" x-show="show" x-transition
                     class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                     {{-- Num. RUC --}}
