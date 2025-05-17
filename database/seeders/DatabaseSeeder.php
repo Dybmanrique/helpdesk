@@ -30,9 +30,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'DNI',
         ]);
         IdentityType::create([
-            'name' => 'RUC',
-        ]);
-        IdentityType::create([
             'name' => 'Carnet Extranjería',
         ]);
 
