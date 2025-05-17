@@ -7,9 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class File extends Model
 {
     protected $table = "files";
-    protected $fillable = ['name','path','procedure_id'];
+    protected $fillable = ['name', 'path'];
 
-    public function procedure(){
-        return $this->belongsTo(Procedure::class,'procedure_id','id');
+    public function actions()
+    {
+        return $this->hasMany(Action::class, 'file_id', 'id');
+    }
+    public function procedures()
+    {
+        return $this->hasMany(Procedure::class, 'file_id', 'id');
+    }
+    public function resolutions()
+    {
+        return $this->hasMany(Resolution::class, 'file_id', 'id');
     }
 }
