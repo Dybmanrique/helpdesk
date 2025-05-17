@@ -63,6 +63,12 @@ class Create extends Component
 
     protected function rules()
     {
+        $identityType = IdentityType::find($this->applicant['identityTypeId']);
+        [$min, $max] = match ($identityType?->name) {
+            'DNI' => [8, 8],
+            'Carnet Extranjería' => [9, 12],
+            default => [8, 12],
+        };
         return [
             1 => [
                 'applicant.isJuridical' => ['nullable', Rule::requiredIf(!Auth::check())],
@@ -72,7 +78,7 @@ class Create extends Component
                 'applicant.email' => ['nullable', Rule::requiredIf(!Auth::check()), 'string', 'lowercase', 'email', 'max:255', 'regex:/(.*)@(gmail\.com|hotmail\.com|outlook\.com|\.edu\.pe)$/i'],
                 'applicant.phone' => ['nullable', Rule::requiredIf(!Auth::check()), 'numeric', 'digits:9'],
                 'applicant.address' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
-                'applicant.identityNumber' => ['nullable', Rule::requiredIf(!Auth::check()), 'numeric'],
+                'applicant.identityNumber' => ['nullable', Rule::requiredIf(!Auth::check()), "between:$min,$max", 'regex:/^\d+$/'],
                 'applicant.identityTypeId' => ['nullable', Rule::requiredIf(!Auth::check())],
                 'applicant.ruc' => ['nullable', Rule::requiredIf(!Auth::check() && $this->applicant['isJuridical']), 'numeric', 'digits:11'],
                 'applicant.companyName' => ['nullable', Rule::requiredIf(!Auth::check() && $this->applicant['isJuridical']), 'string'],
@@ -86,6 +92,18 @@ class Create extends Component
             3 => [
                 'files' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:10240'],
             ],
+        ];
+    }
+
+    protected function messages()
+    {
+        $identityType = IdentityType::find($this->applicant['identityTypeId']);
+        return [
+            'applicant.identityNumber.between' => match ($identityType?->name) {
+                'DNI' => 'El número de identificación debe tener 8 dígitos.',
+                'Carnet Extranjería' => 'El número de identificación debe tener entre 9 y 12 dígitos.',
+                default => 'El número de identificación puede tener hasta 12 dígitos.',
+            },
         ];
     }
 
@@ -119,9 +137,7 @@ class Create extends Component
     #[On('applicantInformationConfirmed')]
     public function nextStep($isConfirmed = false)
     {
-        // dd(['applicant' => $this->applicant['isJuridical']]);
-        // $identityType = IdentityType::find($this->applicant['identityTypeId']);
-        $this->validate($this->rules()[$this->currentStep], [], $this->attributes());
+        $this->validate($this->rules()[$this->currentStep], $this->messages(), $this->attributes());
         if ($this->currentStep < 3) {
             if ($this->currentStep > 1 || $isConfirmed || Auth::check()) {
                 $this->currentStep++;
@@ -186,12 +202,7 @@ class Create extends Component
 
     public function save(ProcedureService $procedureService)
     {
-        // dd([
-        //     'office' => $office = Office::where('name', 'Mesa de partes')->first(),
-        //     'user' => AdministrativeUser::where('office_id', $office->id)->where('is_default', true)->first()->user_id,
-        // ]);
-        $identityType = IdentityType::find($this->applicant['identityTypeId']);
-        $this->validate(collect($this->rules($identityType))->collapse()->toArray(), [], $this->attributes());
+        $this->validate(collect($this->rules())->collapse()->toArray(), $this->messages(), $this->attributes());
         $procedureState = ProcedureState::where('name', 'Pendiente')->first();
         $procedurePriority = ProcedurePriority::where('name', 'Media')->first();
         if ($procedureState && $procedurePriority) {
@@ -220,9 +231,6 @@ class Create extends Component
                 'document_type_id' => $this->documentTypeId,
             ]);
             $applicant->procedures()->save($procedure);
-
-            //registro de la relación del solicitante (usuario o persona) con el trámite
-            // $applicant->procedures()->attach([$procedure->id]); ❌
 
             //registro de los archivos del trámite
             if ($this->files) {
