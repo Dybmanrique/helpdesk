@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProcedureResource;
 use App\Models\ActionFile;
 use App\Models\Derivation;
+use App\Models\File;
 use App\Models\Office;
 use App\Models\Procedure;
 use App\Models\ProcedureState;
@@ -19,52 +20,48 @@ class ProceduresOfficeController extends Controller
 {
     public function index()
     {
-        $offices = Office::all();
+        $userOfficeId = auth()->user()->office->id; // u office_id si tienes la FK directamente
+
+        $offices = Office::where('id', '!=', $userOfficeId)->get();
+
         return view('admin.procedures-office.index', compact('offices'));
     }
 
     public function data()
     {
         $user = Auth::user();
-        $procedures = DB::table('users as u')
-            ->join('people as po', 'po.id', '=', 'u.person_id')
-            ->join('derivations as d', 'd.user_id', '=', 'u.id')
-            ->join('procedures as p', 'p.id', '=', 'd.procedure_id')
-            ->join('procedure_states as ps', 'ps.id', '=', 'p.procedure_state_id')
-            ->join('procedure_categories as pc', 'pc.id', '=', 'p.procedure_category_id')
-            ->join('procedure_priorities as pp', 'pp.id', '=', 'p.procedure_priority_id')
-            ->join('document_types as dt', 'dt.id', '=', 'p.document_type_id')
-            ->where('d.is_active', true)
-            ->where('u.id', $user->id)
-            ->orderBy('d.id', 'desc')
-            ->select([
-                'd.id as derivation_id',
-                'p.id as procedure_id',
-                'u.email',
-                'po.name',
-                'po.last_name',
-                'po.second_last_name',
-                'po.phone',
-                'po.address',
-                'po.identity_number',
-                'p.expedient_number',
-                'p.reason',
-                'p.description',
-                'p.ticket',
-                'ps.name as procedure_state',
-                'pc.name as procedure_category',
-                'pp.name as procedure_priority',
-                'dt.name as document_type',
-            ])
-            ->get();
 
-        return DataTables::of($procedures)
-            ->addColumn('actions', function ($row) {
-                return ''; // Las acciones se renderizan en el frontend
+        $query = Derivation::query()
+            ->with([
+                'procedure.applicant',
+                'procedure.state',
+                'procedure.category',
+                'procedure.priority',
+                'procedure.document_type'
+            ])
+            ->where('is_active', true)
+            ->where('user_id', $user->id);
+
+        return DataTables::eloquent($query)
+            ->addColumn('expedient_number', fn($d) => $d->procedure->expedient_number)
+            ->addColumn('reason', fn($d) => $d->procedure->reason)
+            ->addColumn('applicant_name', function ($d) {
+                $a = $d->procedure->applicant;
+                return trim("{$a->name} {$a->last_name} {$a->second_last_name}");
             })
+            ->addColumn('applicant_email', fn($d) => $d->procedure->applicant->email)
+            ->addColumn('applicant_identity', fn($d) => $d->procedure->applicant->identity_number)
+            ->addColumn('document_type', fn($d) => $d->procedure->document_type->name ?? '')
+            ->addColumn('procedure_category', fn($d) => $d->procedure->category->name ?? '')
+            ->addColumn('procedure_priority', fn($d) => $d->procedure->priority->name ?? '')
+            ->addColumn('procedure_state', fn($d) => $d->procedure->state->name ?? '')
+            ->addColumn('actions', fn() => '')
+
             ->rawColumns(['actions'])
-            ->make(true);
+            ->toJson();
     }
+
+
 
     public function info_procedure(Request $request)
     {
@@ -77,9 +74,9 @@ class ProceduresOfficeController extends Controller
             'category',
             'priority',
             'document_type',
-            'user.person',
-            'files',
-            'actions.action_files'
+            'procedure_files.file',
+            'actions.action_files',
+            'applicant' // <-- aquí
         ])->find($request->procedure_id);
 
         if (!$procedure) {
@@ -96,15 +93,25 @@ class ProceduresOfficeController extends Controller
     {
         $year = now()->year;
 
-        $lastProcedure = Procedure::whereYear('created_at', $year)->orderByDesc('created_at')->first();
+        // Obtener todos los procedimientos del año actual
+        $procedures = Procedure::whereYear('created_at', $year)
+            ->whereNotNull('expedient_number')
+            ->get();
 
-        $lastNumber = 0;
+        $maxNumber = 0;
 
-        if ($lastProcedure && preg_match('/EXP-(\d+)-' . $year . '/', $lastProcedure->expedient_number, $matches)) {
-            $lastNumber = (int) $matches[1];
+        // Iterar y encontrar el valor numérico más alto
+        foreach ($procedures as $procedure) {
+            if (preg_match('/EXP-(\d+)-' . $year . '/', $procedure->expedient_number, $matches)) {
+                $currentNumber = (int) $matches[1];
+                if ($currentNumber > $maxNumber) {
+                    $maxNumber = $currentNumber;
+                }
+            }
         }
 
-        $nextNumber = $lastNumber + 1;
+        // El próximo número será el máximo + 1
+        $nextNumber = $maxNumber + 1;
 
         $expedientNumber = 'EXP-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT) . '-' . $year;
 
@@ -154,6 +161,8 @@ class ProceduresOfficeController extends Controller
                     'office_id' => 'required|integer|exists:offices,id',
                     'user_id' => 'required|integer|exists:users,id',
                 ]);
+                $office = Office::find($request->office_id);
+                $request->comment = "De {$derivation->office->name} a {$office->name}";
                 $will_continue_active_derivation = 0; // Inactivate current derivation
                 break;
 
@@ -191,10 +200,14 @@ class ProceduresOfficeController extends Controller
             $path = $request->file->store('helpdesk/procedure_files/auth/' . $derivation->user->id . '/' . $folder);
 
             // Create file record in database
-            ActionFile::create([
+            $file = File::create([
                 'name' => $request->file->getClientOriginalName(),
                 'path' => $path,
-                'action_id' => $action->id
+            ]);
+
+            ActionFile::create([
+                'action_id' => $action->id,
+                'file_id' => $file->id
             ]);
         }
 
@@ -203,6 +216,7 @@ class ProceduresOfficeController extends Controller
             Derivation::create([
                 'procedure_id' => $derivation->procedure->id,
                 'user_id' => $request->user_id,
+                'office_id' => $request->office_id,
                 'is_active' => 1
             ]);
         }

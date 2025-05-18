@@ -222,7 +222,7 @@
                                 <th>ASUNTO</th>
                                 <th>SOLICITANTE</th>
                                 <th>CORREO</th>
-                                <th>CELULAR</th>
+                                <th>IDENTIFICACIÓN</th>
                                 <th>T. DOCUMENTO</th>
                                 <th>CATEGORÍA</th>
                                 <th>PRIORIDAD</th>

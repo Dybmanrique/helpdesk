@@ -36,9 +36,9 @@ class Procedure extends Model
     {
         return $this->belongsTo(ProcedureState::class, 'procedure_state_id', 'id');
     }
-    public function files()
+    public function procedure_files()
     {
-        return $this->hasMany(File::class, 'procedure_id', 'id');
+        return $this->hasMany(ProcedureFile::class, 'procedure_id', 'id');
     }
     public function derivations()
     {

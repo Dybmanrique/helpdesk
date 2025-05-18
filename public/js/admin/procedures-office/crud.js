@@ -10,69 +10,63 @@ import { Utils } from '/js/utils.js';
         table = $('#table').DataTable({
             processing: true,
             serverSide: false,
+            ordering: false,
             ajax: "/admin/tramites-mi-oficina/data",
-            columns: [{
-                data: null,
-                name: 'id',
-                render: function (data, type, row, meta) {
-                    return meta.row + 1;
+            columns: [
+                {
+                    data: null,
+                    name: 'id',
+                    render: (data, type, row, meta) => meta.row + 1
+                },
+                {
+                    data: 'expedient_number',
+                    name: 'expedient_number',
+                    render: data => data ?? 'No tiene'
+                },
+                {
+                    data: 'reason',
+                    name: 'reason'
+                },
+                {
+                    data: 'applicant_name',
+                    name: 'applicant_name'
+                },
+                {
+                    data: 'applicant_email',
+                    name: 'applicant_email'
+                },
+                {
+                    data: 'applicant_identity',
+                    name: 'applicant_identity'
+                },
+                {
+                    data: 'document_type',
+                    name: 'document_type'
+                },
+                {
+                    data: 'procedure_category',
+                    name: 'procedure_category'
+                },
+                {
+                    data: 'procedure_priority',
+                    name: 'procedure_priority'
+                },
+                {
+                    data: 'procedure_state',
+                    name: 'procedure_state'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false,
+                    render: function () {
+                        return `
+                        <button class="btn btn-primary btn-sm fw-bold btn-edit text-nowrap" data-coreui-toggle="modal" data-coreui-target="#modal">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
+                        </button>`;
+                    }
                 }
-            },
-            {
-                data: 'expedient_number',
-                name: 'expedient_number',
-                render: function (data, type, row, meta) {
-                    return `${data ?? 'No tiene'}`;
-                }
-            },
-            {
-                data: 'reason',
-                name: 'reason'
-            },
-            {
-                data: null,
-                name: 'person',
-                render: function (data, type, row, meta) {
-                    return `${data.name} ${data.last_name} ${data.second_last_name}`;
-                }
-            },
-            {
-                data: 'email',
-                name: 'email'
-            },
-            {
-                data: 'phone',
-                name: 'phone'
-            },
-            {
-                data: 'document_type',
-                name: 'document_type'
-            },
-            {
-                data: 'procedure_category',
-                name: 'procedure_category'
-            },
-            {
-                data: 'procedure_priority',
-                name: 'procedure_priority'
-            },
-            {
-                data: 'procedure_state',
-                name: 'procedure_state'
-            },
-            {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    return `
-                            <button class="btn btn-primary btn-sm fw-bold btn-edit" data-coreui-toggle="modal" data-coreui-target="#modal">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
-                            </button>
-                        `;
-                }
-            }
             ],
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
@@ -106,8 +100,8 @@ import { Utils } from '/js/utils.js';
     $(`#table tbody`).on('click', '.btn-edit', function () {
 
         let data = table.row($(this).parents('tr')).data();
-        procedure_id = data['procedure_id'];
-        derivation_id = data['derivation_id'];
+        procedure_id = data.procedure.id;
+        derivation_id = data.id;
 
         showInfoProcedure(procedure_id);
         document.getElementById('formSave').reset();
@@ -115,7 +109,7 @@ import { Utils } from '/js/utils.js';
     });
 
     async function showInfoProcedure(procedure_id) {
-        try{
+        try {
             showLoader('modalLoader', 'modalContent');
             const response = await fetch('/admin/tramites-mi-oficina/info-tramite', {
                 method: 'POST',
@@ -126,26 +120,27 @@ import { Utils } from '/js/utils.js';
                 body: JSON.stringify({ procedure_id: procedure_id })
             });
     
-            if(!response.ok){
-                Toast.fire({icon: 'error', title: 'Algo salió mal'});
+            if (!response.ok) {
+                Toast.fire({ icon: 'error', title: 'Algo salió mal' });
                 return;
             }
     
             const dataResponse = await response.json();
-            if(!dataResponse.success){
-                Toast.fire({icon: 'info', title: data.message});
+            if (!dataResponse.success) {
+                Toast.fire({ icon: 'info', title: data.message });
                 return;
             }
     
             completeFieldsProcedure(dataResponse.data);
             showLoader('modalLoader', 'modalContent', false);
 
-        } catch(Exception){
-            Toast.fire({icon: 'error', title: 'Algo salió mal'});
+        } catch (Exception) {
+            Toast.fire({ icon: 'error', title: 'Algo salió mal' });
+            console.error(Exception);
         }
     }
 
-    function completeFieldsProcedure(data){
+    function completeFieldsProcedure(data) {
         document.getElementById('expedientNumber').value = data.expedient_number;
         document.getElementById('ticketModal').textContent = data.ticket;
         document.getElementById('reasonModal').textContent = data.reason;
@@ -154,12 +149,12 @@ import { Utils } from '/js/utils.js';
         document.getElementById('categoryModal').textContent = data.category;
         document.getElementById('documentTypeModal').textContent = data.document_type;
         document.getElementById('priorityModal').textContent = data.priority;
-        document.getElementById('personModal').textContent = `${data.user.last_name} ${data.user.second_last_name} ${data.user.name}`;
-        document.getElementById('personPhoneModal').textContent = data.user.phone;
-        document.getElementById('personEmailModal').textContent = data.user.email;
-        
+        document.getElementById('personModal').textContent = `${data.applicant.last_name} ${data.applicant.second_last_name} ${data.applicant.name}`;
+        document.getElementById('personPhoneModal').textContent = data.applicant.phone;
+        document.getElementById('personEmailModal').textContent = data.applicant.email;
+
         const expedientNumber = document.getElementById('expedientNumber');
-        
+
         if (data.expedient_number === null || data.expedient_number === "") {
             expedientNumber.readOnly = false;
             showButtonsEditExpedient(true, false);
@@ -170,7 +165,7 @@ import { Utils } from '/js/utils.js';
 
         const filesModal = document.getElementById('filesModal');
         filesModal.innerHTML = '';
-        data.files.forEach(file => {
+        data.procedure_files.forEach(file => {
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.href = `/ver-archivo/${file.id}`;
@@ -183,16 +178,16 @@ import { Utils } from '/js/utils.js';
         const timelineModal = document.getElementById('timelineModal');
         timelineModal.innerHTML = '';
         data.actions.forEach(action => {
-            timelineModal.insertAdjacentHTML('beforeend',setTimelineTemplate(action));
+            timelineModal.insertAdjacentHTML('beforeend', setTimelineTemplate(action));
         });
     }
 
     const actionsMap = {
-        'iniciar': 'Se inició el trámite', 
-        'comentar': 'Se agregó un comentario', 
-        'derivar': 'Se derivó a otra oficina', 
-        'concluir': 'Se concluyó el trámite', 
-        'anular': 'Se anuló el trámite', 
+        'iniciar': 'Se inició el trámite',
+        'comentar': 'Se agregó un comentario',
+        'derivar': 'Se derivó a otra oficina',
+        'concluir': 'Se concluyó el trámite',
+        'anular': 'Se anuló el trámite',
         'archivar': 'Se archivó el trámite'
     }
 
@@ -200,13 +195,13 @@ import { Utils } from '/js/utils.js';
         // Formatear fecha y hora
         let formattedDate = '';
         let formattedTime = '';
-        
+
         if (action.created_at) {
             const dateTime = Utils.formatDateTimeString(action.created_at);
             formattedDate = dateTime.date;
             formattedTime = dateTime.time;
         }
-    
+
         // Preparar el template de archivos solo si hay archivos
         let filesSection = '';
         if (action.files && action.files.length > 0) {
@@ -215,20 +210,20 @@ import { Utils } from '/js/utils.js';
                 templateFiles += `<li><a target="_blank" href="${file.id}">${file.name}</a></li>`;
             });
             templateFiles += '</ol>';
-            
+
             filesSection = `
                 <br>
                 <span>Archivos Adjuntos: </span>
                 ${templateFiles}
             `;
         }
-    
+
         // Preparar la sección de descripción solo si hay descripción
         let descriptionSection = '';
         if (action.comment) {
             descriptionSection = `<div style="white-space: pre-line">${action.comment}</div>`;
         }
-    
+
         const template = `
         <div>
             <i class="fas bg-blue"></i>
@@ -250,7 +245,7 @@ import { Utils } from '/js/utils.js';
                 </div>
             </div>
         </div>`;
-    
+
         return template;
     }
 
@@ -275,7 +270,7 @@ import { Utils } from '/js/utils.js';
                     comment.required = true;
                     showDerivationSection(false)
                     break;
-            
+
                 default:
                     showDerivationSection(false);
                     break;
@@ -285,11 +280,11 @@ import { Utils } from '/js/utils.js';
 
     function showDerivationSection(show = true) {
         const container_derivation = document.getElementById('container_derivation');
-        if(show){
+        if (show) {
             container_derivation.classList.remove('d-none');
             office_id.required = true;
             user_id.required = true;
-        } else{
+        } else {
             container_derivation.classList.add('d-none');
             office_id.required = false;
             user_id.required = false;
@@ -299,29 +294,29 @@ import { Utils } from '/js/utils.js';
     const generateExpedientNumber = document.getElementById('generateExpedientNumber');
     generateExpedientNumber.addEventListener('click', async () => {
         showLoader('expedientNumberLoader', 'expedientNumber');
-        
+
         try {
             const response = await fetch('/admin/tramites-mi-oficina/generar-numero-expediente');
 
-            if(!response.ok){
-                Toast.fire({icon: 'error', title: 'Ocurrió un error en el servidor'});
+            if (!response.ok) {
+                Toast.fire({ icon: 'error', title: 'Ocurrió un error en el servidor' });
                 return;
             }
 
             const data = await response.json();
-            if(!data.success){
-                Toast.fire({icon: 'info', title: data.message});
+            if (!data.success) {
+                Toast.fire({ icon: 'info', title: data.message });
                 return;
             }
 
             const expedientNumber = document.getElementById('expedientNumber');
             expedientNumber.value = data.data;
         } catch (Exception) {
-            Toast.fire({icon: 'error', title: 'Algo salió mal, intentelo nuevamente'});
+            Toast.fire({ icon: 'error', title: 'Algo salió mal, intentelo nuevamente' });
         } finally {
             showLoader('expedientNumberLoader', 'expedientNumber', false);
         }
-        
+
     })
 
     const office_id = document.getElementById('office_id');
@@ -337,14 +332,14 @@ import { Utils } from '/js/utils.js';
             body: JSON.stringify({ office_id: office_id })
         });
 
-        if(!response.ok){
-            Toast.fire({icon: 'error', title: 'Algo salió mal'});
+        if (!response.ok) {
+            Toast.fire({ icon: 'error', title: 'Algo salió mal' });
             return;
         }
 
         const data = await response.json();
-        if(!data.success){
-            Toast.fire({icon: 'info', title: data.message});
+        if (!data.success) {
+            Toast.fire({ icon: 'info', title: data.message });
             return;
         }
 
@@ -396,7 +391,7 @@ import { Utils } from '/js/utils.js';
         formData.append('office_id', document.getElementById('office_id').value);
         formData.append('user_id', document.getElementById('user_id').value);
         formData.append('comment', document.getElementById('comment').value);
-        
+
         const fileInput = document.getElementById('file');
         if (fileInput.files.length > 0) {
             formData.append('file', fileInput.files[0]);
@@ -411,22 +406,22 @@ import { Utils } from '/js/utils.js';
                 },
                 body: formData
             });
-    
-            
+
+
             if (response.ok) {
                 const result = await response.json();
                 console.log(result);
-                Toast.fire({icon: 'success', 'title': result.message});
+                Toast.fire({ icon: 'success', 'title': result.message });
                 table.ajax.reload();
                 form.reset();
                 showDerivationSection(false);
 
-                if(result.will_continue_active_derivation){
+                if (result.will_continue_active_derivation) {
                     showInfoProcedure(procedure_id);
-                } else{
+                } else {
                     $('#modal').modal('hide');
                 }
-                
+
             } else {
                 console.error(result);
             }
@@ -452,7 +447,7 @@ import { Utils } from '/js/utils.js';
 
     const buttonsEditExpedientContainer = document.getElementById('buttonsEditExpedientContainer');
 
-    function showButtonsEditExpedient(show = true, includeCancelButton = true){
+    function showButtonsEditExpedient(show = true, includeCancelButton = true) {
         if (show) {
             editExpedientNumber.classList.add('d-none');
             buttonsEditExpedientContainer.classList.add('d-flex');
@@ -464,7 +459,7 @@ import { Utils } from '/js/utils.js';
             buttonsEditExpedientContainer.classList.add('d-none');
             expedientNumber.readOnly = true;
         }
-        if(includeCancelButton){
+        if (includeCancelButton) {
             cancelExpedientNumber.classList.remove('d-none');
         } else {
             cancelExpedientNumber.classList.add('d-none');
@@ -474,12 +469,12 @@ import { Utils } from '/js/utils.js';
     const saveExpedientNumber = document.getElementById('saveExpedientNumber');
     const formExpedientNumber = document.getElementById('formExpedientNumber');
     saveExpedientNumber.addEventListener('click', async () => {
-        if(!formExpedientNumber.checkValidity()){
+        if (!formExpedientNumber.checkValidity()) {
             formExpedientNumber.reportValidity();
             return;
         }
 
-        try{
+        try {
             const response = await fetch('/admin/tramites-mi-oficina/guardar-numero-expediente', {
                 method: 'POST',
                 headers: {
@@ -488,33 +483,33 @@ import { Utils } from '/js/utils.js';
                 },
                 body: JSON.stringify({ procedure_id: procedure_id, expedient_number: expedientNumber.value })
             });
-    
-            
-            if(!response.ok){
-                Toast.fire({icon: 'error', title: 'Ocurrió un error en el servidor'});
+
+
+            if (!response.ok) {
+                Toast.fire({ icon: 'error', title: 'Ocurrió un error en el servidor' });
                 return;
             }
-            
+
             const dataResponse = await response.json();
-    
-            if(!dataResponse.success){
-                Toast.fire({icon: 'info', title: dataResponse.message});
+
+            if (!dataResponse.success) {
+                Toast.fire({ icon: 'info', title: dataResponse.message });
                 return;
             }
-    
-            Toast.fire({icon: 'success', title: dataResponse.message});
+
+            Toast.fire({ icon: 'success', title: dataResponse.message });
             showButtonsEditExpedient(false);
             table.ajax.reload();
-        } catch(Exception){
-            Toast.fire({icon: 'error', title: 'Algo salió mal, inténtelo nuevamente'});
+        } catch (Exception) {
+            Toast.fire({ icon: 'error', title: 'Algo salió mal, inténtelo nuevamente' });
         }
     });
 
     //Prevenir el comportamiento por defecto de los forms
-    document.getElementById('formExpedientNumber').addEventListener('submit', function(event) {
+    document.getElementById('formExpedientNumber').addEventListener('submit', function (event) {
         event.preventDefault();
     });
-    document.getElementById('formSave').addEventListener('submit', function(event) {
+    document.getElementById('formSave').addEventListener('submit', function (event) {
         event.preventDefault();
     });
 })();

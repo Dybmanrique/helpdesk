@@ -25,20 +25,24 @@ class ProcedureResource extends JsonResource
             'category' => $this->category->name,
             'priority' => $this->priority->name,
             'document_type' => $this->document_type->name,
-            'user' => $this->user ? [
-                'email' => $this->user->email,
-                'name' => optional($this->user->person)->name,
-                'last_name' => optional($this->user->person)->last_name,
-                'second_last_name' => optional($this->user->person)->second_last_name,
-                'identity_number' => optional($this->user->person)->identity_number,
-                'address' => optional($this->user->person)->address,
-                'phone' => optional($this->user->person)->phone,
-            ] : null,
-            'files' => $this->files->map(function ($file) {
+            'applicant' => $this->whenLoaded('applicant', function () {
                 return [
-                    'id' => $file->id,
-                    'name' => $file->name,
-                    'path' => $file->path,
+                    'type' => class_basename($this->applicant_type),
+                    'id' => $this->applicant->id,
+                    'name' => $this->applicant->name ?? null, // Suponiendo que tiene name
+                    'last_name' => $this->applicant->last_name ?? null, // Suponiendo que tiene name
+                    'second_last_name' => $this->applicant->second_last_name ?? null, // Suponiendo que tiene name
+                    'email' => $this->applicant->email ?? null, // Si aplica
+                    'phone' => $this->applicant->phone ?? null, // Si aplica
+                    // puedes adaptar según el tipo de modelo
+                ];
+            }),
+            'procedure_files' => $this->procedure_files->map(function ($procedure_file) {
+                return [
+                    'id' => $procedure_file->file->id,
+                    'name' => $procedure_file->file->name,
+                    'path' => $procedure_file->file->path,
+                    'uuid' => $procedure_file->file->uuid,
                 ];
             }),
             'actions' => $this->actions->map(function ($action) {
@@ -47,11 +51,12 @@ class ProcedureResource extends JsonResource
                     'comment' => $action->comment,
                     'action' => $action->action,
                     'created_at' => $action->created_at->toDateTimeString(),
-                    'files' => $action->action_files->map(function ($file) {
+                    'files' => $action->action_files->map(function ($action_file) {
                         return [
-                            'id' => $file->id,
-                            'name' => $file->name,
-                            'path' => $file->path, // suponiendo que tienes un campo o método `url`
+                            'id' => $action_file->file->id,
+                            'name' => $action_file->file->name,
+                            'path' => $action_file->file->path, // suponiendo que tienes un campo o método `url`
+                            'uuid' => $action_file->file->uuid,
                         ];
                     }),
                 ];
