@@ -1,12 +1,7 @@
 'use strict';
 
 let table;
-
-document.addEventListener('livewire:initialized', () => {
-    Livewire.on('refreshTable', () => {
-        table.ajax.reload();
-    });
-});
+import { Utils } from '/js/utils.js';
 
 (function () {
     initDataTable();
@@ -14,106 +9,88 @@ document.addEventListener('livewire:initialized', () => {
     function initDataTable() {
         table = $('#table').DataTable({
             processing: true,
-            serverSide: false,
+            serverSide: true,
+            ordering: false,
             ajax: "/admin/todos-los-tramites/data",
-            columns: [{
-                data: null,
-                name: 'id',
-                render: function (data, type, row, meta) {
-                    return meta.row + 1;
+            columns: [
+                {
+                    data: null,
+                    name: 'id',
+                    render: (data, type, row, meta) => meta.row + 1
+                },
+                {
+                    data: 'expedient_number',
+                    name: 'expedient_number',
+                    render: data => data ?? 'No tiene'
+                },
+                {
+                    data: 'reason',
+                    name: 'reason'
+                },
+                {
+                    data: 'applicant_name',
+                    name: 'applicant_name'
+                },
+                {
+                    data: 'applicant_identity',
+                    name: 'applicant_identity'
+                },
+                {
+                    data: 'document_type_name',
+                    name: 'document_type_name'
+                },
+                {
+                    data: 'category_name',
+                    name: 'category_name'
+                },
+                {
+                    data: 'priority_name',
+                    name: 'priority_name'
+                },
+                {
+                    data: 'state_name',
+                    name: 'state_name'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false,
+                    render: function () {
+                        return `
+                    <button class="btn btn-primary btn-sm fw-bold btn-edit text-nowrap" data-coreui-toggle="modal" data-coreui-target="#modal">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
+                    </button>`;
+                    }
                 }
-            },
-            {
-                data: 'ticket',
-                name: 'ticket'
-            },
-            {
-                data: 'reason',
-                name: 'reason'
-            },
-            {
-                data: null,
-                name: 'person',
-                render: function (data, type, row, meta) {
-                    return `${data.user.person.name} ${data.user.person.last_name} ${data.user.person.second_last_name}`;
-                }
-            },
-            {
-                data: 'user.email',
-                name: 'email'
-            },
-            {
-                data: 'user.person.phone',
-                name: 'phone'
-            },
-            {
-                data: 'document_type.name',
-                name: 'document_type'
-            },
-            {
-                data: 'procedure_category.name',
-                name: 'procedure_category'
-            },
-            {
-                data: 'procedure_priority.name',
-                name: 'procedure_priority'
-            },
-            {
-                data: 'procedure_state.name',
-                name: 'procedure_state'
-            },
-            {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    return `
-                            <button class="btn btn-primary btn-sm fw-bold btn-edit" data-coreui-toggle="modal" data-coreui-target="#modal">
-                                <i class="fa-solid fa-pen-to-square"></i> EDITAR
-                            </button>
-                            <button class="btn btn-danger btn-sm fw-bold btn-delete"">
-                                <i class="fa-solid fa-trash-can"></i> ELIMINAR
-                            </button>
-                        `;
-                }
-            }
             ],
+            // Configuración para la búsqueda
+            // search: {
+            //     return: true,    // Envía búsqueda al servidor
+            // },
+            // searchDelay: 500,    // Retraso en milisegundos antes de buscar
             language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json',
+                // searchPlaceholder: "Buscar por expediente, asunto, solicitante o identificación"
             },
             columnDefs: [{
                 className: 'dt-body-left dt-head-left text-nowrap',
-                targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]
             }, {
                 className: 'dt-body-center dt-head-center text-nowrap',
-                targets: [10]
-            },]
+                targets: [9]
+            }, {
+                // Columnas que serán buscables (especificar solo estas columnas)
+                searchable: true,
+                targets: [1, 2, 3, 4] // Expediente, Razón, Solicitante, Identidad
+            }, {
+                searchable: false,
+                targets: [0, 5, 6, 7, 8, 9] // El resto de columnas no son buscables
+            }]
         });
+
+        // Opcional: Personalizar el campo de búsqueda
+        // $('#table_filter input').attr('placeholder', 'Expediente, asunto, solicitante, identificación...');
     }
-
-    $(`#table tbody`).on('click', '.btn-edit', function () {
-        document.getElementById('modalTitle').textContent = "MODIFICAR TIPO DE DOCUMENTO";
-
-        let data = table.row($(this).parents('tr')).data();
-        Livewire.dispatch('editItem', {
-            id: data['id'],
-            name: data['name'],
-        });
-    });
-
-    $(`#table tbody`).on('click', '.btn-delete', async function () {
-        let data = table.row($(this).parents('tr')).data();
-        if (await confirmationMessage()) {
-            Livewire.dispatch('deleteItem', {
-                id: data['id']
-            });
-        }
-    });
-
-    $('#modal').on('hidden.coreui.modal', function () {
-        document.getElementById('modalTitle').innerText = "REGISTRAR TIPO DE DOCUMENTO";
-        Livewire.dispatch('resetInputs');
-    });
 
 })();
