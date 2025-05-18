@@ -283,11 +283,10 @@ class Create extends Component
                 ['ruc' => $data['ruc']],
                 ['company_name' => $data['companyName']],
             );
-            // $applicant = LegalRepresentative::firstOrCreate([
-            //     'person_id' => $person->id,
-            //     'legal_person_id' => $legalPerson->id,
-            // ]);
-            $applicant = $legalPerson->people()->attach([$applicant->id]);
+            $applicant = LegalRepresentative::firstOrCreate([
+                'person_id' => $applicant->id,
+                'legal_person_id' => $legalPerson->id,
+            ]);
         }
         return $applicant;
     }
