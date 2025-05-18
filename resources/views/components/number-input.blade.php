@@ -1,7 +1,7 @@
 @props(['disabled' => false, 'value' => '', 'model' => null])
 {{-- value: se usará cuando NO se use livewire; y, model: se usará cuando se use livewire --}}
 <div
-    @if ($model) x-data="{ number: $wire.entangle('{{ $model }}') }" @else x-data="{ number: @js($value) }" @endif>
+    @if ($model) x-data="{ number: $wire.entangle('{{ $model }}') }" @else x-data="{ number: @js($value) }" @endif class="w-full">
     <input x-model="number" @disabled($disabled)
         @input="number = number.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
         {{ $attributes->merge([
