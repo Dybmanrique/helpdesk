@@ -217,13 +217,11 @@ class Create extends Component
             if (Auth::check()) {
                 // si hay un usuario autenticado el solicitante es el usuario autenticado
                 $applicant = Auth::user();
-                // $isJuridical = $applicant->person->identity_type->name === "RUC" ? true : false;
                 $applicantEmail = $applicant->email;
             } else {
                 // obtengo el solicitante (persona natural o representante legal) según los datos ingresados en el formulario
                 // pero, primero lo busco, y, si no existe, lo registro (en personas y/o personas jurídicas, de ser el caso)
                 $applicant = $this->findOrCreateApplicant($this->applicant);
-                // $isJuridical = $applicant->identity_type->name === "RUC" ? true : false;
                 $applicantEmail = $this->applicant['email'];
             }
             //registro del trámite
@@ -294,42 +292,49 @@ class Create extends Component
         return $applicant;
     }
 
-    public function searchApplicant()
+    public function searchPerson()
     {
         $this->validate([
-            'search' => 'required|numeric',
-            'searchBy' => 'required',
+            'applicant.identityNumber' => 'required',
+            'applicant.identityTypeId' => 'required',
         ], [], [
-            'search' => 'buscar',
+            'applicant.identityNumber' => 'número de identificación',
+            'applicant.identityTypeId' => 'tipo de identidad',
         ]);
-        $identityType = IdentityType::find($this->searchBy);
-        if ($identityType->name === "RUC") {
-            $legalPerson = LegalPerson::where('ruc', $this->search)->latest('updated_at')->first();
-            $person = $legalPerson ? $legalPerson->person : null;
-        } elseif ($identityType->name === "DNI") {
-            $person = Person::where('identity_number', $this->search)->where(function ($query) {
-                $query->where('identity_type_id', $this->searchBy)
-                    ->orWhere('identity_type_id', IdentityType::firstWhere('name', 'RUC')->id);
-            })->latest('updated_at')->first();
-        } else {
-            $person = Person::where('identity_number', $this->search)->where('identity_type_id', $this->searchBy)->latest('updated_at')->first();
-        }
+        $person = Person::where('identity_number', $this->applicant['identityNumber'])
+            ->where('identity_type_id', $this->applicant['identityTypeId'])->first();
         if ($person) {
             $this->applicant['identityTypeId'] = $person->identity_type_id;
             $this->applicant['identityNumber'] = $person->identity_number;
             $this->applicant['lastName'] = $person->last_name;
             $this->applicant['secondLastName'] = $person->second_last_name;
             $this->applicant['name'] = $person->name;
-            $this->applicant['email'] = ''; // no se deben mostrar por seguridad
-            $this->applicant['phone'] = ''; // no se deben mostrar por seguridad
-            $this->applicant['address'] = ''; // no se deben mostrar por seguridad
-            $this->applicant['ruc'] = $person->legal_person->ruc ?? '';
-            $this->applicant['companyName'] = $person->legal_person->company_name ?? '';
         } else {
             // $this->dispatch('resetApplicantInformationForm');
-            $this->reset(['applicant']);
+            $this->applicant['identityNumber'] = null;
+            $this->applicant['lastName'] = null;
+            $this->applicant['secondLastName'] = null;
+            $this->applicant['name'] = null;
             $this->dispatch('notify', ['message' => 'No se encontraron resultados.', 'code' => '500']);
         }
-        $this->reset(['search']);
+    }
+
+    public function searchLegalPerson()
+    {
+        $this->validate([
+            'applicant.ruc' => 'required',
+        ], [], [
+            'applicant.ruc' => 'RUC',
+        ]);
+        $legalPerson = LegalPerson::where('ruc', $this->applicant['ruc'])->latest('updated_at')->first();
+        if ($legalPerson) {
+            $this->applicant['ruc'] = $legalPerson->ruc;
+            $this->applicant['companyName'] = $legalPerson->company_name;
+        } else {
+            // $this->dispatch('resetApplicantInformationForm');
+            $this->applicant['ruc'] = null;
+            $this->applicant['companyName'] = null;
+            $this->dispatch('notify', ['message' => 'No se encontraron resultados.', 'code' => '500']);
+        }
     }
 }
