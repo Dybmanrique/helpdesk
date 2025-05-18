@@ -98,14 +98,14 @@ return [
         [
             'text' => 'Usuarios administrativos',
             'route' => 'admin.administrative_users.index',
-            'icon' => 'fa-solid fa-file-contract',
+            'icon' => 'fa-solid fa-user-tie',
             'active' => 'admin/usuarios-administrativos*',
             // 'can' => ['view-colors'],
         ],
         [
             'text' => 'Usuarios públicos',
             'route' => 'admin.public_users.index',
-            'icon' => 'fa-solid fa-file-contract',
+            'icon' => 'fa-solid fa-user-tag',
             'active' => 'admin/usuarios-publicos*',
             // 'can' => ['view-colors'],
         ],
