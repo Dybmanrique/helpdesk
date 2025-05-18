@@ -85,18 +85,17 @@
             <div class="mt-3 space-y-2">
                 <x-input-label for="applicantType" :value="__('Tipo de solicitante: (*)')" />
                 <div class="">
-                    <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="false"
+                    <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="0"
                         id="person">
                     <label for="person">Persona Natural</label>
                 </div>
                 <div class="">
-                    <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="true"
+                    <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="1"
                         id="legalPerson">
                     <label for="legalPerson">Persona Jurídica</label>
                 </div>
                 <x-input-error :messages="$errors->get('applicant.isJuridical')" class="mt-2" />
             </div>
-            {{-- <p>{{ $applicant['isJuridical'] }}</p> --}}
 
             <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                 {{-- Tipo de identificación --}}
@@ -190,7 +189,7 @@
             </div>
 
             {{-- Identidad persona jurídica --}}
-            <template x-if="isJuridical === 'true'">
+            <template x-if="isJuridical === '1'">
                 <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 10)" x-show="show" x-transition
                     class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                     {{-- Num. RUC --}}
