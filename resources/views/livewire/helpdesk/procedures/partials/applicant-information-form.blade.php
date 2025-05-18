@@ -81,92 +81,27 @@
         </div>
     @else
         <div x-data="{ isJuridical: $wire.entangle('applicant.isJuridical') }" class="p-3">
-            {{-- Campo de búsqueda --}}
-            <div class="mx-4 mb-5">
-                <div class="flex relative">
-                    <select wire:model="searchBy" id="searchBy" title="Buscar por..."
-                        class="w-full sm:w-auto max-w-24 sm:max-w-full text-sm truncate pl-5 rounded-l-full bg-gray-50 dark:bg-slate-900 border-gray-500 dark:border-gray-600 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600">
-                        @foreach ($identityTypes as $identityType)
-                            <option value="{{ $identityType->id }}">{{ $identityType->name }}</option>
-                        @endforeach
-                    </select>
-                    <input wire:model="search" id="search" type="search"
-                        class="flex pl-5 w-full rounded-r-full bg-white dark:bg-slate-900 border-gray-500 dark:border-gray-600 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600"
-                        placeholder="Buscar..." />
-                    <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchApplicant"
-                        type="button"
-                        class="absolute inset-y-0 right-0 flex items-center px-3 rounded-r-full border bg-gray-50 dark:bg-slate-900 border-gray-500 dark:border-gray-600">
-                        <span wire:loading.class="hidden" wire:target="searchApplicant">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                                stroke-linecap="round" stroke-linejoin="round" class="h-5" fill="none"
-                                stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8" />
-                                <path d="m21 21-4.3-4.3" />
-                            </svg>
-                        </span>
-                        <span wire:loading wire:target="searchApplicant" class="animate-spin">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                                fill="currentColor">
-                                <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
-                                <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-                <x-input-error :messages="$errors->get('search')" class="mt-2" />
-            </div>
-
-            {{-- <div class="">
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 p-4">
-                    <label>
-                        <input wire:model.live="applicantType" type="radio" value="0" class="peer hidden">
-                        <div
-                            class="flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-300 group peer-checked:border-blue-500">
-                            <p class="font-medium text-gray-700 dark:text-gray-300">Persona Natural</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor"
-                                class="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </label>
-                    <label>
-                        <input wire:model.live="applicantType" type="radio" value="1" class="peer hidden">
-                        <div
-                            class="flex items-center justify-between px-4 py-2 border-2 rounded-lg cursor-pointer text-sm border-gray-300 group peer-checked:border-blue-500">
-                            <p class="font-medium text-gray-700 dark:text-gray-300">Persona Jurídica</p>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor"
-                                class="w-9 h-9 text-blue-600 invisible group-[.peer:checked+&]:visible">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </label>
-                </div>
-            </div> --}}
-
+            {{-- Tipo de solicitante --}}
             <div class="mt-3 space-y-2">
                 <x-input-label for="applicantType" :value="__('Tipo de solicitante: (*)')" />
                 <div class="">
-                    <input wire:model.live="applicant.isJuridical" x-model="isJuridical" type="radio" value="false" id="person">
+                    <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="0"
+                        id="person">
                     <label for="person">Persona Natural</label>
                 </div>
                 <div class="">
-                    <input wire:model.live="applicant.isJuridical" x-model="isJuridical" type="radio" value="true" id="legalPerson">
+                    <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="1"
+                        id="legalPerson">
                     <label for="legalPerson">Persona Jurídica</label>
                 </div>
                 <x-input-error :messages="$errors->get('applicant.isJuridical')" class="mt-2" />
             </div>
-            {{-- <p>{{ $applicant['isJuridical'] }}</p> --}}
 
             <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                 {{-- Tipo de identificación --}}
                 <div>
                     <x-input-label for="identityTypeId" :value="__('Tipo de documento de identidad: (*)')" />
-                    <x-select wire:model="applicant.identityTypeId" id="identityTypeId"
-                        class="block mt-1 w-full">
+                    <x-select wire:model="applicant.identityTypeId" id="identityTypeId" class="block mt-1 w-full">
                         <option value="" selected disabled>Seleccione...</option>
                         @foreach ($identityTypes as $identityType)
                             <option value="{{ $identityType->id }}">{{ $identityType->name }}</option>
@@ -177,11 +112,34 @@
                 {{-- Num. Identificación --}}
                 <div>
                     <x-input-label for="identityNumber" :value="__('Num. Identificación: (*)')" />
-                    <x-number-input model="applicant.identityNumber" id="identityNumber" class="block mt-1 w-full"
-                        type="text" placeholder="Número de identificación" maxlength="12" />
+                    <div class="w-full flex grow items-center justify-center mt-1 gap-1">
+                        <x-number-input model="applicant.identityNumber" id="identityNumber" class="w-full" type="text"
+                            placeholder="Número de identificación" maxlength="12" />
+                        {{-- Botón de búsqueda por Num. Identificación --}}
+                        <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchPerson"
+                            type="button"
+                            class="flex items-center p-2 rounded border border-gray-300 dark:border-gray-500 bg-slate-200 dark:bg-slate-900">
+                            <span wire:loading.class="hidden" wire:target="searchPerson">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                    stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"
+                                    stroke-width="2" class="h-6">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="m21 21-4.3-4.3" />
+                                </svg>
+                            </span>
+                            <span wire:loading wire:target="searchPerson" class="animate-spin">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
+                                    <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
                     <x-input-error :messages="$errors->get('applicant.identityNumber')" class="mt-2" />
                 </div>
             </div>
+
             <div class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                 {{-- Apellido paterno --}}
                 <div>
@@ -231,14 +189,36 @@
             </div>
 
             {{-- Identidad persona jurídica --}}
-            <template x-if="isJuridical === 'true'">
+            <template x-if="isJuridical === '1'">
                 <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 10)" x-show="show" x-transition
                     class="grid lg:grid-cols-3 sm:grid-cols-2 gap-2 mt-3">
                     {{-- Num. RUC --}}
                     <div>
                         <x-input-label for="ruc" :value="__('RUC: (*)')" />
-                        <x-number-input model="applicant.ruc" id="ruc" class="block mt-1 w-full" type="text"
-                            placeholder="RUC" maxlength="11" />
+                        <div class="w-full flex grow items-center justify-center mt-1 gap-1">
+                            <x-number-input model="applicant.ruc" id="ruc" class="w-full" type="text"
+                                placeholder="RUC" maxlength="11" />
+                            {{-- Botón de búsqueda por RUC --}}
+                            <button wire:loading.class="opacity-50" wire:loading.attr="disabled"
+                                wire:click="searchLegalPerson" type="button"
+                                class="flex items-center p-2 rounded border border-gray-300 dark:border-gray-500 bg-slate-200 dark:bg-slate-900">
+                                <span wire:loading.class="hidden" wire:target="searchLegalPerson">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                        viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
+                                        fill="none" stroke="currentColor" stroke-width="2" class="h-6">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="m21 21-4.3-4.3" />
+                                    </svg>
+                                </span>
+                                <span wire:loading wire:target="searchLegalPerson" class="animate-spin">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                        viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
+                                        <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
                         <x-input-error :messages="$errors->get('applicant.ruc')" class="mt-2" />
                     </div>
                     {{-- Razón social --}}
