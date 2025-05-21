@@ -23,6 +23,8 @@ return new class extends Migration
             $table->foreignId('procedure_state_id')->constrained();
             $table->foreignId('document_type_id')->constrained();
             $table->morphs('applicant');
+            $table->year('year');
+            $table->enum('type', ['internal', 'external'])->default('internal');
             $table->timestamps();
         });
     }
