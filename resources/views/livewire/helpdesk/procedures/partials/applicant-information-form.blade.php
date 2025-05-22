@@ -183,7 +183,7 @@
                 <div>
                     <x-input-label for="address" :value="__('Dirección: (*)')" />
                     <x-text-input wire:model="applicant.address" id="address" class="block mt-1 w-full" type="text"
-                        placeholder="Dirección" maxlength="9" />
+                        placeholder="Dirección" />
                     <x-input-error :messages="$errors->get('applicant.address')" class="mt-2" />
                 </div>
             </div>
