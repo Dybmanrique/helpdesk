@@ -60,7 +60,7 @@ let table;
 
     $(`#table tbody`).on('click', '.btn-view', function () {
         let data = table.row($(this).parents('tr')).data();
-        const uuid = data.file_resolution.file.uuid;
+        const uuid = data.file_resolution.uuid;
         window.open(`/admin/resoluciones/ver-archivo/${uuid}`, '_blank');
     });
 
@@ -84,8 +84,9 @@ let table;
             fileUpload.innerHTML = '';
             const uploadedFileLink = document.createElement('a');
             fileUpload.classList.remove('d-none');
-            uploadedFileLink.href = `/admin/resoluciones/ver-archivo/${data.file_resolution.file.uuid}`;
-            uploadedFileLink.innerHTML = `<i class="fa-solid fa-paperclip"></i> ${data.file_resolution.file.name}`
+            uploadedFileLink.href = `/admin/resoluciones/ver-archivo/${data.file_resolution.uuid}`;
+            uploadedFileLink.innerHTML = `<i class="fa-solid fa-paperclip"></i> ${data.file_resolution.name}`
+            uploadedFileLink.target = '_blank';
             const text = document.createElement('span');
             text.textContent = 'Archivo subido: '
             fileUpload.appendChild(text);
