@@ -27,7 +27,7 @@ class ResolutionsController extends Controller
     {
 
         $resolutions = Resolution::query()
-            ->with(['file_resolution', 'file_resolution.file'])
+            ->with(['file_resolution'])
             ->orderBy('created_at', 'desc');
 
         return DataTables::of($resolutions)
@@ -40,15 +40,15 @@ class ResolutionsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'resolution_number' => 'required|string|max:255|unique:resolutions,resolution_number',
-            'description' => 'required|string|max:1500',
-            'file' => 'required|file|max:5120|mimes:pdf,jpg,png',
-            'resolution_type_id' => 'required|numeric',
-            'resolution_state_id' => 'required|numeric'
-        ]);
-
         try {
+            $request->validate([
+                'resolution_number' => 'required|string|max:255|unique:resolutions,resolution_number',
+                'description' => 'required|string|max:1500',
+                'file' => 'required|file|max:5120|mimes:pdf,jpg,png',
+                'resolution_type_id' => 'required|numeric',
+                'resolution_state_id' => 'required|numeric'
+            ]);
+
             $resolution = Resolution::create([
                 'resolution_number' => $request->resolution_number,
                 'description' => $request->description,
@@ -58,32 +58,30 @@ class ResolutionsController extends Controller
             ]);
 
             $year = date('Y');
-            // Store the file in the appropriate directory
-            $path = $request->file->store("resolutions/{$year}");
 
-            // Create file record in database
-            $file = new File([
-                'name' => $request->file->getClientOriginalName(),
-                'path' => $path,
-            ]);
+            // Opción 1: Laravel genera el nombre automáticamente (recomendado)
+            $path = $request->file('file')->store("resolutions/{$year}", 's3');
 
-            $file->save();
+            // Opción 2: Si necesitas más control, puedes usar storeAs con hash único
+            // $uniqueName = Str::random(40) . '.' . $request->file('file')->getClientOriginalExtension();
+            // $path = $request->file('file')->storeAs("resolutions/{$year}", $uniqueName, 's3');
 
             ResolutionFile::create([
                 'resolution_id' => $resolution->id,
-                'file_id' => $file->id
+                'name' => $request->file('file')->getClientOriginalName(),
+                'path' => $path,
             ]);
 
-            // Return success response with derivation status
+            // Return success response
             return response()->json([
                 'message' => 'Hecho',
                 'success' => true
             ]);
         } catch (\Exception $ex) {
             return response()->json([
-                'message' => 'Ocurrió un error en el servidor',
+                'message' => 'Ocurrió un error en el servidor: ' . $ex->getMessage(),
                 'success' => false
-            ]);
+            ], 500);
         }
     }
 
@@ -98,58 +96,47 @@ class ResolutionsController extends Controller
             'resolution_state_id' => 'required|numeric'
         ]);
 
-        try {
-            // Buscar la resolución existente
-            $resolution = Resolution::findOrFail($request->resolution_id);
+        // Buscar la resolución existente
+        $resolution = Resolution::findOrFail($request->resolution_id);
 
-            // Actualizar campos de la resolución
-            $resolution->update([
-                'resolution_number' => $request->resolution_number,
-                'description' => $request->description,
-                'user_id' => auth()->user()->id,
-                'resolution_type_id' => $request->resolution_type_id,
-                'resolution_state_id' => $request->resolution_state_id,
-            ]);
+        // Actualizar campos de la resolución
+        $resolution->update([
+            'resolution_number' => $request->resolution_number,
+            'description' => $request->description,
+            'user_id' => auth()->user()->id,
+            'resolution_type_id' => $request->resolution_type_id,
+            'resolution_state_id' => $request->resolution_state_id,
+        ]);
 
-            // Verificar si se ha enviado un nuevo archivo
-            if ($request->hasFile('file')) {
-                // Obtener el archivo anterior (asumiendo solo uno)
-                $existingResolutionFile = $resolution->file_resolution()->first();
-
-                if ($existingResolutionFile) {
-                    $existingFile = $existingResolutionFile->file;
-
-                    // Eliminar archivo físico del disco si existe
-                    if ($existingFile && Storage::exists($existingFile->path)) {
-                        Storage::delete($existingFile->path);
-                    }
-
-                    // Eliminar registros de la base de datos
-                    $existingResolutionFile->delete();
-                    $existingFile?->delete(); // Eliminar el modelo File si existe
-                }
-
-                // Guardar el nuevo archivo
-                $year = date('Y');
-                $path = $request->file->store("resolutions/{$year}");
-
-                $file = new File([
-                    'name' => $request->file->getClientOriginalName(),
-                    'path' => $path,
-                ]);
-                $file->save();
-
-                ResolutionFile::create([
-                    'resolution_id' => $resolution->id,
-                    'file_id' => $file->id,
-                ]);
+        // Verificar si se ha enviado un nuevo archivo
+        if ($request->hasFile('file')) {
+            $file = $resolution->file_resolution;
+            
+            // Eliminar archivo físico de S3 si existe
+            if ($file && Storage::disk('s3')->exists($file->path)) {
+                Storage::disk('s3')->delete($file->path);
             }
+            
+            $file?->delete();
 
+            // Guardar el nuevo archivo
+            $year = date('Y');
+            // $path = $request->file->store("resolutions/{$year}");
+            $path = $request->file('file')->store("resolutions/{$year}", 's3');
 
-            return response()->json([
-                'message' => 'Resolución actualizada correctamente',
-                'success' => true
+            ResolutionFile::create([
+                'resolution_id' => $resolution->id,
+                'name' => $request->file->getClientOriginalName(),
+                'path' => $path,
             ]);
+        }
+
+
+        return response()->json([
+            'message' => 'Resolución actualizada correctamente',
+            'success' => true
+        ]);
+        try {
         } catch (\Exception $ex) {
             return response()->json([
                 'message' => 'Ocurrió un error en el servidor',
@@ -162,23 +149,25 @@ class ResolutionsController extends Controller
     public function view_file($uuid)
     {
         try {
-            // Buscar archivo por UUID (convertir a binario)
-            $binaryUuid = File::uuidToBinary($uuid);
-            $file = File::where('uuid', $binaryUuid)->firstOrFail();
+            // Buscar archivo por UUID
+            $file = ResolutionFile::where('uuid', $uuid)->firstOrFail();
 
-            // Obtener ruta y contenido
+            // Obtener ruta del archivo en S3
             $path = $file->path;
 
-            if (!Storage::disk('local')->exists($path)) {
+            // Verificar si el archivo existe en S3
+            if (!Storage::disk('s3')->exists($path)) {
                 return response()->json(['error' => 'Archivo no encontrado en almacenamiento'], 404);
             }
 
-            // Mostrar en navegador (por ejemplo PDF, imagen, etc.)
-            return response()->file(storage_path("app/private/{$path}"));
+            // Generar URL temporal (válida por 15 minutos)
+            $temporaryUrl = Storage::disk('s3')->temporaryUrl(
+                $path,
+                now()->addMinutes(5)
+            );
 
-            // O si quieres forzar la descarga, usa:
-            // return response()->download(storage_path("app/{$path}"));
-
+            // Redirigir a la URL temporal para mostrar el archivo en el navegador
+            return redirect($temporaryUrl);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Archivo no encontrado o UUID inválido'], 404);
         }
@@ -190,11 +179,11 @@ class ResolutionsController extends Controller
             $resolution = Resolution::findOrFail($id);
 
             // Eliminar archivos físicos y sus registros
-            $file = $resolution->file_resolution->file;
+            $file = $resolution->file_resolution;
 
-            // Eliminar archivo físico si existe
-            if ($file && Storage::exists($file->path)) {
-                Storage::delete($file->path);
+            // Eliminar archivo físico de S3 si existe
+            if ($file && Storage::disk('s3')->exists($file->path)) {
+                Storage::disk('s3')->delete($file->path);
             }
 
             // Eliminar registros en la BD
@@ -210,9 +199,9 @@ class ResolutionsController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Ocurrió un error al eliminar la resolución',
+                'message' => 'Ocurrió un error al eliminar la resolución: ' . $e->getMessage(),
                 'success' => false,
-            ]);
+            ], 500);
         }
     }
 }
