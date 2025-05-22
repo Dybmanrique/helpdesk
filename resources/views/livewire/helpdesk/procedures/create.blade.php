@@ -124,24 +124,8 @@
         @elseif ($currentStep === 3)
             {{-- Archivos a adjuntar --}}
             <section class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded px-3 py-5">
-                <x-input-label for="files" :value="__('Archivo:')" />
-                <div x-data="{ uploading: false, progress: 0 }" x-on:livewire-upload-start="uploading = true"
-                    x-on:livewire-upload-finish="uploading = false" x-on:livewire-upload-cancel="uploading = false"
-                    x-on:livewire-upload-error="uploading = false"
-                    x-on:livewire-upload-progress="progress = $event.detail.progress">
-                    {{-- Progress Bar --}}
-                    <div x-show="uploading" class="w-full flex items-center">
-                        <div class="w-full rounded-full bg-gray-300 dark:bg-gray-700 h-4">
-                            <div class="bg-blue-500 h-full rounded-full text-white font-medium text-xs text-center"
-                                :style="'width:' + progress + '%;'">
-                                <span x-text="progress + '%'"></span>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- File Input --}}
-                    <x-text-input wire:model="files" id="files" class="block mt-1 w-full" type="file"
-                        name="files" :value="old('files')" accept="application/pdf, image/*" />
-                </div>
+                <x-input-label for="files" :value="__('Archivo:')" class="mb-3" />
+                <x-helpdesk.filepond-input wire:model="files" />
             </section>
         @endif
 
@@ -177,6 +161,7 @@
     </form>
 </div>
 @push('js')
-    <script src="{{ asset('js/helpdesk/notifications.js') }}?v={{ env('APP_VERSION') }}"></script>
     <script src="{{ asset('js/helpdesk/procedures/create.js') }}?v={{ env('APP_VERSION') }}"></script>
+    <script src="{{ asset('js/helpdesk/notifications.js') }}?v={{ env('APP_VERSION') }}"></script>
+    {{-- <script src="{{ asset('js/helpdesk/filepond-handler.js') }}?v={{ env('APP_VERSION') }}"></script> --}}
 @endpush

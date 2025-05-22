@@ -1,0 +1,23 @@
+/* estilos para el contenedor del texto y el ícono */
+.custom .filepond--drop-label {
+    color: #777;
+    text-align: center;
+}
+
+/* estilos para el contenedor del ícono */
+.filepond--drop-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* estilos para el área drag and drop */
+.custom .filepond--panel-root {
+    background-color: #eee;
+    border: 1px solid #402c2c58;
+}
+
+.dark .custom .filepond--panel-root {
+    background-color: #030712;
+    border: 1px solid #aab4c758;
+}

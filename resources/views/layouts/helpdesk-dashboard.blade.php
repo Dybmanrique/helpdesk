@@ -13,8 +13,13 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <!-- Local Styles -->
     <link rel="stylesheet" href="{{ asset('css/helpdesk/loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/helpdesk/filepond-custom.css') }}">
     <!-- Livewire Styles -->
     @livewireStyles
+    <!-- FilePond Styles -->
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet" />
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('css')
@@ -61,6 +66,11 @@
     <script src="{{ asset('js/helpdesk/loader.js') }}?v={{ env('APP_VERSION') }}"></script>
     <!-- Livewire Scripts -->
     @livewireScripts
+    <!-- FilePond Scripts -->
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
     @yield('js')
     @stack('js')
 </body>
