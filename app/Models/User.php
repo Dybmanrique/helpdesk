@@ -76,7 +76,12 @@ class User extends Authenticatable
 
     public function derivations()
     {
-        return $this->belongsToMany(Procedure::class, 'derivations', 'user_id', 'procedure_id');
+        return $this->hasMany(Derivation::class, 'user_id', 'id');
+    }
+
+    public function resolutions()
+    {
+        return $this->hasMany(Resolution::class, 'user_id', 'id');
     }
 
     public function isAdmin()

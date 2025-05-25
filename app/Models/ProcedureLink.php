@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProcedureFile extends Model
+class ProcedureLink extends Model
 {
-    protected $table = "procedure_files";
-    protected $fillable = ['name', 'path', 'uuid', 'procedure_id'];
+    protected $table = "procedure_links";
+    protected $fillable = ['url', 'procedure_id'];
 
     public function procedure()
     {

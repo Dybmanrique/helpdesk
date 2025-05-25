@@ -25,4 +25,8 @@ class Resolution extends Model
     {
         return $this->hasOne(ResolutionFile::class);
     }
+    public function actions()
+    {
+        return $this->belongsToMany(Action::class, 'related_resolutions', 'resolution_id', 'action_id');
+    }
 }

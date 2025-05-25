@@ -13,6 +13,8 @@ class Procedure extends Model
         'description',
         'ticket',
         'is_juridical',
+        'year',
+        'type',
         'procedure_priority_id',
         'procedure_category_id',
         'procedure_state_id',
