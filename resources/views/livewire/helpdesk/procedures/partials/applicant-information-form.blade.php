@@ -145,14 +145,14 @@
                 <div>
                     <x-input-label for="lastName" :value="__('Apellido paterno: (*)')" />
                     <x-text-input wire:model="applicant.lastName" id="lastName" class="block mt-1 w-full" type="text"
-                        placeholder="Apellido paterno" maxlength="9" />
+                        placeholder="Apellido paterno" />
                     <x-input-error :messages="$errors->get('applicant.lastName')" class="mt-2" />
                 </div>
                 {{-- Apellido materno --}}
                 <div>
                     <x-input-label for="secondLastName" :value="__('Apellido materno: (*)')" />
                     <x-text-input wire:model="applicant.secondLastName" id="secondLastName" class="block mt-1 w-full"
-                        type="text" placeholder="Apellido materno" maxlength="9" />
+                        type="text" placeholder="Apellido materno" />
                     <x-input-error :messages="$errors->get('applicant.secondLastName')" class="mt-2" />
                 </div>
                 {{-- Nombre --}}
