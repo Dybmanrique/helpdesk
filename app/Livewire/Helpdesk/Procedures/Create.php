@@ -12,6 +12,7 @@ use App\Models\Office;
 use App\Models\Person;
 use App\Models\Procedure;
 use App\Models\ProcedureCategory;
+use App\Models\ProcedureCounter;
 use App\Models\ProcedurePriority;
 use App\Models\ProcedureState;
 use App\Services\ProcedureService;
@@ -26,7 +27,7 @@ class Create extends Component
     use WithFileUploads;
     public $user;
     public $legalPerson;
-    public $procedureCategoryId = "", $documentTypeId = "", $reason, $description, $files;
+    public $procedureCategoryId = "", $documentTypeId = "", $reason, $description, $procedureFile, $procedureLink;
     public $search, $searchBy;
     public $applicant = [
         'isJuridical' => false,
@@ -48,7 +49,8 @@ class Create extends Component
     {
         $this->user = Auth::user();
         if ($this->user) {
-            $this->legalPerson = LegalPerson::where('person_id', $this->user->person_id)->first();
+            // Obtener la última empresa relacionada con el usuario autenticado
+            $this->legalPerson = LegalRepresentative::where('person_id', $this->user->person_id)->latest()->first()?->legal_person;
         }
         $this->searchBy = IdentityType::first()->id;
     }
@@ -90,7 +92,8 @@ class Create extends Component
                 'documentTypeId' => ['required'],
             ],
             3 => [
-                'files' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:10240'],
+                'procedureFile' => ['nullable', 'mimes:jpg,jpeg,png,pdf', 'max:10240'],
+                'procedureLink' => ['nullable', 'url', 'regex:/^https:\/\/(drive\.google\.com\/(file\/d\/[\w-]+\/view|drive\/folders\/[\w-]+)\?usp=(sharing|drive_link)|[\w.-]+-my\.sharepoint\.com\/:([bf]):\/g\/personal\/[\w]+\/[\w-]+(\?e=[\w-]+)?)$/'],
             ],
         ];
     }
@@ -123,7 +126,8 @@ class Create extends Component
             'reason' => 'asunto',
             'procedureCategoryId' => 'categoría',
             'documentTypeId' => 'tipo de documento',
-            'files' => 'archivo',
+            'procedureFile' => 'archivo',
+            'procedureLink' => 'link del archivo',
         ];
     }
 
@@ -224,13 +228,19 @@ class Create extends Component
                 $applicant = $this->findOrCreateApplicant($this->applicant);
                 $applicantEmail = $this->applicant['email'];
             }
-            //registro del trámite
+            // registro del trámite
+            // obtener el siguiente número de expediente que se debe registrar
+            $expedientNumber = $procedureService->getNextExpedientNumber();
+            // generar el número del ticket
             $procedureTicket = $procedureService->generateUniqueProcedureTicket();
             $procedure = new Procedure([
+                'expedient_number' => $expedientNumber,
                 'reason' => $this->reason,
                 'description' => $this->description,
                 'ticket' => $procedureTicket,
                 'is_juridical' => $this->applicant['isJuridical'],
+                'year' => now()->year,
+                'type' => 'external',
                 'procedure_priority_id' => $procedurePriority->id,
                 'procedure_category_id' => $this->procedureCategoryId,
                 'procedure_state_id' => $procedureState->id,
@@ -238,9 +248,13 @@ class Create extends Component
             ]);
             $applicant->procedures()->save($procedure);
 
-            //registro de los archivos del trámite
-            if ($this->files) {
-                $procedureService->saveProcedureFiles($this->files, $applicant->id, $procedure);
+            // solo se debe registrar el archivo o el link del trámite; si existen ambos se registra solo el archivo
+            if ($this->procedureFile) {
+                //registro del archivo del trámite
+                $procedureService->saveProcedureFiles($this->procedureFile, $applicant->id, $procedure);
+            } elseif ($this->procedureLink) {
+                //registro del link del trámite
+                $procedureService->saveProcedureLink($this->procedureLink, $procedure);
             }
 
             // registrar la derivación del trámite a mesa de partes
@@ -260,7 +274,7 @@ class Create extends Component
             $notifyContent = ['message' => 'Algo salió mal. Inténtelo más tarde.', 'code' => '500'];
         }
         //reiniciar los inputs
-        $this->reset(['applicant', 'reason', 'description', 'procedureCategoryId', 'documentTypeId', 'files', 'currentStep']);
+        $this->reset(['applicant', 'reason', 'description', 'procedureCategoryId', 'documentTypeId', 'procedureFile', 'procedureLink', 'currentStep']);
         $this->dispatch('resetInputs');
         $this->dispatch('notify', $notifyContent);
     }

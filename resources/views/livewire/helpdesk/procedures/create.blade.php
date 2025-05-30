@@ -124,8 +124,17 @@
         @elseif ($currentStep === 3)
             {{-- Archivos a adjuntar --}}
             <section class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded px-3 py-5">
-                <x-input-label for="files" :value="__('Archivo:')" class="mb-3" />
-                <x-helpdesk.filepond-input wire:model="files" />
+                {{-- <div> --}}
+                    <x-input-label for="procedure_file" :value="__('Archivo:')" class="mb-3" />
+                    <x-helpdesk.filepond-input wire:model="procedureFile" />
+                    <x-input-error :messages="$errors->get('procedureFile')" class="mt-2" />
+                {{-- </div> --}}
+                <div>
+                    <x-input-label for="procedure_link" :value="__('Link del archivo:')" class="mb-3" />
+                    <x-text-input wire:model="procedureLink" id="procedure_link" class="block mt-1 w-full"
+                        type="text" placeholder="Enlace del archivo o carpeta de Google Drive o OneDrive" />
+                    <x-input-error :messages="$errors->get('procedureLink')" class="mt-2" />
+                </div>
             </section>
         @endif
 
