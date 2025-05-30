@@ -8,7 +8,9 @@ use App\Models\Derivation;
 use App\Models\File;
 use App\Models\Office;
 use App\Models\Procedure;
+use App\Models\ProcedureCounter;
 use App\Models\ProcedureFile;
+use App\Models\ProcedureLink;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -26,17 +28,40 @@ class ProcedureService
         return $procedureTicket;
     }
 
+    public function getNextExpedientNumber($year = null)
+    {
+        $year = $year ?? now()->year;
+        $procedureCounter = ProcedureCounter::where('year', $year)->first();
+        if ($procedureCounter) {
+            $procedureCounter->update([
+                'last_number' => $procedureCounter->last_number + 1,
+            ]);
+        } else {
+            $procedureCounter = ProcedureCounter::create([
+                'year' => $year,
+                'last_number' => 1,
+            ]);
+        }
+        $expedientNumber = str_pad($procedureCounter->last_number, 10, '0', STR_PAD_LEFT);
+        return $expedientNumber;
+    }
+
     public function saveProcedureFiles($file, $applicantId, Procedure $procedure)
     {
         $extension = $file->extension();
         $folder = $extension === 'pdf' ? 'pdfs' : 'images';
-        $file = File::create([
+        $file = ProcedureFile::create([
             'name' => $file->getClientOriginalName(),
-            'path' => $file->store('helpdesk/procedure_files/' . (Auth::check() ? 'auth' : 'guest') . '/' . $applicantId . '/' . $folder),
-        ]);
-        ProcedureFile::create([
+            'path' => $file->store('helpdesk/procedure_files/' . now()->year . '/' . (Auth::check() ? 'auth' : 'guest') . '/' . $applicantId . '/' . $folder),
             'procedure_id' => $procedure->id,
-            'file_id' => $file->id,
+        ]);
+    }
+
+    public function saveProcedureLink($url, Procedure $procedure)
+    {
+        ProcedureLink::create([
+            'url' => $url,
+            'procedure_id' => $procedure->id,
         ]);
     }
 
