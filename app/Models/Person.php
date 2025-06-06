@@ -13,6 +13,10 @@ class Person extends Model
     {
         return $this->belongsToMany(Person::class, 'legal_representatives', 'person_id', 'legal_person_id');
     }
+    public function legal_representatives()
+    {
+        return $this->hasMany(LegalRepresentative::class, 'person_id', 'id');
+    }
     public function user()
     {
         return $this->hasOne(User::class, 'person_id', 'id');
