@@ -222,11 +222,13 @@ class Create extends Component
                 // si hay un usuario autenticado el solicitante es el usuario autenticado
                 $applicant = Auth::user();
                 $applicantEmail = $applicant->email;
+                $isJuridical = $this->legalPerson ? true : false;
             } else {
                 // obtengo el solicitante (persona natural o representante legal) según los datos ingresados en el formulario
                 // pero, primero lo busco, y, si no existe, lo registro (en personas y/o personas jurídicas, de ser el caso)
                 $applicant = $this->findOrCreateApplicant($this->applicant);
                 $applicantEmail = $this->applicant['email'];
+                $isJuridical = $this->applicant['isJuridical'];
             }
             // registro del trámite
             // obtener el siguiente número de expediente que se debe registrar
@@ -238,7 +240,7 @@ class Create extends Component
                 'reason' => $this->reason,
                 'description' => $this->description,
                 'ticket' => $procedureTicket,
-                'is_juridical' => $this->applicant['isJuridical'],
+                'is_juridical' => $isJuridical,
                 'year' => now()->year,
                 'type' => 'external',
                 'procedure_priority_id' => $procedurePriority->id,
