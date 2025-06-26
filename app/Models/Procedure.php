@@ -38,6 +38,10 @@ class Procedure extends Model
     {
         return $this->belongsTo(ProcedureState::class, 'procedure_state_id', 'id');
     }
+    public function procedure_link()
+    {
+        return $this->hasOne(ProcedureLink::class, 'procedure_id', 'id');
+    }
     public function procedure_files()
     {
         return $this->hasMany(ProcedureFile::class, 'procedure_id', 'id');
