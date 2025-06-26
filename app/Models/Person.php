@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
@@ -28,5 +29,12 @@ class Person extends Model
     public function procedures()
     {
         return $this->morphMany(Procedure::class, 'applicant');
+    }
+    // Accessor para concatenar los nombres y apellidos
+    protected function FullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => "{$this->name} {$this->last_name} {$this->second_last_name}"
+        );
     }
 }
