@@ -38,10 +38,6 @@
      updateTheme(value);
  });" x-cloak>
 
-    <div id="preloader">
-        <div id="loader"></div>
-    </div>
-
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.helpdesk-navigation')
 
@@ -61,9 +57,6 @@
     </div>
     <!-- Sweet Alert 2-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.15.10/dist/sweetalert2.all.min.js"></script>
-    <!-- Local Scripts -->
-    <script src="{{ asset('js/helpers.js') }}?v={{ env('APP_VERSION') }}"></script>
-    <script src="{{ asset('js/helpdesk/loader.js') }}?v={{ env('APP_VERSION') }}"></script>
     <!-- Livewire Scripts -->
     @livewireScripts
     <!-- FilePond Scripts -->
