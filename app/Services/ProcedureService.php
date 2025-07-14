@@ -52,7 +52,7 @@ class ProcedureService
         $folder = $extension === 'pdf' ? 'pdfs' : 'images';
         $file = ProcedureFile::create([
             'name' => $file->getClientOriginalName(),
-            'path' => $file->store('helpdesk/procedure_files/' . now()->year . '/' . (Auth::check() ? 'auth' : 'guest') . '/' . $applicantId . '/' . $folder),
+            'path' => $file->store('helpdesk/procedure_files/' . now()->year . '/' . (Auth::check() ? 'auth' : 'guest') . '/' . $applicantId . '/' . $folder, 's3'),
             'procedure_id' => $procedure->id,
         ]);
     }
