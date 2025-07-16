@@ -42,7 +42,6 @@ class RegisteredUserController extends Controller
             default => [8, 12],
         };
         $request->validate([
-            'user_type' => ['required'],
             'identity_type_id' => ['required'],
             'identity_number' => ['required', "between:$min,$max", 'regex:/^\d+$/'],
             'name' => ['required', 'string'],
@@ -50,8 +49,8 @@ class RegisteredUserController extends Controller
             'second_last_name' => ['required', 'string'],
             'phone' => ['required', 'numeric', 'digits:9'],
             'address' => ['required', 'string'],
-            'ruc' => ['nullable', Rule::requiredIf($request->user_type === 'juridica'), 'numeric', 'digits:11'],
-            'company_name' => ['nullable', Rule::requiredIf($request->user_type === 'juridica'), 'string'],
+            'ruc' => ['nullable', Rule::requiredIf(!empty($request->company_name)), 'numeric', 'digits:11'],
+            'company_name' => ['nullable', Rule::requiredIf(!empty($request->ruc)), 'string'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'regex:/(.*)@(gmail\.com|outlook\.com|universidad\.edu\.pe)$/i', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ], [
@@ -61,7 +60,6 @@ class RegisteredUserController extends Controller
                 default => 'El número de identificación puede tener hasta 12 dígitos.',
             },
         ], [
-            'user_type' => 'tipo de usuario',
             'identity_type_id' => 'tipo de identificación',
             'identity_number' => 'número de identificación',
             'name' => 'nombre(s)',
@@ -81,7 +79,7 @@ class RegisteredUserController extends Controller
             'identity_number' => $request->identity_number,
             'identity_type_id' => $request->identity_type_id,
         ]);
-        if ($request->user_type === "juridica") {
+        if (!empty($request->ruc) && !empty($request->company_name)) {
             $legalPerson = LegalPerson::updateOrCreate(
                 ['ruc' => $request->ruc],
                 ['company_name' => $request->company_name],
