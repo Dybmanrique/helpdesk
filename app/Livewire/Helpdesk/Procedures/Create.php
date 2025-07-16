@@ -49,8 +49,8 @@ class Create extends Component
     {
         $this->user = Auth::user();
         if ($this->user) {
-            // buscar si hay algún representante legal relacionado con la persona del usuario autenticado
-            $legalRepresentative = LegalRepresentative::where('person_id', $this->user->person_id)->latest()->first();
+            // buscar el último representante legal relacionado con la persona del usuario autenticado
+            $legalRepresentative = LegalRepresentative::where('person_id', $this->user->person_id)->latest('updated_at')->first();
             // obtener sus datos
             $this->applicant['name'] = $this->user->person->name;
             $this->applicant['lastName'] = $this->user->person->last_name;
@@ -311,6 +311,10 @@ class Create extends Component
                 ['ruc' => $data['ruc']],
                 ['company_name' => $data['companyName']],
             );
+            $legalRepresentative = LegalRepresentative::firstOrCreate([
+                'person_id' => $person->id,
+                'legal_person_id' => $legalPerson->id,
+            ]);
             if (Auth::check()) {
                 // si está autenticado, el solicitante es el usuario actualizando los datos de la persona relacionada
                 // el email no se debe actualizar para no afectar al usuario al iniciar sesión
@@ -321,10 +325,7 @@ class Create extends Component
                 $applicant = $user;
             } else {
                 // si no está autenticado, el solicitante es el representante legal
-                $applicant = LegalRepresentative::firstOrCreate([
-                    'person_id' => $person->id,
-                    'legal_person_id' => $legalPerson->id,
-                ]);
+                $applicant = $legalRepresentative;
             }
         } else {
             if (Auth::check()) {
