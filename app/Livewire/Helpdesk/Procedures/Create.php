@@ -49,8 +49,23 @@ class Create extends Component
     {
         $this->user = Auth::user();
         if ($this->user) {
-            // Obtener la última empresa relacionada con el usuario autenticado
-            $this->legalPerson = LegalRepresentative::where('person_id', $this->user->person_id)->latest()->first()?->legal_person;
+            // buscar si hay algún representante legal relacionado con la persona del usuario autenticado
+            $legalRepresentative = LegalRepresentative::where('person_id', $this->user->person_id)->latest()->first();
+            // obtener sus datos
+            $this->applicant['name'] = $this->user->person->name;
+            $this->applicant['lastName'] = $this->user->person->last_name;
+            $this->applicant['secondLastName'] = $this->user->person->second_last_name;
+            $this->applicant['email'] = $this->user->email;
+            $this->applicant['phone'] = $this->user->person->phone;
+            $this->applicant['address'] = $this->user->person->address;
+            $this->applicant['identityNumber'] = $this->user->person->identity_number;
+            $this->applicant['identityTypeId'] = $this->user->person->identity_type_id;
+            if ($legalRepresentative) {
+                $this->legalPerson = $legalRepresentative->legal_person;
+                $this->applicant['isJuridical'] = '1';
+                $this->applicant['ruc'] = $this->legalPerson->ruc;
+                $this->applicant['companyName'] = $this->legalPerson->company_name;
+            }
         }
         $this->searchBy = IdentityType::first()->id;
     }
@@ -73,17 +88,17 @@ class Create extends Component
         };
         return [
             1 => [
-                'applicant.isJuridical' => ['nullable', Rule::requiredIf(!Auth::check())],
-                'applicant.name' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
-                'applicant.lastName' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
-                'applicant.secondLastName' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
-                'applicant.email' => ['nullable', Rule::requiredIf(!Auth::check()), 'string', 'lowercase', 'email', 'max:255', 'regex:/(.*)@(gmail\.com|hotmail\.com|outlook\.com|\.edu\.pe)$/i'],
-                'applicant.phone' => ['nullable', Rule::requiredIf(!Auth::check()), 'numeric', 'digits:9'],
-                'applicant.address' => ['nullable', Rule::requiredIf(!Auth::check()), 'string'],
-                'applicant.identityNumber' => ['nullable', Rule::requiredIf(!Auth::check()), "between:$min,$max", 'regex:/^\d+$/'],
-                'applicant.identityTypeId' => ['nullable', Rule::requiredIf(!Auth::check())],
-                'applicant.ruc' => ['nullable', Rule::requiredIf(!Auth::check() && $this->applicant['isJuridical']), 'numeric', 'digits:11'],
-                'applicant.companyName' => ['nullable', Rule::requiredIf(!Auth::check() && $this->applicant['isJuridical']), 'string'],
+                'applicant.isJuridical' => ['required'],
+                'applicant.name' => ['required', 'string'],
+                'applicant.lastName' => ['required', 'string'],
+                'applicant.secondLastName' => ['required', 'string'],
+                'applicant.email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'regex:/(.*)@(gmail\.com|hotmail\.com|outlook\.com|\.edu\.pe)$/i'],
+                'applicant.phone' => ['required', 'numeric', 'digits:9'],
+                'applicant.address' => ['required', 'string'],
+                'applicant.identityNumber' => ['required', "between:$min,$max", 'regex:/^\d+$/'],
+                'applicant.identityTypeId' => ['required'],
+                'applicant.ruc' => ['nullable', Rule::requiredIf($this->applicant['isJuridical'] === '1'), 'numeric', 'digits:11'],
+                'applicant.companyName' => ['nullable', Rule::requiredIf($this->applicant['isJuridical'] === '1'), 'string'],
             ],
             2 => [
                 'reason' => ['required'],
@@ -143,9 +158,9 @@ class Create extends Component
     {
         $this->validate($this->rules()[$this->currentStep], $this->messages(), $this->attributes());
         if ($this->currentStep < 3) {
-            if ($this->currentStep > 1 || $isConfirmed || Auth::check()) {
+            if ($this->currentStep > 1 || $isConfirmed) {
                 $this->currentStep++;
-            } elseif ($this->currentStep == 1 && !Auth::check()) {
+            } elseif ($this->currentStep == 1) {
                 $changeDetectedMessages = $this->checkApplicantInformation();
                 if ($changeDetectedMessages) {
                     $notifyContent = [
@@ -190,7 +205,7 @@ class Create extends Component
                         ->where('email', $this->applicant['email'])
                         ->first();
                     if (!$personByContactData) {
-                        $changeDetectedMessages[] = 'Los datos de contacto no coinciden con los que se registraron previamente para esta persona.';
+                        $changeDetectedMessages[] = 'Los datos de contacto no coinciden con los que se registraron previamente para ' . (Auth::check() ? 'este usuario' : 'esta persona') . '.';
                     }
                 } else {
                     $changeDetectedMessages[] = 'Los nombres y apellidos no coinciden con los de trámites previos asociados a este número de identificación.';
@@ -218,18 +233,10 @@ class Create extends Component
         $procedureState = ProcedureState::where('name', 'Pendiente')->first();
         $procedurePriority = ProcedurePriority::where('name', 'Media')->first();
         if ($procedureState && $procedurePriority) {
-            if (Auth::check()) {
-                // si hay un usuario autenticado el solicitante es el usuario autenticado
-                $applicant = Auth::user();
-                $applicantEmail = $applicant->email;
-                $isJuridical = $this->legalPerson ? true : false;
-            } else {
-                // obtengo el solicitante (persona natural o representante legal) según los datos ingresados en el formulario
-                // pero, primero lo busco, y, si no existe, lo registro (en personas y/o personas jurídicas, de ser el caso)
-                $applicant = $this->findOrCreateApplicant($this->applicant);
-                $applicantEmail = $this->applicant['email'];
-                $isJuridical = $this->applicant['isJuridical'];
-            }
+            // obtengo el solicitante (usuario, persona natural o representante legal)
+            $applicant = $this->findOrCreateApplicant($this->applicant);
+            $applicantEmail = $this->applicant['email']; // el email será el registrado en el formulario
+            $isJuridical = $this->applicant['isJuridical'];
             // registro del trámite
             // obtener el siguiente número de expediente que se debe registrar
             $expedientNumber = $procedureService->getNextExpedientNumber();
@@ -247,6 +254,8 @@ class Create extends Component
                 'procedure_category_id' => $this->procedureCategoryId,
                 'procedure_state_id' => $procedureState->id,
                 'document_type_id' => $this->documentTypeId,
+                'applicant_full_name' => $this->applicant['name'] . ' ' . $this->applicant['lastName'] . ' ' . $this->applicant['secondLastName'],
+                'applicant_identification' => $this->applicant['identityNumber'],
             ]);
             $applicant->procedures()->save($procedure);
 
@@ -276,15 +285,18 @@ class Create extends Component
             $notifyContent = ['message' => 'Algo salió mal. Inténtelo más tarde.', 'code' => '500'];
         }
         //reiniciar los inputs
-        $this->reset(['applicant', 'reason', 'description', 'procedureCategoryId', 'documentTypeId', 'procedureFile', 'procedureLink', 'currentStep']);
-        $this->dispatch('resetInputs');
+        if (!Auth::check()) {
+            $this->reset(['applicant']);
+        }
+        $this->reset(['reason', 'description', 'procedureCategoryId', 'documentTypeId', 'procedureFile', 'procedureLink', 'currentStep']);
+        // $this->dispatch('resetInputs');
         $this->dispatch('notify', $notifyContent);
     }
 
     public function findOrCreateApplicant($data)
     {
         // si los datos existen, se recupera el registro; si no, se crea uno nuevo
-        $applicant = Person::firstOrCreate([
+        $person = Person::firstOrCreate([
             'name' => $data['name'],
             'last_name' => $data['lastName'],
             'second_last_name' => $data['secondLastName'],
@@ -299,11 +311,36 @@ class Create extends Component
                 ['ruc' => $data['ruc']],
                 ['company_name' => $data['companyName']],
             );
-            $applicant = LegalRepresentative::firstOrCreate([
-                'person_id' => $applicant->id,
-                'legal_person_id' => $legalPerson->id,
-            ]);
+            if (Auth::check()) {
+                // si está autenticado, el solicitante es el usuario actualizando los datos de la persona relacionada
+                // el email no se debe actualizar para no afectar al usuario al iniciar sesión
+                $user = Auth::user();
+                $user->update([
+                    'person_id' => $person->id,
+                ]);
+                $applicant = $user;
+            } else {
+                // si no está autenticado, el solicitante es el representante legal
+                $applicant = LegalRepresentative::firstOrCreate([
+                    'person_id' => $person->id,
+                    'legal_person_id' => $legalPerson->id,
+                ]);
+            }
+        } else {
+            if (Auth::check()) {
+                // si está autenticado, el solicitante es el usuario actualizando los datos de la persona relacionada
+                // el email no se debe actualizar para no afectar al usuario al iniciar sesión
+                $user = Auth::user();
+                $user->update([
+                    'person_id' => $person->id,
+                ]);
+                $applicant = $user;
+            } else {
+                // si no está autenticado, el solicitante es la persona
+                $applicant = $person;
+            }
         }
+        // applicant puede ser el modelo del usuario, la persona o el representante legal
         return $applicant;
     }
 

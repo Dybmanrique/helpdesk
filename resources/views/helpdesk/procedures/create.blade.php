@@ -3,9 +3,10 @@
 @section('title', 'Registro de Trámites')
 
 @section('header')
-    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        Formulario de registro de trámite
-    </h2>
+    <div class="text-center text-gray-800 dark:text-gray-200">
+        <h1 class="text-3xl font-bold">Formulario de registro de trámites</h1>
+        <p class="font-light">Complete el siguiente formulario para registrar un nuevo trámite.</p>
+    </div>
 @endsection
 
 @section('content')
