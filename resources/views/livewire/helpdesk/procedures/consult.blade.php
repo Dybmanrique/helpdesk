@@ -1,27 +1,10 @@
 <div>
     <form wire:submit="searchProcedure" class="space-y-3">
-        {{-- Buscar por ticket o número de expediente --}}
-        <div class="grid grid-cols-2 gap-0.5 rounded-xl bg-gray-200 dark:bg-gray-700 p-0.5">
-            <div class="gap-2">
-                <input wire:model="searchBy" type="radio" value="expedientNumber" id="expedientNumber" name="code"
-                    class="peer sr-only">
-                <label for="expedientNumber"
-                    class="w-full h-full rounded-xl flex items-center justify-center text-center p-1 cursor-pointer peer-focus:ring-2 peer-checked:bg-white dark:peer-checked:bg-slate-900 peer-checked:font-bold">Num.
-                    Expediente</label>
-            </div>
-            <div class="gap-2">
-                <input wire:model="searchBy" type="radio" value="ticket" id="ticket" name="code"
-                    class="peer sr-only">
-                <label for="ticket"
-                    class="w-full h-full rounded-xl flex items-center justify-center text-center p-1 cursor-pointer peer-focus:ring-2 peer-checked:bg-white dark:peer-checked:bg-slate-900 peer-checked:font-bold">Ticket</label>
-            </div>
-        </div>
-
         <div class="">
             <div class="flex gap-2">
                 <x-text-input wire:model="search" id="search" type="search" name="search"
-                    class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el número de expediente o el ticket"
-                    aria-label="Buscar por número de expediente o ticket" required />
+                    class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el código del ticket"
+                    aria-label="Buscar por el código del ticket" required />
                 <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchProcedure"
                     class="flex gap-2 items-center p-2 px-4 rounded-xl text-slate-50 dark:text-slate-800 border border-gray-300 dark:border-gray-700 bg-slate-800 dark:bg-slate-200">
                     <span wire:loading.class="hidden" wire:target="searchProcedure">

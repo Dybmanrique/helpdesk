@@ -11,7 +11,6 @@ use Livewire\Component;
 class Consult extends Component
 {
     public $search;
-    public $searchBy = "expedientNumber";
     public $procedure;
     public $applicant = [
         'type' => null,
@@ -61,11 +60,7 @@ class Consult extends Component
             'derivations.actions.resolutions.resolution_type:id,name',
             'derivations.actions.resolutions.file_resolution:id,name,resolution_id',
         ];
-        if ($this->searchBy === "ticket") {
-            $this->procedure = Procedure::with($procedureQuery)->where('ticket', $this->search)->first();
-        } elseif ($this->searchBy === "expedientNumber") {
-            $this->procedure = Procedure::with($procedureQuery)->where('expedient_number', $this->search)->first();
-        }
+        $this->procedure = Procedure::with($procedureQuery)->where('ticket', $this->search)->first();
         if ($this->procedure) {
             // obtener la información del solicitante de la relación polimórfica
             $procedureApplicant = $this->procedure->applicant;

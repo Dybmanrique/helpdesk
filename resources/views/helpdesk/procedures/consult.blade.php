@@ -5,7 +5,8 @@
 @section('header')
     <div class="text-center text-gray-800 dark:text-gray-200">
         <h1 class="text-3xl font-bold">Consulta de trámites</h1>
-        <p class="font-light">Busque sus trámites usando el número de expediente o el código del ticket.</p>
+        <p class="font-light">Busque la información de sus trámites ingresando el código del ticket que se generó al
+            registrar su trámite.</p>
     </div>
 @endsection
 
