@@ -25,6 +25,14 @@ class Consult extends Component
     public $allProcedureDerivations;
     public $derivationsToShow = 5;
 
+    public function mount($ticket = null)
+    {
+        if ($ticket) {
+            $this->search = $ticket;
+            $this->search();
+        }
+    }
+
     public function render()
     {
         return view('livewire.helpdesk.procedures.consult');
@@ -37,6 +45,13 @@ class Consult extends Component
         ], [], [
             'search' => 'buscar trámite',
         ]);
+        if ($this->search) {
+            $this->redirect(route('procedures.consult', ['code' => $this->search]), navigate: true);
+        }
+    }
+
+    public function search()
+    {
         // construcción del query para precargar todos los datos necesarios y relacionados al trámite
         $procedureQuery = [
             'applicant' => function ($morphTo) {

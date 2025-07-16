@@ -14,8 +14,8 @@ class ProcedureController extends Controller
         return view('helpdesk.procedures.create');
     }
 
-    public function consult()
+    public function consult($ticket = null)
     {
-        return view('helpdesk.procedures.consult');
+        return view('helpdesk.procedures.consult', compact('ticket'));
     }
 }

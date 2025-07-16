@@ -1,34 +1,32 @@
 <div>
-    <form wire:submit="searchProcedure" class="space-y-3">
-        <div class="">
-            <div class="flex gap-2">
-                <x-text-input wire:model="search" id="search" type="search" name="search"
-                    class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el código del ticket"
-                    aria-label="Buscar por el código del ticket" required />
-                <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchProcedure"
-                    class="flex gap-2 items-center p-2 px-4 rounded-xl text-slate-50 dark:text-slate-800 border border-gray-300 dark:border-gray-700 bg-slate-800 dark:bg-slate-200">
-                    <span wire:loading.class="hidden" wire:target="searchProcedure">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                            stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"
-                            stroke-width="2" class="h-6">
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="m21 21-4.3-4.3" />
-                        </svg>
-                    </span>
-                    <span wire:loading wire:target="searchProcedure" class="animate-spin">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
-                            <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                        </svg>
-                    </span>
-                    <span wire:loading.class="hidden" wire:target="searchProcedure">Buscar</span>
-                    <span wire:loading wire:target="searchProcedure">Buscando...</span>
-                </button>
-            </div>
-            <x-input-error :messages="$errors->get('search')" class="mt-2" />
+    <section>
+        <div class="flex gap-2">
+            <x-text-input wire:model="search" wire:keydown.enter="searchProcedure" id="search" type="search" name="search"
+                class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el código del ticket"
+                aria-label="Buscar por el código del ticket" required />
+            <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchProcedure"
+                class="flex gap-2 items-center p-2 px-4 rounded-xl text-slate-50 dark:text-slate-800 border border-gray-300 dark:border-gray-700 bg-slate-800 dark:bg-slate-200">
+                <span wire:loading.class="hidden" wire:target="searchProcedure">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"
+                        stroke-width="2" class="h-6">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.3-4.3" />
+                    </svg>
+                </span>
+                <span wire:loading wire:target="searchProcedure" class="animate-spin">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
+                        <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                    </svg>
+                </span>
+                <span wire:loading.class="hidden" wire:target="searchProcedure">Buscar</span>
+                <span wire:loading wire:target="searchProcedure">Buscando...</span>
+            </button>
         </div>
-    </form>
+        <x-input-error :messages="$errors->get('search')" class="mt-2" />
+    </section>
     @if ($procedure)
         <div class="border rounded-xl p-6 pt-4 space-y-6 mt-4">
             {{-- Datos generales --}}

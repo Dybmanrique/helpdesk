@@ -3,23 +3,27 @@ var Toast = Swal.mixin({
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
-    customClass: {
-        popup: 'rounded-lg dark:bg-gray-700 dark:text-gray-200',
-    }
 });
 
 document.addEventListener('livewire:initialized', () => {
     Livewire.on('notify', (eventData) => {
+        let appTheme = localStorage.getItem("theme") === "auto"
+            ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+            : localStorage.getItem("theme");
         const data = eventData[0];
         if (data.code == 200) {
             Toast.fire({
                 icon: 'success',
-                title: data.message
+                title: data.message,
+                background: appTheme === "dark" ? "#374151" : "#fff",
+                color: appTheme === "dark" ? "#e5e7eb" : "#333",
             });
         } else if (data.code == 500) {
             Toast.fire({
                 icon: 'warning',
-                title: data.message
+                title: data.message,
+                background: appTheme === "dark" ? "#374151" : "#fff",
+                color: appTheme === "dark" ? "#e5e7eb" : "#333",
             });
         } else if (data.code == 201) {
             Swal.fire({
