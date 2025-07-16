@@ -20,6 +20,8 @@ class Procedure extends Model
         'procedure_state_id',
         'document_type_id',
         'user_id',
+        'applicant_full_name',
+        'applicant_identification',
     ];
 
     public function document_type()
