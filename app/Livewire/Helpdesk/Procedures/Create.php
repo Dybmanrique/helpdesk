@@ -277,8 +277,7 @@ class Create extends Component
             //contenido de la alerta con la información del trámite registrado
             $notifyContent = [
                 'title' => 'Trámite registrado correctamente',
-                'message' => '<p>Su trámite fue registrado con el ticket: <br><b><code>' . $procedureTicket . '</code></b></p>
-                            <p>' . $emailStatusMessage . '</p>',
+                'message' => "<p>Su trámite fue registrado con el ticket: </p><p><b>{$procedureTicket}</b></p><p>{$emailStatusMessage}</p>",
                 'code' => '201'
             ];
         } else {

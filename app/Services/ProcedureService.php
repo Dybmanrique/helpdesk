@@ -84,10 +84,9 @@ class ProcedureService
     {
         try {
             Mail::to($email)->send(new ProcedureCreatedMail($procedure));
-            $emailStatusMessage = '<span><b>Nota: </b>La información adicional fue enviada a su correo: <b>' . $email . '</b></span>';
-        } catch (\Exception $e) {;
-            $emailStatusMessage = '<span style="color: #d33"><b>Nota: </b>Ocurrió un problema al enviar la información adicional a su correo: <b>' . $email . '</b></span>';
+            return "<b>Nota: </b>La información adicional fue enviada a su correo: <b>{$email}</b>";
+        } catch (\Exception $e) {
+            return "<span style='color: #d33;'><b>Nota: </b>Ocurrió un problema al enviar la información adicional a su correo: <b>{$email}</b></span>";
         }
-        return $emailStatusMessage;
     }
 }
