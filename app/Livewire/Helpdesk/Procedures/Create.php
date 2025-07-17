@@ -256,6 +256,7 @@ class Create extends Component
                 'document_type_id' => $this->documentTypeId,
                 'applicant_full_name' => $this->applicant['name'] . ' ' . $this->applicant['lastName'] . ' ' . $this->applicant['secondLastName'],
                 'applicant_identification' => $this->applicant['identityNumber'],
+                'company_ruc' => $this->applicant['ruc'] ?? null,
             ]);
             $applicant->procedures()->save($procedure);
 

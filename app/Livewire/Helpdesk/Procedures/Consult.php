@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Helpdesk\Procedures;
 
+use App\Models\LegalPerson;
 use App\Models\LegalRepresentative;
 use App\Models\Person;
 use App\Models\Procedure;
@@ -94,9 +95,8 @@ class Consult extends Component
                 $this->applicant['type'] = 'Persona Natural';
                 $this->applicant['email'] = $procedureApplicant->email; // el correo será tomado del usuario
                 if ($this->procedure->is_juridical) {
-                    // obtener la última persona jurídica relacionada con la persona
-                    $legalRepresentative = LegalRepresentative::where('person_id', $person->id)->latest('updated_at')->first();
-                    $legalPerson = $legalRepresentative->legal_person;
+                    // obtengo los datos de la persona jurídica
+                    $legalPerson = LegalPerson::where('ruc', $this->procedure->company_ruc)->first();
                     $this->applicant['type'] = 'Persona Jurídica';
                 }
             }
