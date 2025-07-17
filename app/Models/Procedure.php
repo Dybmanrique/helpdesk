@@ -22,6 +22,7 @@ class Procedure extends Model
         'user_id',
         'applicant_full_name',
         'applicant_identification',
+        'company_ruc',
     ];
 
     public function document_type()

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->morphs('applicant');
             $table->string('applicant_full_name');
             $table->string('applicant_identification');
+            $table->string('company_ruc', 11)->nullable();
             $table->year('year');
             $table->enum('type', ['internal', 'external'])->default('internal');
             $table->timestamps();
