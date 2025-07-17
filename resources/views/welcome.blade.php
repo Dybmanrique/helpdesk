@@ -17,10 +17,8 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased" 
-x-data="{ theme: localStorage.getItem('theme') || 'auto' }" x-init="const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-document.documentElement.classList.toggle('dark', isDark);" x-cloak
->
+<body class="font-sans antialiased" x-data="{ theme: localStorage.getItem('theme') || 'auto' }" x-init="const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+document.documentElement.classList.toggle('dark', isDark);" x-cloak>
     <div
         class="absolute top-0 w-screen grid min-h-dvh grid-rows-[auto_1fr_auto] text-black/50 dark:text-white/50 bg-sky-100 dark:bg-gray-900 bg-[radial-gradient(ellipse_80%_80%_at_50%_20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
         <header class="w-full bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700">
@@ -37,7 +35,7 @@ document.documentElement.classList.toggle('dark', isDark);" x-cloak
                             @auth
                                 <a href="{{ route('helpdesk.dashboard') }}"
                                     class="relative border-2 border-gray-800 dark:border-gray-200 bg-transparent rounded-md px-3 py-2 text-center text-gray-800 dark:text-gray-200 transition-colors before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-gray-800 before:dark:bg-gray-200 before:transition-transform before:duration-300 before:content-[''] hover:text-white hover:dark:text-gray-800 before:hover:scale-x-100">
-                                    {{ __('Dashboard') }}
+                                    {{ __('Panel de control') }}
                                 </a>
                             @else
                                 <a href="{{ route('login') }}"
@@ -69,9 +67,17 @@ document.documentElement.classList.toggle('dark', isDark);" x-cloak
                     </div>
                 </div>
                 <!-- Responsive Navigation Menu -->
-                <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden mb-3 border-2 dark:border-gray-600 rounded-lg">
-                    <a href="{{ route('login') }}" class="block px-2 py-3 text-gray-600 dark:text-gray-200 border-b-2 dark:border-gray-600">{{__('Log in')}}</a>
-                    <a href="{{ route('register') }}" class="block px-2 py-3 text-gray-600 dark:text-gray-200">{{__('Register')}}</a>
+                <div :class="{ 'block': open, 'hidden': !open }"
+                    class="hidden sm:hidden mb-3 border-2 dark:border-gray-600 rounded-lg">
+                    @auth
+                        <a href="{{ route('helpdesk.dashboard') }}"
+                            class="block px-2 py-3 text-gray-600 dark:text-gray-200 dark:border-gray-600">{{ __('Panel de control') }}</a>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="block px-2 py-3 text-gray-600 dark:text-gray-200 border-b-2 dark:border-gray-600">{{ __('Log in') }}</a>
+                        <a href="{{ route('register') }}"
+                            class="block px-2 py-3 text-gray-600 dark:text-gray-200">{{ __('Register') }}</a>
+                    @endauth
                 </div>
             </nav>
         </header>
