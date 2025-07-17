@@ -125,9 +125,9 @@
             {{-- Archivos a adjuntar --}}
             <section class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded px-3 py-5">
                 {{-- <div> --}}
-                    <x-input-label for="procedure_file" :value="__('Archivo:')" class="mb-3" />
-                    <x-helpdesk.filepond-input wire:model="procedureFile" />
-                    <x-input-error :messages="$errors->get('procedureFile')" class="mt-2" />
+                <x-input-label for="procedure_file" :value="__('Archivo:')" class="mb-3" />
+                <x-helpdesk.filepond-input wire:model="procedureFile" />
+                <x-input-error :messages="$errors->get('procedureFile')" class="mt-2" />
                 {{-- </div> --}}
                 <div>
                     <x-input-label for="procedure_link" :value="__('Link del archivo:')" class="mb-3" />
@@ -140,10 +140,11 @@
 
         <section class="flex items-center justify-end mt-6 gap-2">
             @if ($currentStep > 1)
-                <x-secondary-button wire:click="previousStep">Atrás</x-secondary-button>
+                <x-secondary-button wire:click="previousStep" wire:loading.attr="disabled"
+                    wire:target="save">Atrás</x-secondary-button>
             @endif
             @if ($currentStep < 3)
-                <x-secondary-button wire:loading.attr="disabled" wire:click="nextStep">
+                <x-primary-button wire:loading.attr="disabled" wire:click="nextStep" type="button">
                     <span wire:loading wire:target="nextStep" class="animate-spin">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
                             fill="currentColor">
@@ -152,7 +153,7 @@
                         </svg>
                     </span>
                     <span wire:loading.class="hidden" wire:target="nextStep">Siguiente</span>
-                </x-secondary-button>
+                </x-primary-button>
             @endif
             @if ($currentStep === 3)
                 <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:target="save">
@@ -172,5 +173,4 @@
 @push('js')
     <script src="{{ asset('js/helpdesk/procedures/create.js') }}?v={{ env('APP_VERSION') }}"></script>
     <script src="{{ asset('js/helpdesk/notifications.js') }}?v={{ env('APP_VERSION') }}"></script>
-    {{-- <script src="{{ asset('js/helpdesk/filepond-handler.js') }}?v={{ env('APP_VERSION') }}"></script> --}}
 @endpush

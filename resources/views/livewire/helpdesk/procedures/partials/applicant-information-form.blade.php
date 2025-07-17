@@ -31,7 +31,7 @@
             <div>
                 <x-input-label for="identityNumber" :value="__('Num. Identificación: (*)')" />
                 <div class="w-full flex grow items-center justify-center mt-1 gap-1">
-                    <x-number-input model="applicant.identityNumber" id="identityNumber" class="w-full" type="text"
+                    <x-number-input wire:keydown.enter="searchPerson" model="applicant.identityNumber" id="identityNumber" class="w-full" type="text"
                         placeholder="Número de identificación" maxlength="12" />
                     {{-- Botón de búsqueda por Num. Identificación --}}
                     <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchPerson"
@@ -114,7 +114,7 @@
                 <div>
                     <x-input-label for="ruc" :value="__('RUC: (*)')" />
                     <div class="w-full flex grow items-center justify-center mt-1 gap-1">
-                        <x-number-input model="applicant.ruc" id="ruc" class="w-full" type="text"
+                        <x-number-input wire:keydown.enter="searchLegalPerson" model="applicant.ruc" id="ruc" class="w-full" type="text"
                             placeholder="RUC" maxlength="11" />
                         {{-- Botón de búsqueda por RUC --}}
                         <button wire:loading.class="opacity-50" wire:loading.attr="disabled"
