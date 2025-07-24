@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid sm:grid-cols-2 gap-2">
             {{-- Número de RUC --}}
             <div>
                 <x-input-label for="ruc">RUC <span class="text-xs italic">(opcional)</span></x-input-label>
