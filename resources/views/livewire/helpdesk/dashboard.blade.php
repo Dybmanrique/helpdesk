@@ -254,7 +254,7 @@
         </div>
 
         {{-- Modal de la información del trámite --}}
-        <x-modal name="procedure-information-modal" maxWidth="2xl">
+        <x-modal name="procedure-information-modal" maxWidth="2xl" focusable>
             {{-- Modal header --}}
             <div class="m-3 flex items-center justify-between text-gray-800 dark:text-gray-200">
                 <h2 class="text-lg font-bold">Información del trámite</h2>
