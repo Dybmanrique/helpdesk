@@ -29,14 +29,22 @@ let table;
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    return `
+                    let buttonActions = '';
+                    if (can('Tipos de Resolución: Actualizar')) {
+                        buttonActions += `
                             <button class="btn btn-primary btn-sm fw-bold btn-edit" data-coreui-toggle="modal" data-coreui-target="#modal">
                                 <i class="fa-solid fa-pen-to-square"></i> EDITAR
                             </button>
+                        `;
+                    }
+                    if (can('Tipos de Resolución: Eliminar')) {
+                        buttonActions += `
                             <button class="btn btn-danger btn-sm fw-bold btn-delete"">
                                 <i class="fa-solid fa-trash-can"></i> ELIMINAR
                             </button>
                         `;
+                    }
+                    return buttonActions;
                 }
             }
             ],
@@ -51,6 +59,10 @@ let table;
                 targets: [2]
             },]
         });
+    }
+
+    function can(permission) {
+        return App.permissions.includes(permission);
     }
 
     const buttonSubmitModal = new Buttons(document.getElementById('buttonSubmitModal'));
@@ -71,7 +83,7 @@ let table;
 
     $(`#table tbody`).on('click', '.btn-delete', async function () {
         let data = table.row($(this).parents('tr')).data();
-        if (await confirmationMessage("¿Está seguro?","Se eliminará permanentemente")) {
+        if (await confirmationMessage("¿Está seguro?", "Se eliminará permanentemente")) {
             remove(data.id);
         }
     });
@@ -85,7 +97,7 @@ let table;
 
     const btnAdd = document.getElementById('btnAdd');
     btnAdd.addEventListener('click', () => {
-        if(resolution_type_id){
+        if (resolution_type_id) {
             form.reset();
             Forms.clearErrors('formModal')
             resolution_type_id = null;
@@ -108,15 +120,15 @@ let table;
                 },
                 body: formData
             });
-    
-            
+
+
             if (response.ok) {
                 const result = await response.json();
                 if (!result.success) {
                     Toast.fire({ icon: 'error', 'title': result.message });
                     return;
                 }
-    
+
                 Toast.fire({ icon: 'success', 'title': result.message });
                 table.ajax.reload();
                 form.reset();
@@ -137,7 +149,7 @@ let table;
         } catch (error) {
             console.error("Error inesperado", error);
             Toast.fire({ icon: 'error', 'title': 'Error inesperado' });
-        } finally{
+        } finally {
             Forms.enableForm('formModal');
             buttonSubmitModal.reset();
         }
@@ -150,7 +162,7 @@ let table;
 
         formData.append('resolution_type_id', resolution_type_id);
         formData.append('name', document.getElementById('name').value);
-        
+
         try {
             const response = await fetch('/admin/tipos-de-resolucion/actualizar-tipo-resolucion', {
                 method: 'POST',
@@ -160,7 +172,7 @@ let table;
                 },
                 body: formData
             });
- 
+
             if (response.ok) {
                 const result = await response.json();
                 if (!result.success) {
@@ -187,7 +199,7 @@ let table;
         } catch (error) {
             console.error("Error inesperado", error);
             Toast.fire({ icon: 'error', 'title': 'Error inesperado' });
-        } finally{
+        } finally {
             Forms.enableForm('formModal');
             buttonSubmitModal.reset();
         }

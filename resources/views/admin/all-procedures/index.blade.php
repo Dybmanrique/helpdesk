@@ -21,7 +21,9 @@
                                 <th>CATEGORÍA</th>
                                 <th>PRIORIDAD</th>
                                 <th>ESTADO</th>
-                                <th>ACCIONES</th>
+                                @if (auth()->user()->can('Todos los Trámites: Administrar'))
+                                    <th>ACCIONES</th>
+                                @endif
                             </tr>
                         </thead>
                     </table>
@@ -32,7 +34,7 @@
 @endsection
 
 @section('css')
-    
+
 @endsection
 
 @section('js')

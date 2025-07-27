@@ -39,7 +39,9 @@ class HelpdeskUserSeeder extends Seeder
             'password' => Hash::make('password'),
             'is_active' => 1,
             'person_id' => $person_deyber->id,
-        ]);
+        ])
+        // ->assignRole('Usuario Administrativo');
+        ->assignRole('Administrador');
 
         AdministrativeUser::create([
             'user_id' => $user->id,

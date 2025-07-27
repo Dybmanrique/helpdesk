@@ -73,10 +73,12 @@
                                             <div class="mb-3">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <label for="password" class="form-label">Contraseña (*):</label>
-                                                    <button id="buttonGeneratePassword" type="button" class="btn btn-sm btn-outline-info mb-1"><i class="fa-solid fa-rotate"></i> Generar</button>
+                                                    <button id="buttonGeneratePassword" type="button"
+                                                        class="btn btn-sm btn-outline-info mb-1"><i
+                                                            class="fa-solid fa-rotate"></i> Generar</button>
                                                 </div>
-                                                <input type="password" class="form-control" name='password'
-                                                    id="password" required autocomplete="off">
+                                                <input type="password" class="form-control" name='password' id="password"
+                                                    required autocomplete="off">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="password_confirmation" class="form-label">Confirmar contraseña
@@ -91,10 +93,12 @@
                             </div>
 
                         </div>
-                        <div class="modal-footer">
-                            <button type="submit" id="buttonSubmitModal" class="btn btn-primary fw-bold"><i
-                                    class="fa-solid fa-floppy-disk"></i> GUARDAR</button>
-                        </div>
+                        @if (auth()->user()->can('Usuarios: Crear') || auth()->user()->can('Usuarios: Actualizar'))
+                            <div class="modal-footer">
+                                <button type="submit" id="buttonSubmitModal" class="btn btn-primary fw-bold"><i
+                                        class="fa-solid fa-floppy-disk"></i> GUARDAR</button>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>
@@ -102,12 +106,14 @@
 
         <h2>USUARIOS PÚBLICOS</h2>
         <div class="card">
-            <div class="card-header">
-                <button id="btnAdd" type="button" class="btn btn-primary fw-bold" data-coreui-toggle="modal"
-                    data-coreui-target="#modal">
-                    <i class="fa-solid fa-circle-plus"></i> AGREGAR
-                </button>
-            </div>
+            @can('Usuarios: Crear')
+                <div class="card-header">
+                    <button id="btnAdd" type="button" class="btn btn-primary fw-bold" data-coreui-toggle="modal"
+                        data-coreui-target="#modal">
+                        <i class="fa-solid fa-circle-plus"></i> AGREGAR
+                    </button>
+                </div>
+            @endcan
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-md table-striped w-100 my-2 border-top" id="table">
@@ -117,7 +123,9 @@
                                 <th>IDENTIFICACIÓN</th>
                                 <th>NOMBRE</th>
                                 <th>CORREO</th>
-                                <th>ACCIONES</th>
+                                @if (auth()->user()->can('Usuarios: Actualizar') || auth()->user()->can('Usuarios: Eliminar'))
+                                    <th>ACCIONES</th>
+                                @endif
                             </tr>
                         </thead>
                     </table>

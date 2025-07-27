@@ -57,10 +57,15 @@ import { Utils } from '/js/utils.js';
                     orderable: false,
                     searchable: false,
                     render: function () {
-                        return `
-                    <button class="btn btn-primary btn-sm fw-bold btn-edit text-nowrap" data-coreui-toggle="modal" data-coreui-target="#modal">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
-                    </button>`;
+                        let buttonActions = '';
+                        if (can('Todos los Trámites: Administrar')) {
+                            buttonActions += `
+                                <button class="btn btn-primary btn-sm fw-bold btn-edit text-nowrap" data-coreui-toggle="modal" data-coreui-target="#modal">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
+                                </button>
+                            `;
+                        }
+                        return buttonActions;
                     }
                 }
             ],
@@ -91,6 +96,10 @@ import { Utils } from '/js/utils.js';
 
         // Opcional: Personalizar el campo de búsqueda
         // $('#table_filter input').attr('placeholder', 'Expediente, asunto, solicitante, identificación...');
+    }
+
+    function can(permission) {
+        return App.permissions.includes(permission);
     }
 
 })();

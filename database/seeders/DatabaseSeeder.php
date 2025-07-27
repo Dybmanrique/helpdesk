@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        
+        $this->call(RoleSeeder::class);
+
         IdentityType::create([
             'name' => 'DNI',
         ]);
@@ -54,9 +55,9 @@ class DatabaseSeeder extends Seeder
         $user = User::create([
             'email' => 'ever@gmail.com',
             'password' => Hash::make('12345678'),
-            // 'is_active' => 1,
+            'is_active' => 1,
             'person_id' => $person->id,
-        ]);
+        ])->assignRole('Administrador');
 
         AdministrativeUser::create([
             'user_id' => $user->id,
@@ -79,7 +80,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'dbrmanrique@gmail.com',
         // 'person_id' => 1,
         // ]);
-        
+
         DocumentType::create([
             'name' => 'Carta',
         ]);
@@ -96,7 +97,7 @@ class DatabaseSeeder extends Seeder
         ProcedureCategory::create([
             'name' => 'Administrativos',
         ]);
-        
+
         ProcedurePriority::create([
             'name' => 'Alta',
         ]);
@@ -128,7 +129,7 @@ class DatabaseSeeder extends Seeder
 
         ResolutionType::create(['name' => 'Resolucion Judiciales']);
         ResolutionType::create(['name' => 'Resoluciones Administrativa']);
-        
+
         ResolutionState::create(['name' => 'Pendiente']);
         ResolutionState::create(['name' => 'Firme']);
         ResolutionState::create(['name' => 'Impugnable']);

@@ -60,11 +60,11 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center justify-center">
-                            @auth
+                            @if (auth()->check() && auth()->user()->can('Dashboard de Trámites: Ver'))
                                 <x-nav-link :href="route('helpdesk.dashboard')" :active="request()->routeIs('helpdesk.dashboard')" class="h-full">
                                     {{ __('Panel de control') }}
                                 </x-nav-link>
-                            @endauth
+                            @endif
                             <x-nav-link :href="route('procedures.create')" :active="request()->routeIs('procedures.create')" class="h-full">
                                 {{ __('Registro de Trámites') }}
                             </x-nav-link>
@@ -99,24 +99,28 @@
                                     </div>
                                     {{-- Dropdown Section --}}
                                     <div class="flex flex-col py-1.5">
-                                        <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2" role="menuitem">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
-                                                <circle cx="12" cy="8" r="5" />
-                                                <path d="M20 21a8 8 0 0 0-16 0" />
-                                            </svg>
-                                            {{ __('Profile') }}
-                                        </x-dropdown-link>
-                                        <x-dropdown-link :href="route('helpdesk.dashboard')" class="flex items-center gap-2" role="menuitem">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
-                                                <path d="m12 14 4-4" />
-                                                <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-                                            </svg>
-                                            Panel de control
-                                        </x-dropdown-link>
+                                        @can('Perfil de Usuario: Ver')
+                                            <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2" role="menuitem">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                                                    <circle cx="12" cy="8" r="5" />
+                                                    <path d="M20 21a8 8 0 0 0-16 0" />
+                                                </svg>
+                                                {{ __('Profile') }}
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('Dashboard de Trámites: Ver')
+                                            <x-dropdown-link :href="route('helpdesk.dashboard')" class="flex items-center gap-2" role="menuitem">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                                                    <path d="m12 14 4-4" />
+                                                    <path d="M3.34 19a10 10 0 1 1 17.32 0" />
+                                                </svg>
+                                                Panel de control
+                                            </x-dropdown-link>
+                                        @endcan
                                     </div>
                                     {{-- Dropdown Section --}}
                                     <div class="flex flex-col py-1.5">
@@ -167,6 +171,7 @@
                         </button>
                     </div>
                 </div>
+
                 <!-- Responsive Navigation Menu -->
                 <div x-show="open" x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -194,11 +199,11 @@
                         </div>
                         {{-- Menu --}}
                         <div class="grid gap-3 mt-3">
-                            @auth
+                            @if (auth()->check() && auth()->user()->can('Dashboard de Trámites: Ver'))
                                 <x-responsive-nav-link :href="route('helpdesk.dashboard')" :active="request()->routeIs('helpdesk.dashboard')">
                                     {{ __('Panel de control') }}
                                 </x-responsive-nav-link>
-                            @endauth
+                            @endif
                             <x-responsive-nav-link :href="route('procedures.create')" :active="request()->routeIs('procedures.create')">
                                 {{ __('Registro de Trámites') }}
                             </x-responsive-nav-link>
@@ -240,28 +245,32 @@
                                             </div>
                                             {{-- Dropdown Section --}}
                                             <div class="flex flex-col py-1.5">
-                                                <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2"
-                                                    role="menuitem">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="size-4 shrink-0">
-                                                        <circle cx="12" cy="8" r="5" />
-                                                        <path d="M20 21a8 8 0 0 0-16 0" />
-                                                    </svg>
-                                                    {{ __('Profile') }}
-                                                </x-dropdown-link>
-                                                <x-dropdown-link :href="route('helpdesk.dashboard')" class="flex items-center gap-2"
-                                                    role="menuitem">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="size-4 shrink-0">
-                                                        <path d="m12 14 4-4" />
-                                                        <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-                                                    </svg>
-                                                    Panel de control
-                                                </x-dropdown-link>
+                                                @can('Perfil de Usuario: Ver')
+                                                    <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2"
+                                                        role="menuitem">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                            class="size-4 shrink-0">
+                                                            <circle cx="12" cy="8" r="5" />
+                                                            <path d="M20 21a8 8 0 0 0-16 0" />
+                                                        </svg>
+                                                        {{ __('Profile') }}
+                                                    </x-dropdown-link>
+                                                @endcan
+                                                @can('Dashboard de Trámites: Ver')
+                                                    <x-dropdown-link :href="route('helpdesk.dashboard')" class="flex items-center gap-2"
+                                                        role="menuitem">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                            class="size-4 shrink-0">
+                                                            <path d="m12 14 4-4" />
+                                                            <path d="M3.34 19a10 10 0 1 1 17.32 0" />
+                                                        </svg>
+                                                        Panel de control
+                                                    </x-dropdown-link>
+                                                @endcan
                                             </div>
                                             {{-- Dropdown Section --}}
                                             <div class="flex flex-col py-1.5">

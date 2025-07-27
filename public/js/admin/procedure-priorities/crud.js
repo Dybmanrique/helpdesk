@@ -33,14 +33,22 @@ document.addEventListener('livewire:initialized', () => {
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    return `
+                    let buttonActions = '';
+                    if (can('Prioridades de Trámites: Actualizar')) {
+                        buttonActions += `
                             <button class="btn btn-primary btn-sm fw-bold btn-edit" data-coreui-toggle="modal" data-coreui-target="#modal">
                                 <i class="fa-solid fa-pen-to-square"></i> EDITAR
                             </button>
+                        `;
+                    }
+                    if (can('Prioridades de Trámites: Eliminar')) {
+                        buttonActions += `
                             <button class="btn btn-danger btn-sm fw-bold btn-delete"">
                                 <i class="fa-solid fa-trash-can"></i> ELIMINAR
                             </button>
                         `;
+                    }
+                    return buttonActions;
                 }
             }
             ],
@@ -55,6 +63,10 @@ document.addEventListener('livewire:initialized', () => {
                 targets: [2]
             },]
         });
+    }
+
+    function can(permission) {
+        return App.permissions.includes(permission);
     }
 
     $(`#table tbody`).on('click', '.btn-edit', function () {

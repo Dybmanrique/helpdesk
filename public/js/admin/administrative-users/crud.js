@@ -47,14 +47,22 @@ let table;
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
-                    return `
+                    let buttonActions = '';
+                    if (can('Usuarios: Actualizar')) {
+                        buttonActions += `
                             <button class="btn btn-primary btn-sm fw-bold btn-edit" data-coreui-toggle="modal" data-coreui-target="#modal">
                                 <i class="fa-solid fa-pen-to-square"></i> EDITAR
                             </button>
+                        `;
+                    }
+                    if (can('Usuarios: Eliminar')) {
+                        buttonActions += `
                             <button class="btn btn-danger btn-sm fw-bold btn-delete"">
                                 <i class="fa-solid fa-trash-can"></i> ELIMINAR
                             </button>
                         `;
+                    }
+                    return buttonActions;
                 }
             }
             ],
@@ -69,6 +77,10 @@ let table;
                 targets: [4]
             },]
         });
+    }
+
+    function can(permission) {
+        return App.permissions.includes(permission);
     }
 
     const passwordTemplate = `
