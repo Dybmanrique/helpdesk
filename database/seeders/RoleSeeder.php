@@ -29,11 +29,9 @@ class RoleSeeder extends Seeder
                 'Dashboard de Trámites: Ver',
                 // Todos los Trámites
                 'Todos los Trámites: Listar',
-                'Todos los Trámites: Datos',
                 'Todos los Trámites: Administrar',
                 // Trámites de mi Oficina
                 'Trámites de mi Oficina: Listar',
-                'Trámites de mi Oficina: Datos',
                 'Trámites de mi Oficina: Ver Trámite',
                 'Trámites de mi Oficina: Generar Número',
                 'Trámites de mi Oficina: Ver Encargado',
@@ -42,7 +40,6 @@ class RoleSeeder extends Seeder
                 'Trámites de mi Oficina: Administrar',
                 // Resoluciones
                 'Resoluciones: Listar',
-                'Resoluciones: Datos',
                 'Resoluciones: Crear',
                 'Resoluciones: Actualizar',
                 'Resoluciones: Ver',
@@ -58,41 +55,34 @@ class RoleSeeder extends Seeder
                 'Dashboard de Trámites: Ver',
                 // Tipos de Documentos
                 'Tipos de Documentos: Listar',
-                'Tipos de Documentos: Datos',
                 'Tipos de Documentos: Crear',
                 'Tipos de Documentos: Actualizar',
                 'Tipos de Documentos: Eliminar',
                 // Categorías de Trámites
                 'Categorías de Trámites: Listar',
-                'Categorías de Trámites: Datos',
                 'Categorías de Trámites: Crear',
                 'Categorías de Trámites: Actualizar',
                 'Categorías de Trámites: Eliminar',
                 // Prioridades de Trámites
                 'Prioridades de Trámites: Listar',
-                'Prioridades de Trámites: Datos',
                 'Prioridades de Trámites: Crear',
                 'Prioridades de Trámites: Actualizar',
                 'Prioridades de Trámites: Eliminar',
                 // Estados de Trámites
                 'Estados de Trámites: Listar',
-                'Estados de Trámites: Datos',
                 'Estados de Trámites: Crear',
                 'Estados de Trámites: Actualizar',
                 'Estados de Trámites: Eliminar',
                 // Oficinas
                 'Oficinas: Listar',
-                'Oficinas: Datos',
                 'Oficinas: Crear',
                 'Oficinas: Actualizar',
                 'Oficinas: Eliminar',
                 // Todos los Trámites
                 'Todos los Trámites: Listar',
-                'Todos los Trámites: Datos',
                 'Todos los Trámites: Administrar',
                 // Trámites de mi Oficina
                 'Trámites de mi Oficina: Listar',
-                'Trámites de mi Oficina: Datos',
                 'Trámites de mi Oficina: Ver Trámite',
                 'Trámites de mi Oficina: Generar Número',
                 'Trámites de mi Oficina: Ver Encargado',
@@ -101,26 +91,22 @@ class RoleSeeder extends Seeder
                 'Trámites de mi Oficina: Administrar',
                 // Tipos de Resolución
                 'Tipos de Resolución: Listar',
-                'Tipos de Resolución: Datos',
                 'Tipos de Resolución: Crear',
                 'Tipos de Resolución: Actualizar',
                 'Tipos de Resolución: Eliminar',
                 // Estados de Resolución
                 'Estados de Resolución: Listar',
-                'Estados de Resolución: Datos',
                 'Estados de Resolución: Crear',
                 'Estados de Resolución: Actualizar',
                 'Estados de Resolución: Eliminar',
                 // Resoluciones
                 'Resoluciones: Listar',
-                'Resoluciones: Datos',
                 'Resoluciones: Crear',
                 'Resoluciones: Actualizar',
                 'Resoluciones: Ver',
                 'Resoluciones: Eliminar',
                 // Usuarios
                 'Usuarios: Listar',
-                'Usuarios: Datos',
                 'Usuarios: Crear',
                 'Usuarios: Actualizar',
                 'Usuarios: Eliminar',
@@ -129,11 +115,6 @@ class RoleSeeder extends Seeder
                 'Roles: Crear',
                 'Roles: Actualizar',
                 'Roles: Eliminar',
-                // Permisos
-                'Permisos: Listar',
-                'Permisos: Crear',
-                'Permisos: Actualizar',
-                'Permisos: Eliminar',
                 // Perfil de Usuario
                 'Perfil de Usuario: Ver',
                 'Perfil de Usuario: Actualizar Información',

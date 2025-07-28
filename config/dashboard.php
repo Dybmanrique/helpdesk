@@ -116,6 +116,17 @@ return [
             'active' => 'admin/usuarios-publicos*',
             'can' => ['Usuarios: Listar'],
         ],
+        [
+            'title' => 'ROLES Y PERMISOS',
+            'can' => ['Roles: Listar'],
+        ],
+        [
+            'text' => 'Roles',
+            'route' => 'admin.roles.index',
+            'icon' => 'fa-solid fa-id-card',
+            'active' => 'admin/roles*',
+            'can' => ['Roles: Listar'],
+        ],
         // [
         //     'text' => 'Buttons',
         //     'icon' => 'fa-regular fa-file',
