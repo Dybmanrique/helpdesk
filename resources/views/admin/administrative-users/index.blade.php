@@ -74,6 +74,17 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="rounded border p-3 mb-2">
+                                        <div class="mb-3">
+                                            <label for="role_id" class="form-label">Rol (*):</label>
+                                            <select name="role_id" id="role_id" class="form-select" required>
+                                                <option value="" class="d-none">-Seleccione-</option>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="rounded border p-3">
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email (*):</label>

@@ -13,6 +13,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class AdministrativeUsersController extends Controller
 {
@@ -20,12 +21,13 @@ class AdministrativeUsersController extends Controller
     {
         $identity_types = IdentityType::all();
         $offices = Office::all();
-        return view('admin.administrative-users.index', compact('identity_types', 'offices'));
+        $roles = Role::select('id', 'name')->get();
+        return view('admin.administrative-users.index', compact('identity_types', 'offices', 'roles'));
     }
 
     public function data()
     {
-        $resolutions = AdministrativeUser::query()->with(['user.person.identity_type', 'office']);
+        $resolutions = AdministrativeUser::query()->with(['user.person.identity_type', 'office', 'user.roles']);
 
         return DataTables::of($resolutions)
             ->addColumn('actions', function ($row) {
@@ -46,11 +48,13 @@ class AdministrativeUsersController extends Controller
             'phone' => 'required|string|max:11',
             'address' => 'required|string|max:255',
             'office_id' => 'required|numeric',
+            'role_id' => 'required|numeric',
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         try {
+            $role = Role::find($request->role_id);
             $person = Person::create([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
@@ -67,7 +71,7 @@ class AdministrativeUsersController extends Controller
                 'password' => Hash::make($request->password),
                 'is_active' => 1,
                 'person_id' => $person->id
-            ]);
+            ])->assignRole($role->name);
 
             AdministrativeUser::create([
                 'user_id' => $user->id,
@@ -100,6 +104,7 @@ class AdministrativeUsersController extends Controller
             'phone' => 'required|string|max:11',
             'address' => 'required|string|max:255',
             'office_id' => 'required|numeric',
+            'role_id' => 'required|numeric',
             'email' => [
                 'required',
                 'string',
@@ -110,26 +115,27 @@ class AdministrativeUsersController extends Controller
             ],
         ]);
 
-        if($request->password){
+        if ($request->password) {
             $request->validate([
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
         }
 
         try {
+            $role = Role::find($request->role_id);
             $administrative_user = AdministrativeUser::findOrFail($request->administrative_user_id);
+            $user = $administrative_user->user;
 
             $administrative_user->update([
                 'office_id' => $request->office_id
             ]);
 
-            $administrative_user->user->update([
+            $user->update([
                 'email' => $request->email,
                 'is_active' => 1,
             ]);
 
-            $administrative_user->user->person->update([
+            $user->person->update([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
                 'second_last_name' => $request->second_last_name,
@@ -140,8 +146,10 @@ class AdministrativeUsersController extends Controller
                 'identity_type_id' => $request->identity_type_id,
             ]);
 
-            if($request->password){
-                $administrative_user->user->update([
+            $user->syncRoles([$role->name]);
+
+            if ($request->password) {
+                $user->update([
                     'password' => Hash::make($request->password)
                 ]);
             }

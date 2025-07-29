@@ -63,7 +63,7 @@ class PublicUsersController extends Controller
                 'password' => Hash::make($request->password),
                 'is_active' => 1,
                 'person_id' => $person->id
-            ]);
+            ])->assignRole('Usuario Registrado');
 
             // Return success response with derivation status
             return response()->json([
@@ -99,11 +99,10 @@ class PublicUsersController extends Controller
             ],
         ]);
 
-        if($request->password){
+        if ($request->password) {
             $request->validate([
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
         }
 
         try {
@@ -125,7 +124,7 @@ class PublicUsersController extends Controller
                 'identity_type_id' => $request->identity_type_id,
             ]);
 
-            if($request->password){
+            if ($request->password) {
                 $user->update([
                     'password' => Hash::make($request->password)
                 ]);

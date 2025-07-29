@@ -141,8 +141,9 @@ let table;
             document.getElementById('phone').value = data.user.person.phone;
             document.getElementById('address').value = data.user.person.address;
             document.getElementById('office_id').value = data.office_id;
+            document.getElementById('role_id').value = data.user.roles[0].id;
             document.getElementById('email').value = data.user.email;
-            
+
             const passwordContainer = document.getElementById('passwordContainer');
             passwordContainer.innerHTML = changePasswordTemplate;
 
@@ -157,7 +158,7 @@ let table;
 
     $(`#table tbody`).on('click', '.btn-delete', async function () {
         let data = table.row($(this).parents('tr')).data();
-        if (await confirmationMessage("¿Está seguro?","Se eliminará permanentemente")) {
+        if (await confirmationMessage("¿Está seguro?", "Se eliminará permanentemente")) {
             remove(data.id);
         }
     });
@@ -172,7 +173,7 @@ let table;
     const btnAdd = document.getElementById('btnAdd');
     btnAdd.addEventListener('click', () => {
 
-        if(selected_item){
+        if (selected_item) {
             form.reset();
             Forms.clearErrors('formModal')
             selected_item = null;
@@ -195,6 +196,7 @@ let table;
         formData.append('phone', document.getElementById('phone').value);
         formData.append('address', document.getElementById('address').value);
         formData.append('office_id', document.getElementById('office_id').value);
+        formData.append('role_id', document.getElementById('role_id').value);
         formData.append('email', document.getElementById('email').value);
         formData.append('password', document.getElementById('password').value);
         formData.append('password_confirmation', document.getElementById('password_confirmation').value);
@@ -208,15 +210,15 @@ let table;
                 },
                 body: formData
             });
-    
-            
+
+
             if (response.ok) {
                 const result = await response.json();
                 if (!result.success) {
                     Toast.fire({ icon: 'error', 'title': result.message });
                     return;
                 }
-    
+
                 Toast.fire({ icon: 'success', 'title': result.message });
                 table.ajax.reload();
                 form.reset();
@@ -237,7 +239,7 @@ let table;
         } catch (error) {
             console.error("Error inesperado", error);
             Toast.fire({ icon: 'error', 'title': 'Error inesperado' });
-        } finally{
+        } finally {
             Forms.enableForm('formModal');
             buttonSubmitModal.reset();
         }
@@ -258,14 +260,15 @@ let table;
         formData.append('phone', document.getElementById('phone').value);
         formData.append('address', document.getElementById('address').value);
         formData.append('office_id', document.getElementById('office_id').value);
+        formData.append('role_id', document.getElementById('role_id').value);
         formData.append('email', document.getElementById('email').value);
 
         const collapsePassword = document.getElementById('collapsePassword');
-        if(collapsePassword.classList.contains('show')){
+        if (collapsePassword.classList.contains('show')) {
             formData.append('password', document.getElementById('password').value);
             formData.append('password_confirmation', document.getElementById('password_confirmation').value);
         }
-        
+
         try {
             const response = await fetch('/admin/usuarios-administrativos/actualizar-usuario', {
                 method: 'POST',
@@ -275,7 +278,7 @@ let table;
                 },
                 body: formData
             });
- 
+
             if (response.ok) {
                 const result = await response.json();
                 if (!result.success) {
@@ -302,7 +305,7 @@ let table;
         } catch (error) {
             console.error("Error inesperado", error);
             Toast.fire({ icon: 'error', 'title': 'Error inesperado' });
-        } finally{
+        } finally {
             Forms.enableForm('formModal');
             buttonSubmitModal.reset();
         }
@@ -398,7 +401,7 @@ let table;
                     // Copiar al portapapeles
                     navigator.clipboard.writeText(generatedPassword)
                         .then(() => {
-                            Toast.fire({icon: 'info', title: `Contraseña copiada al portapapeles`})
+                            Toast.fire({ icon: 'info', title: `Contraseña copiada al portapapeles` })
 
                         })
                         .catch(err => {
