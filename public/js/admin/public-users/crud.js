@@ -38,6 +38,19 @@ let table;
                 name: 'email'
             },
             {
+                data: 'is_active',
+                name: 'state',
+                render: function (data, type, row) {
+                    let state = '';
+                    if (data === 1) {
+                        state = `<span class="badge rounded-pill bg-success">Activo</span>`;
+                    } else {
+                        state = `<span class="badge rounded-pill bg-danger">Inactivo</span>`;
+                    }
+                    return state;
+                }
+            },
+            {
                 data: 'actions',
                 name: 'actions',
                 orderable: false,
@@ -124,6 +137,16 @@ let table;
 
     $(`#table tbody`).on('click', '.btn-edit', function () {
         document.getElementById('modalTitle').textContent = "MODIFICAR USUARIO";
+        let stateSelect = document.getElementById('stateSelect');
+        stateSelect.innerHTML = `
+            <label for="is_active" class="form-label">Estado (*):</label>
+            <select name="is_active" id="is_active" class="form-select" required>
+                <option value="" class="d-none">-Seleccione-</option>
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        `;
+        stateSelect.classList.add('mb-3');
 
         let data = table.row($(this).parents('tr')).data();
 
@@ -137,6 +160,7 @@ let table;
             document.getElementById('phone').value = data.person.phone;
             document.getElementById('address').value = data.person.address;
             document.getElementById('email').value = data.email;
+            document.getElementById('is_active').value = data.is_active;
 
             const passwordContainer = document.getElementById('passwordContainer');
             passwordContainer.innerHTML = changePasswordTemplate;
@@ -167,7 +191,10 @@ let table;
 
     const btnAdd = document.getElementById('btnAdd');
     btnAdd.addEventListener('click', () => {
-
+        let stateSelect = document.getElementById('stateSelect');
+        stateSelect.innerHTML = "";
+        stateSelect.classList.remove('mb-3');
+        
         if (selected_item) {
             form.reset();
             Forms.clearErrors('formModal')
@@ -252,6 +279,7 @@ let table;
         formData.append('phone', document.getElementById('phone').value);
         formData.append('address', document.getElementById('address').value);
         formData.append('email', document.getElementById('email').value);
+        formData.append('is_active', document.getElementById('is_active').value);
 
         const collapsePassword = document.getElementById('collapsePassword');
         if (collapsePassword.classList.contains('show')) {

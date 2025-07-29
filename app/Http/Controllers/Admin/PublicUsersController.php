@@ -97,6 +97,7 @@ class PublicUsersController extends Controller
                 'max:255',
                 Rule::unique(User::class)->ignore($request->user_id),
             ],
+            'is_active' => 'required|numeric',
         ]);
 
         if ($request->password) {
@@ -120,7 +121,7 @@ class PublicUsersController extends Controller
             ]);
 
             $user->email = $request->email;
-            $user->is_active = 1;
+            $user->is_active = $request->is_active;
             $user->person_id = $person->id;
             if ($request->password) {
                 $user->password = Hash::make($request->password);
