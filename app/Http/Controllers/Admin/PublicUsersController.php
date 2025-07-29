@@ -47,7 +47,7 @@ class PublicUsersController extends Controller
         ]);
 
         try {
-            $person = Person::create([
+            $person = Person::firstOrCreate([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
                 'second_last_name' => $request->second_last_name,
@@ -108,12 +108,7 @@ class PublicUsersController extends Controller
         try {
             $user = User::findOrFail($request->user_id);
 
-            $user->update([
-                'email' => $request->email,
-                'is_active' => 1,
-            ]);
-
-            $user->person->update([
+            $person = Person::firstOrCreate([
                 'name' => $request->name,
                 'last_name' => $request->last_name,
                 'second_last_name' => $request->second_last_name,
@@ -124,11 +119,13 @@ class PublicUsersController extends Controller
                 'identity_type_id' => $request->identity_type_id,
             ]);
 
+            $user->email = $request->email;
+            $user->is_active = 1;
+            $user->person_id = $person->id;
             if ($request->password) {
-                $user->update([
-                    'password' => Hash::make($request->password)
-                ]);
+                $user->password = Hash::make($request->password);
             }
+            $user->save();
 
             // Return success response with derivation status
             return response()->json([
