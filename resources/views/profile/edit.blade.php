@@ -24,7 +24,7 @@
                 </div>
             @endcan
 
-            @can('Perfil de Usuario: Desactivar cuenta')
+            @can('Perfil de Usuario: Desactivar Cuenta')
                 <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                     <div class="max-w-xl">
                         @include('profile.partials.deactivate-user-form')

@@ -40,7 +40,7 @@
                 <x-secondary-button x-on:click="$dispatch('close')">
                     {{ __('Cancel') }}
                 </x-secondary-button>
-                @can('Perfil de Usuario: Desactivar cuenta')
+                @can('Perfil de Usuario: Desactivar Cuenta')
                     <x-danger-button class="ms-3">Desactivar cuenta</x-danger-button>
                 @endcan
             </div>
