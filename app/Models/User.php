@@ -85,7 +85,7 @@ class User extends Authenticatable
         return $this->hasMany(Resolution::class, 'user_id', 'id');
     }
 
-    public function isAdmin()
+    public function isAdministrative(): bool
     {
         return $this->offices()->exists();
     }
