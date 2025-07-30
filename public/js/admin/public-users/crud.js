@@ -64,13 +64,13 @@ let table;
                             </button>
                         `;
                     }
-                    if (can('Usuarios: Eliminar')) {
-                        buttonActions += `
-                            <button class="btn btn-danger btn-sm fw-bold btn-delete"">
-                                <i class="fa-solid fa-trash-can"></i> ELIMINAR
-                            </button>
-                        `;
-                    }
+                    // if (can('Usuarios: Eliminar')) {
+                    //     buttonActions += `
+                    //         <button class="btn btn-danger btn-sm fw-bold btn-delete"">
+                    //             <i class="fa-solid fa-trash-can"></i> ELIMINAR
+                    //         </button>
+                    //     `;
+                    // }
                     return buttonActions;
                 }
             }
@@ -175,12 +175,12 @@ let table;
         }
     });
 
-    $(`#table tbody`).on('click', '.btn-delete', async function () {
-        let data = table.row($(this).parents('tr')).data();
-        if (await confirmationMessage("¿Está seguro?", "Se eliminará permanentemente")) {
-            remove(data.id);
-        }
-    });
+    // $(`#table tbody`).on('click', '.btn-delete', async function () {
+    //     let data = table.row($(this).parents('tr')).data();
+    //     if (await confirmationMessage("¿Está seguro?", "Se eliminará permanentemente")) {
+    //         remove(data.id);
+    //     }
+    // });
 
     $('#modal').on('hidden.coreui.modal', function () {
         document.getElementById('modalTitle').innerText = "REGISTRAR USUARIO";
@@ -329,34 +329,34 @@ let table;
         }
     }
 
-    async function remove(user_id) {
-        try {
-            const response = await fetch(`/admin/usuarios-publicos/eliminar-usuario/${user_id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
+    // async function remove(user_id) {
+    //     try {
+    //         const response = await fetch(`/admin/usuarios-publicos/eliminar-usuario/${user_id}`, {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    //             }
+    //         });
 
-            if (!response.ok) {
-                Toast.fire({ icon: 'error', 'title': 'Error en el servidor' });
-                return;
-            }
+    //         if (!response.ok) {
+    //             Toast.fire({ icon: 'error', 'title': 'Error en el servidor' });
+    //             return;
+    //         }
 
-            const result = await response.json();
-            if (!result.success) {
-                Toast.fire({ icon: 'error', 'title': result.message });
-                return;
-            }
+    //         const result = await response.json();
+    //         if (!result.success) {
+    //             Toast.fire({ icon: 'error', 'title': result.message });
+    //             return;
+    //         }
 
-            Toast.fire({ icon: 'success', 'title': result.message });
-            table.ajax.reload();
-        } catch (error) {
-            Toast.fire({ icon: 'error', 'title': 'Error en el servidor' });
-            console.error(error);
-        }
-    }
+    //         Toast.fire({ icon: 'success', 'title': result.message });
+    //         table.ajax.reload();
+    //     } catch (error) {
+    //         Toast.fire({ icon: 'error', 'title': 'Error en el servidor' });
+    //         console.error(error);
+    //     }
+    // }
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();

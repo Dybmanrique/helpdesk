@@ -141,26 +141,26 @@ class PublicUsersController extends Controller
         }
     }
 
-    public function destroy($id)
-    {
-        try {
-            $user = User::findOrFail($id);
+    // public function destroy($id)
+    // {
+    //     try {
+    //         $user = User::findOrFail($id);
 
-            // Eliminar al usuario
-            $user->delete();
+    //         // Eliminar al usuario
+    //         $user->delete();
 
-            //Si tiene trámites no eliminar al usuario, de lo contrario sí
+    //         //Si tiene trámites no eliminar al usuario, de lo contrario sí
 
 
-            return response()->json([
-                'message' => 'Eliminado correctamente',
-                'success' => true,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Ocurrió un error en el servidor',
-                'success' => false,
-            ]);
-        }
-    }
+    //         return response()->json([
+    //             'message' => 'Eliminado correctamente',
+    //             'success' => true,
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Ocurrió un error en el servidor',
+    //             'success' => false,
+    //         ]);
+    //     }
+    // }
 }

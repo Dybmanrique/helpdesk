@@ -75,7 +75,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/usuarios-publicos/data', [PublicUsersController::class, 'data'])->middleware(['can:Usuarios: Listar'])->name('admin.public_users.data');
     Route::post('/usuarios-publicos/guardar-usuario', [PublicUsersController::class, 'store'])->middleware(['can:Usuarios: Crear'])->name('admin.public_users.store');
     Route::post('/usuarios-publicos/actualizar-usuario', [PublicUsersController::class, 'update'])->middleware(['can:Usuarios: Actualizar'])->name('admin.public_users.update');
-    Route::delete('/usuarios-publicos/eliminar-usuario/{id}', [PublicUsersController::class, 'destroy'])->middleware(['can:Usuarios: Eliminar'])->name('admin.public_users.destroy');
+    // Route::delete('/usuarios-publicos/eliminar-usuario/{id}', [PublicUsersController::class, 'destroy'])->middleware(['can:Usuarios: Eliminar'])->name('admin.public_users.destroy');
 
     Route::get('/roles', [RoleController::class, 'index'])->middleware(['can:Roles: Listar'])->name('admin.roles.index');
     Route::get('/roles/data', [RoleController::class, 'data'])->middleware(['can:Roles: Listar'])->name('admin.roles.data');

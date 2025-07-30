@@ -125,7 +125,7 @@
                                 <th>NOMBRE</th>
                                 <th>CORREO</th>
                                 <th>ESTADO</th>
-                                @if (auth()->user()->can('Usuarios: Actualizar') || auth()->user()->can('Usuarios: Eliminar'))
+                                @if (auth()->user()->can('Usuarios: Actualizar'))
                                     <th>ACCIONES</th>
                                 @endif
                             </tr>
