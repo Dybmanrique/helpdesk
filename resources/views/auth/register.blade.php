@@ -27,21 +27,21 @@
             <div class="sm:col-span-2 md:col-span-1">
                 <x-input-label for="name" :value="__('Nombre(s)')" />
                 <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
-                    autocomplete="name" required />
+                    autocomplete="off" required />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
             {{-- Apellido Paterno --}}
             <div>
                 <x-input-label for="last_name" :value="__('Apellido Paterno')" />
                 <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')"
-                    autocomplete="last_name" required />
+                    autocomplete="off" required />
                 <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
             </div>
             {{-- Apellido Materno --}}
             <div>
                 <x-input-label for="second_last_name" :value="__('Apellido Materno')" />
                 <x-text-input id="second_last_name" class="block mt-1 w-full" type="text" name="second_last_name"
-                    :value="old('second_last_name')" autocomplete="second_last_name" required />
+                    :value="old('second_last_name')" autocomplete="off" required />
                 <x-input-error :messages="$errors->get('second_last_name')" class="mt-2" />
             </div>
         </div>
@@ -72,7 +72,8 @@
         </div>
         {{-- Razón Social --}}
         <div class="mt-3">
-            <x-input-label for="company_name">Razón Social <span class="text-xs italic">(opcional)</span></x-input-label>
+            <x-input-label for="company_name">Razón Social <span
+                    class="text-xs italic">(opcional)</span></x-input-label>
             <x-text-input id="company_name" class="block mt-1 w-full" type="text" name="company_name"
                 :value="old('company_name')" autocomplete="company_name" />
             <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
@@ -89,8 +90,8 @@
         {{-- Password --}}
         <div class="mt-3">
             <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password"
-                autocomplete="new-password" required />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" autocomplete="off"
+                required />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
@@ -98,7 +99,7 @@
         <div class="mt-3">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
-                name="password_confirmation" autocomplete="new-password" required />
+                name="password_confirmation" autocomplete="off" required />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
