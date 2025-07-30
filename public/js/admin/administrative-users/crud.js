@@ -42,6 +42,19 @@ let table;
                 name: 'office'
             },
             {
+                data: 'user.is_active',
+                name: 'state',
+                render: function (data, type, row) {
+                    let state = '';
+                    if (data === 1) {
+                        state = `<span class="badge rounded-pill bg-success">Activo</span>`;
+                    } else {
+                        state = `<span class="badge rounded-pill bg-danger">Inactivo</span>`;
+                    }
+                    return state;
+                }
+            },
+            {
                 data: 'actions',
                 name: 'actions',
                 orderable: false,
@@ -128,6 +141,16 @@ let table;
 
     $(`#table tbody`).on('click', '.btn-edit', function () {
         document.getElementById('modalTitle').textContent = "MODIFICAR USUARIO";
+        let stateSelect = document.getElementById('stateSelect');
+        stateSelect.innerHTML = `
+            <label for="is_active" class="form-label">Estado (*):</label>
+            <select name="is_active" id="is_active" class="form-select" required>
+                <option value="" class="d-none">-Seleccione-</option>
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        `;
+        stateSelect.classList.add('mb-3');
 
         let data = table.row($(this).parents('tr')).data();
 
@@ -143,6 +166,7 @@ let table;
             document.getElementById('office_id').value = data.office_id;
             document.getElementById('role_id').value = data.user.roles[0].id;
             document.getElementById('email').value = data.user.email;
+            document.getElementById('is_active').value = data.user.is_active;
 
             const passwordContainer = document.getElementById('passwordContainer');
             passwordContainer.innerHTML = changePasswordTemplate;
@@ -172,6 +196,9 @@ let table;
 
     const btnAdd = document.getElementById('btnAdd');
     btnAdd.addEventListener('click', () => {
+        let stateSelect = document.getElementById('stateSelect');
+        stateSelect.innerHTML = "";
+        stateSelect.classList.remove('mb-3');
 
         if (selected_item) {
             form.reset();
@@ -262,6 +289,7 @@ let table;
         formData.append('office_id', document.getElementById('office_id').value);
         formData.append('role_id', document.getElementById('role_id').value);
         formData.append('email', document.getElementById('email').value);
+        formData.append('is_active', document.getElementById('is_active').value);
 
         const collapsePassword = document.getElementById('collapsePassword');
         if (collapsePassword.classList.contains('show')) {

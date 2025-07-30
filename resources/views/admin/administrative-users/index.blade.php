@@ -86,6 +86,7 @@
                                         </div>
                                     </div>
                                     <div class="rounded border p-3">
+                                        <div id="stateSelect"></div>
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email (*):</label>
                                             <input type="email" class="form-control" name='email' id="email"
@@ -146,6 +147,7 @@
                                 <th>NOMBRE</th>
                                 <th>CORREO</th>
                                 <th>OFICINA</th>
+                                <th>ESTADO</th>
                                 @if (auth()->user()->can('Usuarios: Actualizar') || auth()->user()->can('Usuarios: Eliminar'))
                                     <th>ACCIONES</th>
                                 @endif
