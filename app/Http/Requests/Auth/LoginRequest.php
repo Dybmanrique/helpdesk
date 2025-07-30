@@ -50,6 +50,16 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // Verificar si el usuario está activo
+        $user = Auth::user();
+        if (! $user->is_active) {
+            Auth::logout(); // Cerrar sesión si se autenticó pero está inactivo
+
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
     }
 
     /**
@@ -80,6 +90,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
     }
 }

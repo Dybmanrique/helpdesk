@@ -22,6 +22,7 @@ class RoleSeeder extends Seeder
                 'Perfil de Usuario: Ver',
                 'Perfil de Usuario: Actualizar Información',
                 'Perfil de Usuario: Actualizar Contraseña',
+                'Perfil de Usuario: Desactivar Cuenta',
             ],
             'Usuario Administrativo' => [
                 // Dashboard
@@ -48,6 +49,7 @@ class RoleSeeder extends Seeder
                 'Perfil de Usuario: Ver',
                 'Perfil de Usuario: Actualizar Información',
                 'Perfil de Usuario: Actualizar Contraseña',
+                'Perfil de Usuario: Desactivar Cuenta',
             ],
             'Administrador' => [
                 // Dashboard
@@ -119,6 +121,7 @@ class RoleSeeder extends Seeder
                 'Perfil de Usuario: Ver',
                 'Perfil de Usuario: Actualizar Información',
                 'Perfil de Usuario: Actualizar Contraseña',
+                'Perfil de Usuario: Desactivar Cuenta',
             ],
         ];
 
