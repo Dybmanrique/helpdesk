@@ -6,7 +6,10 @@
                 <div>
                     <h2 class="text-lg font-bold">Datos generales del trámite</h2>
                     <p class="text-sm">Num. Expediente: {{ $procedure->expedient_number }}</p>
-                    <p class="text-sm">Ticket: {{ $procedure->ticket }}</p>
+                    <div class="sm:flex items-center justify-center gap-2">
+                        <p class="text-sm">Ticket: {{ $procedure->ticket }}</p>
+                        <x-helpdesk.copy-to-clipboard-button text="{{ $procedure->ticket }}" />
+                    </div>
                 </div>
                 <p
                     class="rounded-full px-3 py-1 text-sm font-normal {{ $stateBadgeStyles[$procedure->state->name] ?? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800 border border-blue-600 dark:border-blue-400' }}">
