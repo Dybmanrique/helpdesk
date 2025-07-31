@@ -25,6 +25,12 @@ class Consult extends Component
     public $derivations;
     public $allProcedureDerivations;
     public $derivationsToShow = 5;
+    public $stateBadgeStyles = [
+        'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800 border border-yellow-600 dark:border-yellow-400',
+        'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800 border border-red-600 dark:border-red-400',
+        'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800 border border-green-600 dark:border-green-400',
+        'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-600 dark:border-gray-400',
+    ];
 
     public function mount($ticket = null)
     {
@@ -113,12 +119,15 @@ class Consult extends Component
                     // si es la primera iteración, los datos del origen de la derivación se indican manualmente
                     $fromUser = $this->applicant['name'];
                     $fromOffice = 'Solicitante';
-                    $state = 'Registrado';
                 } else {
                     // si no es la primera iteración, los datos del origen de la derivación se toman de la derivación anterior
                     $fromUser = $this->procedure->derivations[$i - 1]->user->person->full_name;
                     $fromOffice = $this->procedure->derivations[$i - 1]->office->name;
-                    $state = $derivation->actions->last()->action ?? '';
+                }
+                if (count($this->procedure->derivations) === 1) {
+                    $state = 'Registrado';
+                } else {
+                    $state = $derivation->actions->last()->action ?? 'En espera';
                 }
                 $toUser = $derivation->user->person->full_name;
                 $toOffice = $derivation->office->name;

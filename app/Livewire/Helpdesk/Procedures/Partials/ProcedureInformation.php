@@ -25,6 +25,12 @@ class ProcedureInformation extends Component
     public $allProcedureDerivations;
     public $derivations;
     public $derivationsToShow = 5;
+    public $stateBadgeStyles = [
+        'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800 border border-yellow-600 dark:border-yellow-400',
+        'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800 border border-red-600 dark:border-red-400',
+        'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800 border border-green-600 dark:border-green-400',
+        'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-600 dark:border-gray-400',
+    ];
 
     public function mount($procedureId = null)
     {
@@ -90,12 +96,15 @@ class ProcedureInformation extends Component
                     // si es la primera iteración, los datos del origen de la derivación se indican manualmente
                     $fromUser = $this->applicant['name'];
                     $fromOffice = 'Solicitante';
-                    $state = 'Registrado';
                 } else {
                     // si no es la primera iteración, los datos del origen de la derivación se toman de la derivación anterior
                     $fromUser = $this->procedure->derivations[$i - 1]->user->person->full_name;
                     $fromOffice = $this->procedure->derivations[$i - 1]->office->name;
-                    $state = $derivation->actions->last()->action ?? '';
+                }
+                if (count($this->procedure->derivations) === 1) {
+                    $state = 'Registrado';
+                } else {
+                    $state = $derivation->actions->last()->action ?? 'En espera';
                 }
                 $toUser = $derivation->user->person->full_name;
                 $toOffice = $derivation->office->name;
@@ -111,10 +120,11 @@ class ProcedureInformation extends Component
             });
             // cargar los datos de las derivaciones
             $this->loadDerivations();
+            $notify_content = ['message' => 'Trámite encontrado.', 'code' => '200'];
         } else {
             $notify_content = ['message' => 'El trámite no fue encontrado.', 'code' => '500'];
-            $this->dispatch('notify', $notify_content);
         }
+        return $this->dispatch('notify', $notify_content);
     }
 
     public function loadDerivations()
@@ -128,17 +138,5 @@ class ProcedureInformation extends Component
         // actualizo el limite de derivaciones para mostrar
         $this->derivationsToShow += 3;
         $this->loadDerivations();
-    }
-
-    public function getStateBadgeStyles($stateName)
-    {
-        // obtener los estilos para el badge por cada estado del trámite
-        return match ($stateName) {
-            'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800 border border-yellow-600 dark:border-yellow-400',
-            'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800 border border-red-600 dark:border-red-400',
-            'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800 border border-green-600 dark:border-green-400',
-            'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-600 dark:border-gray-400',
-            default => 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800 border border-blue-600 dark:border-blue-400',
-        };
     }
 }

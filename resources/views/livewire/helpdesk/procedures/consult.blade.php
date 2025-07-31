@@ -1,8 +1,8 @@
 <div>
     <section>
         <div class="flex gap-2">
-            <x-text-input wire:model="search" wire:keydown.enter="searchProcedure" id="search" type="search" name="search"
-                class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el código del ticket"
+            <x-text-input wire:model="search" wire:keydown.enter="searchProcedure" id="search" type="search"
+                name="search" class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el código del ticket"
                 aria-label="Buscar por el código del ticket" required />
             <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchProcedure"
                 class="flex gap-2 items-center p-2 px-4 rounded-xl text-slate-50 dark:text-slate-800 border border-gray-300 dark:border-gray-700 bg-slate-800 dark:bg-slate-200">
@@ -37,7 +37,7 @@
                     <p class="text-sm">Ticket: {{ $procedure->ticket }}</p>
                 </div>
                 <p
-                    class="px-2.5 py-0.5 rounded-full shadow font-bold text-cyan-700 dark:text-cyan-500 border border-cyan-700 dark:border-cyan-500">
+                    class="rounded-full px-3 py-1 font-bold shadow {{ $stateBadgeStyles[$procedure->state->name] ?? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800 border border-blue-600 dark:border-blue-400' }}">
                     {{ $procedure->state->name }}</p>
             </div>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -93,14 +93,16 @@
                                 @if ($loop->iteration < count($derivations) || count($derivations) === 1)
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500">
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="h-5 w-5 text-green-500 shrink-0">
                                         <path d="M21.801 10A10 10 0 1 1 17 3.335" />
                                         <path d="m9 11 3 3L22 4" />
                                     </svg>
                                 @else
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-cyan-500">
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="h-5 w-5 text-cyan-500 shrink-0">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <polyline points="12 6 12 12 16 14"></polyline>
                                     </svg>
@@ -114,8 +116,9 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <p
-                                    class="rounded-full px-2.5 py-0.5 text-xs capitalize font-semibold border {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'text-green-700 dark:text-green-500 border-green-700 dark:border-green-500' : 'text-cyan-700 dark:text-cyan-500 border-cyan-700 dark:border-cyan-500' }}">
-                                    {{ $derivation['state'] }}</p>
+                                    class="rounded-full px-2.5 py-0.5 text-xs capitalize font-semibold whitespace-nowrap border {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'text-green-700 dark:text-green-500 border-green-700 dark:border-green-500' : 'text-cyan-700 dark:text-cyan-500 border-cyan-700 dark:border-cyan-500' }}">
+                                    {{ $derivation['state'] }}
+                                </p>
                                 <div class="transition-transform group-open:rotate-180">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

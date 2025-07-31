@@ -183,7 +183,7 @@
                                                 {{ $procedure->reason }}</td>
                                             <td class="px-4 py-4 text-sm font-medium whitespace-nowrap">
                                                 <span
-                                                    class="rounded-full px-3 py-1 text-sm font-normal {{ $this->getStateBadgeStyles($procedure->state->name) }}">
+                                                    class="rounded-full px-3 py-1 text-sm font-normal {{ $stateBadgeStyles[$procedure->state->name] ?? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800' }}">
                                                     {{ $procedure->state->name }}</span>
                                             </td>
                                             <td class="px-4 py-4 text-sm whitespace-nowrap">
@@ -276,3 +276,6 @@
 
     </div>
 </div>
+@push('js')
+    <script src="{{ asset('js/helpdesk/notifications.js') }}?v={{ env('APP_VERSION') }}"></script>
+@endpush

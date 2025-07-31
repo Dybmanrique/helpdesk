@@ -25,6 +25,12 @@ class Dashboard extends Component
     public $endDate;
     public $search = "";
     public $procedureId;
+    public $stateBadgeStyles = [
+        'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800',
+        'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800',
+        'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800',
+        'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800',
+    ];
 
     #[Computed]
     public function procedures()
@@ -116,18 +122,6 @@ class Dashboard extends Component
         $this->sortCreatedDateDirection = $this->sortCreatedDateDirection === 'desc' ? 'asc' : 'desc';
         // reinicio la paginación
         $this->resetPage();
-    }
-
-    public function getStateBadgeStyles($stateName)
-    {
-        // obtener los estilos para el badge por cada estado del trámite
-        return match ($stateName) {
-            'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800',
-            'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800',
-            'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800',
-            'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800',
-            default => 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800',
-        };
     }
 
     public function resetFilters()
