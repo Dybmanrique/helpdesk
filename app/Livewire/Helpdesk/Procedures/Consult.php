@@ -71,16 +71,18 @@ class Consult extends Component
             'state:id,name',
             'document_type:id,name',
             'category:id,name',
+            'procedure_files:name,uuid,procedure_id',
+            'procedure_link:url,procedure_id',
             'derivations:id,procedure_id,user_id,office_id,created_at',
             'derivations.user:id,person_id',
             'derivations.user.person:id,name,last_name,second_last_name',
             'derivations.office:id,name',
             'derivations.actions:id,action,comment,derivation_id,created_at',
-            'derivations.actions.action_files:id,name,action_id',
+            'derivations.actions.action_files:id,name,uuid,action_id',
             'derivations.actions.resolutions:id,resolution_number,description,resolution_state_id,resolution_type_id',
             'derivations.actions.resolutions.resolution_state:id,name',
             'derivations.actions.resolutions.resolution_type:id,name',
-            'derivations.actions.resolutions.file_resolution:id,name,resolution_id',
+            'derivations.actions.resolutions.file_resolution:id,name,uuid,resolution_id',
         ];
         $this->procedure = Procedure::with($procedureQuery)->where('ticket', $this->search)->first();
         if ($this->procedure) {

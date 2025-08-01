@@ -2,17 +2,61 @@
     @if ($procedure)
         <div class="border rounded-xl p-6 pt-4 space-y-6 mt-4">
             {{-- Datos generales --}}
-            <div class="flex items-start justify-between gap-2">
-                <div>
+            <div class="flex flex-col-reverse sm:flex-row items-start justify-between gap-2">
+                <div class="space-y-0.5 w-full">
                     <h2 class="text-lg font-bold">Datos generales del trámite</h2>
-                    <p class="text-sm">Num. Expediente: {{ $procedure->expedient_number }}</p>
-                    <div class="sm:flex items-center justify-center gap-2">
-                        <p class="text-sm">Ticket: {{ $procedure->ticket }}</p>
-                        <x-helpdesk.copy-to-clipboard-button text="{{ $procedure->ticket }}" />
+                    <div class="sm:flex items-center gap-2 text-sm">
+                        <h3>Num. Expediente:</h3>
+                        <p>{{ $procedure->expedient_number }}</p>
+                    </div>
+                    <div class="sm:flex items-center gap-2 text-sm">
+                        <h3>Ticket:</h3>
+                        <div class="flex gap-2">
+                            <p class="whitespace-nowrap truncate">{{ $procedure->ticket }}</p>
+                            <x-helpdesk.copy-to-clipboard-button text="{{ $procedure->ticket }}" />
+                        </div>
+                    </div>
+                    <div class="sm:flex items-center gap-2 text-sm">
+                        <h3>Archivo adjunto:</h3>
+                        @if ($procedure->procedure_files->isNotEmpty())
+                            <a href="{{ route('procedures.view_file', $procedure->procedure_files->first()->uuid) }}"
+                                target="_blank"
+                                class="flex items-center gap-1 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                title="Ver archivo adjunto">
+                                <span
+                                    class="whitespace-nowrap truncate">{{ $procedure->procedure_files->first()->name }}</span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="size-5">
+                                        <path d="m10 18 3-3-3-3" />
+                                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                                        <path
+                                            d="M4 11V4a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h7" />
+                                    </svg>
+                                </span>
+                            </a>
+                        @elseif(!empty($procedure->procedure_link))
+                            <a href="{{ $procedure->procedure_link->url }}" target="_blank"
+                                class="flex items-center gap-1 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                title="Ver archivo adjunto">
+                                <span class="whitespace-nowrap truncate">Abrir enlace compartido</span>
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="size-5">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                    </svg>
+                                </span>
+                            </a>
+                        @else
+                            <p class="text-gray-600 dark:text-gray-400">-Sin archivo adjunto-</p>
+                        @endif
                     </div>
                 </div>
                 <p
-                    class="rounded-full px-3 py-1 text-sm font-normal {{ $stateBadgeStyles[$procedure->state->name] ?? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800 border border-blue-600 dark:border-blue-400' }}">
+                    class="rounded-full px-3 py-1 font-bold shadow {{ $stateBadgeStyles[$procedure->state->name] ?? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800 border border-blue-600 dark:border-blue-400' }}">
                     {{ $procedure->state->name }}</p>
             </div>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -60,7 +104,7 @@
         <div class="space-y-3 mt-3">
             @foreach ($derivations as $derivation)
                 <div
-                    class="rounded-xl border border-l-2 {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'border-l-green-500' : 'border-l-cyan-500' }}">
+                    class="rounded-xl border border-l-2 overflow-hidden {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'border-l-green-500' : 'border-l-cyan-500' }}">
                     <details class="group" name="derivations">
                         <summary class="flex items-center justify-between cursor-pointer list-none p-4">
                             <div class="flex items-center space-x-2">
@@ -130,27 +174,40 @@
                                                     </p>
                                                     <p class="text-sm font-light">{{ $action->comment }}</p>
                                                 </div>
+                                                {{-- Archivos de acciones adjuntos --}}
                                                 <div class="space-y-1">
                                                     <p class="text-xs">Archivos adjuntos:</p>
-                                                    <div class="space-y-1">
-                                                        @foreach ($action->action_files as $actionFile)
-                                                            <p class="flex items-center space-x-2 text-sm">
-                                                                <span>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                                        width="14" height="14"
-                                                                        viewBox="0 0 24 24" fill="none"
-                                                                        stroke="currentColor" stroke-width="2"
-                                                                        stroke-linecap="round" stroke-linejoin="round"
-                                                                        class="">
-                                                                        <path
-                                                                            d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                                                                        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                                                                    </svg>
-                                                                </span>
-                                                                <span>{{ $actionFile->name }}</span>
-                                                            </p>
-                                                        @endforeach
-                                                    </div>
+                                                    @if ($action->action_files->isNotEmpty())
+                                                        <div class="space-y-1">
+                                                            @foreach ($action->action_files as $actionFile)
+                                                                <div class="text-sm font-light">
+                                                                    <a href="{{ route('procedures.view_action_file', $actionFile->uuid) }}"
+                                                                        target="_blank"
+                                                                        class="inline-flex items-center gap-2 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300">
+                                                                        <span>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="size-4">
+                                                                                <path d="m10 18 3-3-3-3" />
+                                                                                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                                                                                <path
+                                                                                    d="M4 11V4a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h7" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <span>{{ $actionFile->name }}</span>
+                                                                    </a>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @else
+                                                        <p class="text-xs font-light text-gray-600 dark:text-gray-400">
+                                                            -Sin archivos adjuntos-
+                                                        </p>
+                                                    @endif
                                                 </div>
                                                 {{-- Información de las resoluciones --}}
                                                 @if ($action->resolutions->isNotEmpty())
@@ -171,29 +228,40 @@
                                                                         class="rounded-full px-2.5 py-0.5 text-xs font-semibold text-cyan-700 dark:text-cyan-500 border border-cyan-700 dark:border-cyan-500">
                                                                         {{ $resolution->resolution_state->name }}</p>
                                                                 </div>
+                                                                {{-- Archivos de resoluciones adjuntos --}}
                                                                 <div class="space-y-1">
                                                                     <p class="text-xs">Archivo resolución:</p>
-                                                                    <div class="space-y-1">
-                                                                        <p class="flex items-center space-x-2 text-sm">
-                                                                            <span>
-                                                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                    width="14" height="14"
-                                                                                    viewBox="0 0 24 24" fill="none"
-                                                                                    stroke="currentColor"
-                                                                                    stroke-width="2"
-                                                                                    stroke-linecap="round"
-                                                                                    stroke-linejoin="round"
-                                                                                    class="">
-                                                                                    <path
-                                                                                        d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                                                                                    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-                                                                                </svg>
-                                                                            </span>
-                                                                            <span>
-                                                                                {{ $resolution->file_resolution->name }}
-                                                                            </span>
+                                                                    @if (!empty($resolution->file_resolution))
+                                                                        <div class="text-sm font-light">
+                                                                            <a href="{{ route('procedures.view_resolution_file', $resolution->file_resolution->uuid) }}"
+                                                                                target="_blank"
+                                                                                class="inline-flex items-center gap-2 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300">
+                                                                                <span>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                        width="24" height="24"
+                                                                                        viewBox="0 0 24 24"
+                                                                                        fill="none"
+                                                                                        stroke="currentColor"
+                                                                                        stroke-width="2"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round"
+                                                                                        class="size-4">
+                                                                                        <path d="m10 18 3-3-3-3" />
+                                                                                        <path
+                                                                                            d="M14 2v4a2 2 0 0 0 2 2h4" />
+                                                                                        <path
+                                                                                            d="M4 11V4a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h7" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                <span>{{ $resolution->file_resolution->name }}</span>
+                                                                            </a>
+                                                                        </div>
+                                                                    @else
+                                                                        <p
+                                                                            class="text-xs font-light text-gray-600 dark:text-gray-400">
+                                                                            -Sin archivos adjuntos-
                                                                         </p>
-                                                                    </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         @endforeach

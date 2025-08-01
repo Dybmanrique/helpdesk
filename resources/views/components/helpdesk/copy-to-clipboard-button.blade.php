@@ -8,7 +8,7 @@
                 setTimeout(() => copiado = false, 5000);
             })
         "
-        class="rounded flex">
+        class="rounded flex hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300" title="Copiar">
         <span x-show="!copiado" x-transition:enter.duration.500ms class="">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5">
