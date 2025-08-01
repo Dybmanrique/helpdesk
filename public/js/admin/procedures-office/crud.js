@@ -61,10 +61,15 @@ import { Utils } from '/js/utils.js';
                     orderable: false,
                     searchable: false,
                     render: function () {
-                        return `
-                        <button class="btn btn-primary btn-sm fw-bold btn-edit text-nowrap" data-coreui-toggle="modal" data-coreui-target="#modal">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
-                        </button>`;
+                        let buttonActions = '';
+                        if (can('Trámites de mi Oficina: Administrar')) {
+                            buttonActions += `
+                                <button class="btn btn-primary btn-sm fw-bold btn-edit text-nowrap" data-coreui-toggle="modal" data-coreui-target="#modal">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> ADMINISTRAR
+                                </button>
+                            `;
+                        }
+                        return buttonActions;
                     }
                 }
             ],
@@ -79,6 +84,10 @@ import { Utils } from '/js/utils.js';
                 targets: [10]
             },]
         });
+    }
+
+    function can(permission) {
+        return App.permissions.includes(permission);
     }
 
     function showLoader(loaderId, conentId, show = true) {
@@ -119,18 +128,18 @@ import { Utils } from '/js/utils.js';
                 },
                 body: JSON.stringify({ procedure_id: procedure_id })
             });
-    
+
             if (!response.ok) {
                 Toast.fire({ icon: 'error', title: 'Algo salió mal' });
                 return;
             }
-    
+
             const dataResponse = await response.json();
             if (!dataResponse.success) {
                 Toast.fire({ icon: 'info', title: data.message });
                 return;
             }
-    
+
             completeFieldsProcedure(dataResponse.data);
             showLoader('modalLoader', 'modalContent', false);
 
