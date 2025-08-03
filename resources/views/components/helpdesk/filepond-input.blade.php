@@ -1,13 +1,43 @@
 <div wire:ignore 
-    x-data 
+    x-data="{ uploading: false }"
     x-init="
-        FilePond.registerPlugin(FilePondPluginImagePreview);
-        FilePond.registerPlugin(FilePondPluginFileValidateType);
-        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+        FilePond.registerPlugin(
+            FilePondPluginImagePreview,
+            FilePondPluginFileValidateType,
+            FilePondPluginFileValidateSize
+        );
         FilePond.setOptions({
             server: {
                 process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
-                    @this.upload('{{ $attributes['wire:model'] }}', file, load, error, progress)
+                    uploading = true;
+                    $dispatch('uploading-changed', { isUploading: uploading });
+
+                    const uploadTask = @this.upload(
+                        '{{ $attributes['wire:model'] }}',
+                        file,
+                        (tempFilename) => {
+                            load(tempFilename);
+                            uploading = false;
+                            $dispatch('uploading-changed', { isUploading: uploading });
+                        },
+                        (errMsg) => {
+                            error(errMsg);
+                            uploading = false;
+                            $dispatch('uploading-changed', { isUploading: uploading });
+                        },
+                        (event) => {
+                            progress(event.lengthComputable, event.loaded, event.total);
+                        }
+                    );
+
+                    return {
+                        abort: () => {
+                            uploadTask.abort();
+                            uploading = false;
+                            $dispatch('uploading-changed', { isUploading: uploading });
+                            abort();
+                        }
+                    };
                 },
                 revert: (filename, load, error) => {
                     @this.removeUpload('{{ $attributes['wire:model'] }}', filename, load)
@@ -20,22 +50,30 @@
             maxFiles: 1,
             dropOnPage: true,
             dropOnElement: false,
-            labelIdle: `<span class='filepond--drop-icon'>
-                            <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' 
-                                fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-                                <path d='M12 3v12'/>
-                                <path d='m17 8-5-5-5 5'/><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/>
-                            </svg>
-                        </span>
-                        <p>Arrastra y suelta un archivo o <span class='filepond--label-action'>haz click</span> para subir</p>`,
+            labelIdle: `
+                <div class='filepond--drop-label-content'>
+                    <span class='filepond--label-icon'>
+                        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' 
+                        fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                            <path d='M12 13v8'/>
+                            <path d='M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242'/>
+                            <path d='m8 17 4-4 4 4'/>
+                    </svg>
+                    </span>
+                    <div class='filepond--label-main-content'>
+                        <p>Arrastra y suelta un archivo o <span class='filepond--label-action'>haz click</span> para subir</p>
+                        <p class='filepond--label-allowed-files'>Imágen o PDF (Máx. 10MB)</p>
+                    </div>
+                </div>
+            `,
             labelFileProcessingComplete: 'Carga completa',
             labelFileProcessing: 'Cargando',
             labelFileProcessingError: 'Error durante la carga',
-            labelFileTypeNotAllowed: 'El archivo es de un tipo no válido',
+            labelFileTypeNotAllowed: 'El tipo de archivo no es válido',
             fileValidateTypeLabelExpectedTypes: 'Se esperó {allButLastType} o {lastType}',
             fileValidateTypeLabelExpectedTypesMap: { 'image/*': 'imagen' , 'application/pdf': 'PDF' },
-            labelMaxFileSizeExceeded: 'El archivo es demasiado grande',
-            labelMaxFileSize: 'El tamaño máximo del archivo es de {filesize}',
+            labelMaxFileSizeExceeded: 'Archivo demasiado grande',
+            labelMaxFileSize: 'El tamaño máximo es {filesize}',
             labelTapToCancel: 'Toca para cancelar',
             labelTapToRetry: 'Toca para reintentar',
             labelTapToUndo: 'Toque para deshacer',

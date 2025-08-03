@@ -1,23 +1,110 @@
-/* estilos para el contenedor del texto y el ícono */
+/* label contenedor del texto y el ícono */
 .custom .filepond--drop-label {
     color: #777;
     text-align: center;
+    height: auto;
 }
 
-/* estilos para el contenedor del ícono */
-.filepond--drop-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* estilos para el área drag and drop */
+/* área drag and drop */
 .custom .filepond--panel-root {
-    background-color: #eee;
+    background-color: #f3f4f6;
     border: 1px solid #402c2c58;
 }
 
 .dark .custom .filepond--panel-root {
     background-color: #030712;
     border: 1px solid #aab4c758;
+}
+
+/* color del círculo en el área al arrastrar un archivo */
+.custom .filepond--drip-blob {
+    background-color: #000;
+}
+
+.dark .custom .filepond--drip-blob {
+    background-color: #fff;
+}
+
+/* contenedor del texto del drag and drop */
+.custom .filepond--drop-label-content {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* ícono */
+.filepond--label-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* texto de archivos permitidos */
+.filepond--label-main-content .filepond--label-allowed-files {
+    font-size: 0.75rem;
+}
+
+.custom .filepond--drop-label:hover {
+    transition: ease-in color 200ms;
+    color: #555;
+}
+
+.dark .custom .filepond--drop-label:hover {
+    transition: ease-in color 200ms;
+    color: #999;
+}
+
+@media (max-width: 640px) {
+
+    /* ícono */
+    .filepond--label-icon svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    /* texto principal */
+    .filepond--drop-label-content .filepond--label-main-content {
+        font-size: 0.75rem;
+    }
+
+    /* texto de archivos permitidos */
+    .filepond--label-main-content .filepond--label-allowed-files {
+        font-size: 0.6rem;
+    }
+
+    /* contenedor del archivo */
+    .custom .filepond--item {
+        height: 95px;
+        min-height: 95px;
+    }
+
+    .custom [data-filepond-item-state*='error'] .filepond--file,
+    .custom [data-filepond-item-state*='invalid'] .filepond--file {
+        flex-direction: column;
+    }
+
+    .custom [data-filepond-item-state*='error'] .filepond--file .filepond--file-info,
+    .custom [data-filepond-item-state*='invalid'] .filepond--file .filepond--file-info {
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+@media (min-width: 641px) {
+
+    /* contenedor del archivo */
+    .custom .filepond--item {
+        height: 85px;
+    }
+
+    .custom [data-filepond-item-state*='error'] .filepond--file,
+    .custom [data-filepond-item-state*='invalid'] .filepond--file {
+        align-items: center;
+    }
 }

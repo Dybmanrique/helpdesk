@@ -156,16 +156,19 @@
                 </x-primary-button>
             @endif
             @if ($currentStep === 3)
-                <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:target="save">
-                    <span wire:loading wire:target="save" class="animate-spin">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                            fill="currentColor">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
-                            <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
-                        </svg>
-                    </span>
-                    <span wire:loading.class="hidden" wire:target="save">Enviar</span>
-                </x-primary-button>
+                <div x-data="{ uploading: false }" @uploading-changed.window="uploading = $event.detail.isUploading">
+                    <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:target="save"
+                        x-bind:disabled="uploading">
+                        <span wire:loading wire:target="save" class="animate-spin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12H19C19 15.866 15.866 19 12 19V22Z" />
+                                <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
+                            </svg>
+                        </span>
+                        <span wire:loading.class="hidden" wire:target="save">Enviar</span>
+                    </x-primary-button>
+                </div>
             @endif
         </section>
     </form>
