@@ -3,14 +3,14 @@
         {{-- Tipo de solicitante --}}
         <div class="mt-3 space-y-2">
             <x-input-label for="applicantType" :value="__('Tipo de solicitante: (*)')" />
-            <div class="">
-                <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="0" id="person">
-                <label for="person">Persona Natural</label>
+            <div class="flex items-center gap-1">
+                <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="0" id="person" class="cursor-pointer">
+                <label for="person" class="cursor-pointer">Persona Natural</label>
             </div>
-            <div class="">
+            <div class="flex items-center gap-1">
                 <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="1"
-                    id="legalPerson">
-                <label for="legalPerson">Persona Jurídica</label>
+                    id="legalPerson" class="cursor-pointer">
+                <label for="legalPerson" class="cursor-pointer">Persona Jurídica</label>
             </div>
             <x-input-error :messages="$errors->get('applicant.isJuridical')" class="mt-2" />
         </div>
@@ -19,8 +19,8 @@
             {{-- Tipo de identificación --}}
             <div>
                 <x-input-label for="identityTypeId" :value="__('Tipo de documento de identidad: (*)')" />
-                <x-select wire:model="applicant.identityTypeId" id="identityTypeId" class="block mt-1 w-full">
-                    <option value="" selected disabled>Seleccione...</option>
+                <x-select wire:model="applicant.identityTypeId" id="identityTypeId" class="block mt-1 w-full cursor-pointer">
+                    <option value="" class="hidden" selected disabled>Seleccione...</option>
                     @foreach ($identityTypes as $identityType)
                         <option value="{{ $identityType->id }}">{{ $identityType->name }}</option>
                     @endforeach
@@ -34,9 +34,9 @@
                     <x-number-input wire:keydown.enter="searchPerson" model="applicant.identityNumber" id="identityNumber" class="w-full" type="text"
                         placeholder="Número de identificación" maxlength="12" />
                     {{-- Botón de búsqueda por Num. Identificación --}}
-                    <button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchPerson"
+                    <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchPerson"
                         type="button"
-                        class="flex items-center p-2 rounded border border-gray-300 dark:border-gray-500 bg-slate-200 dark:bg-slate-900">
+                        class="border border-gray-300 dark:border-gray-700 ">
                         <span wire:loading.class="hidden" wire:target="searchPerson">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"
@@ -52,7 +52,7 @@
                                 <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
                             </svg>
                         </span>
-                    </button>
+                    </x-primary-button>
                 </div>
                 <x-input-error :messages="$errors->get('applicant.identityNumber')" class="mt-2" />
             </div>
@@ -86,22 +86,21 @@
             <div>
                 <x-input-label for="email" :value="__('Email: (*)')" />
                 <x-text-input wire:model="applicant.email" id="email" class="block mt-1 w-full" type="email"
-                    placeholder="Correo electrónico de contacto" />
+                    placeholder="Correo electrónico de contacto" autocomplete="off" />
                 <x-input-error :messages="$errors->get('applicant.email')" class="mt-2" />
             </div>
             {{-- Celular --}}
             <div>
                 <x-input-label for="phone" :value="__('Celular: (*)')" />
                 <x-number-input model="applicant.phone" id="phone" class="block mt-1 w-full" type="text"
-                    placeholder="Celular de contacto" maxlength="9" />
-
+                    placeholder="Celular de contacto" maxlength="9" autocomplete="off" />
                 <x-input-error :messages="$errors->get('applicant.phone')" class="mt-2" />
             </div>
             {{-- Dirección --}}
             <div>
                 <x-input-label for="address" :value="__('Dirección: (*)')" />
                 <x-text-input wire:model="applicant.address" id="address" class="block mt-1 w-full" type="text"
-                    placeholder="Dirección" />
+                    placeholder="Dirección" autocomplete="off" />
                 <x-input-error :messages="$errors->get('applicant.address')" class="mt-2" />
             </div>
         </div>
@@ -117,9 +116,9 @@
                         <x-number-input wire:keydown.enter="searchLegalPerson" model="applicant.ruc" id="ruc" class="w-full" type="text"
                             placeholder="RUC" maxlength="11" />
                         {{-- Botón de búsqueda por RUC --}}
-                        <button wire:loading.class="opacity-50" wire:loading.attr="disabled"
+                        <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled"
                             wire:click="searchLegalPerson" type="button"
-                            class="flex items-center p-2 rounded border border-gray-300 dark:border-gray-500 bg-slate-200 dark:bg-slate-900">
+                            class="border border-gray-300 dark:border-gray-500">
                             <span wire:loading.class="hidden" wire:target="searchLegalPerson">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"
@@ -135,7 +134,7 @@
                                     <path d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z" />
                                 </svg>
                             </span>
-                        </button>
+                        </x-primary-button>
                     </div>
                     <x-input-error :messages="$errors->get('applicant.ruc')" class="mt-2" />
                 </div>

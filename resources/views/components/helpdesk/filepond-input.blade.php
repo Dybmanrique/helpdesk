@@ -77,7 +77,6 @@
             labelTapToCancel: 'Toca para cancelar',
             labelTapToRetry: 'Toca para reintentar',
             labelTapToUndo: 'Toque para deshacer',
-            credits: '',
         });"
         class="custom">
     <input type="file" x-ref="input" class="filepond" wire:model="{{ $attributes['wire:model'] }}" >

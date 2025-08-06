@@ -67,76 +67,95 @@
         </div>
     </section>
 
-    <form wire:submit="save">
-        @if ($currentStep === 1)
-            {{-- Información del solicitante --}}
-            <section class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded">
-                @include('livewire.helpdesk.procedures.partials.applicant-information-form')
-            </section>
-        @elseif ($currentStep === 2)
-            {{-- Descripción de la solicitud o trámite --}}
-            <section class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded">
-                <div class="p-3">
-                    <div class="grid lg:grid-cols-3 gap-2 mt-3">
-                        {{-- Tipo de documento de trámite --}}
-                        <div>
-                            <x-input-label for="documentTypeId" :value="__('Tipo de documento de trámite: (*)')" />
-                            <x-select wire:model="documentTypeId" id="documentTypeId" class="block mt-1 w-full"
-                                name="documentTypeId" :value="old('documentTypeId')">
-                                <option value="" selected disabled>Seleccione...</option>
-                                @foreach ($documentTypes as $documentType)
-                                    <option value="{{ $documentType->id }}">{{ $documentType->name }}</option>
-                                @endforeach
-                            </x-select>
-                            <x-input-error :messages="$errors->get('documentTypeId')" class="mt-2" />
-                        </div>
-                        {{-- Categoría de trámite --}}
-                        <div>
-                            <x-input-label for="procedureCategoryId" :value="__('Categoría: (*)')" />
-                            <x-select wire:model="procedureCategoryId" id="procedureCategoryId"
-                                class="block mt-1 w-full" name="procedureCategoryId" :value="old('procedureCategoryId')">
-                                <option value="" selected disabled>Seleccione...</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </x-select>
-                            <x-input-error :messages="$errors->get('procedureCategoryId')" class="mt-2" />
-                        </div>
+    <form wire:submit="save" x-data="{ currentStep: $wire.entangle('currentStep') }">
+        {{-- Información del solicitante --}}
+        <section x-show="currentStep === 1" x-cloak x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+            class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded">
+            @include('livewire.helpdesk.procedures.partials.applicant-information-form')
+        </section>
+        {{-- Descripción de la solicitud o trámite --}}
+        <section x-show="currentStep === 2" x-cloak x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+            class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded">
+            <div class="p-3">
+                <div class="grid lg:grid-cols-3 gap-2 mt-3">
+                    {{-- Tipo de documento de trámite --}}
+                    <div>
+                        <x-input-label for="documentTypeId" :value="__('Tipo de documento de trámite: (*)')" />
+                        <x-select wire:model="documentTypeId" id="documentTypeId"
+                            class="block mt-1 w-full cursor-pointer" name="documentTypeId" :value="old('documentTypeId')">
+                            <option value="" class="hidden" selected disabled>Seleccione...</option>
+                            @foreach ($documentTypes as $documentType)
+                                <option value="{{ $documentType->id }}">{{ $documentType->name }}</option>
+                            @endforeach
+                        </x-select>
+                        <x-input-error :messages="$errors->get('documentTypeId')" class="mt-2" />
                     </div>
-                    {{-- Asunto --}}
-                    <div class="mt-3">
-                        <x-input-label for="reason" :value="__('Asunto: (*)')" />
-                        <x-text-input wire:model="reason" id="reason" class="block mt-1 w-full" type="text"
-                            name="reason"
-                            placeholder="Registre en forma clara el asunto por el cual ingresa el documento o nombre del procedimiento." />
-                        <x-input-error :messages="$errors->get('reason')" class="mt-2" />
-                    </div>
-                    {{-- Descripción --}}
-                    <div class="mt-3">
-                        <x-input-label for="description" :value="__('Descripción: (*)')" />
-                        <x-textarea wire:model="description" id="description" class="block mt-1 w-full" type="text"
-                            name="description" :value="old('description')" rows="3"
-                            placeholder="Ingrese en forma detallada el contenido de su solicitud, procedimiento o trámite." />
-                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                    {{-- Categoría de trámite --}}
+                    <div>
+                        <x-input-label for="procedureCategoryId" :value="__('Categoría: (*)')" />
+                        <x-select wire:model="procedureCategoryId" id="procedureCategoryId"
+                            class="block mt-1 w-full cursor-pointer" name="procedureCategoryId" :value="old('procedureCategoryId')">
+                            <option value="" class="hidden" selected disabled>Seleccione...</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </x-select>
+                        <x-input-error :messages="$errors->get('procedureCategoryId')" class="mt-2" />
                     </div>
                 </div>
-            </section>
-        @elseif ($currentStep === 3)
-            {{-- Archivos a adjuntar --}}
-            <section class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded px-3 py-5">
-                {{-- <div> --}}
-                <x-input-label for="procedure_file" :value="__('Archivo:')" class="mb-3" />
+                {{-- Asunto --}}
+                <div class="mt-3">
+                    <x-input-label for="reason" :value="__('Asunto: (*)')" />
+                    <x-text-input wire:model="reason" id="reason" class="block mt-1 w-full" type="text"
+                        name="reason"
+                        placeholder="Registre en forma clara el asunto por el cual ingresa el documento o nombre del procedimiento."
+                        autocomplete="off" />
+                    <x-input-error :messages="$errors->get('reason')" class="mt-2" />
+                </div>
+                {{-- Descripción --}}
+                <div class="mt-3">
+                    <x-input-label for="description" :value="__('Descripción: (*)')" />
+                    <x-textarea wire:model="description" id="description" class="block mt-1 w-full" type="text"
+                        name="description" :value="old('description')" rows="3"
+                        placeholder="Ingrese en forma detallada el contenido de su solicitud, procedimiento o trámite."
+                        autocomplete="off" />
+                    <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                </div>
+            </div>
+        </section>
+        {{-- Archivos a adjuntar --}}
+        <section x-show="currentStep === 3" x-cloak x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
+            class="mt-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm rounded px-3 py-5">
+            <div>
+                <x-input-label for="procedure_file" class="mb-1">
+                    Archivo: <span class="text-xs italic">(opcional)</span>
+                </x-input-label>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Suba el archivo a considerar en su proceso de trámite.
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Solo se admiten imágenes y archivos PDF, de un tamaño máximo de 10 Megabytes (MB).
+                </p>
                 <x-helpdesk.filepond-input wire:model="procedureFile" />
                 <x-input-error :messages="$errors->get('procedureFile')" class="mt-2" />
-                {{-- </div> --}}
-                <div>
-                    <x-input-label for="procedure_link" :value="__('Link del archivo:')" class="mb-3" />
-                    <x-text-input wire:model="procedureLink" id="procedure_link" class="block mt-1 w-full"
-                        type="text" placeholder="Enlace del archivo o carpeta de Google Drive o OneDrive" />
-                    <x-input-error :messages="$errors->get('procedureLink')" class="mt-2" />
-                </div>
-            </section>
-        @endif
+            </div>
+            <div>
+                <x-input-label for="procedure_link" class="mb-1">
+                    Link del archivo: <span class="text-xs italic">(opcional)</span>
+                </x-input-label>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    En el caso de que el archivo supere los 10 Megabytes (MB), puede subirlo a Google Drive o OneDrive y
+                    compartir el enlace aquí.
+                </p>
+                <p class="text-xs italic text-gray-600 dark:text-gray-400 break-all mb-3">Ejemplo: https://drive.google.com/file/d/1234567890/view?usp=sharing</p>
+                <x-text-input wire:model="procedureLink" id="procedure_link" class="block mt-1 w-full"
+                    type="text" placeholder="Enlace del archivo o carpeta de Google Drive o OneDrive" />
+                <x-input-error :messages="$errors->get('procedureLink')" class="mt-2" />
+            </div>
+        </section>
 
         <section class="flex items-center justify-end mt-6 gap-2">
             @if ($currentStep > 1)
