@@ -355,7 +355,7 @@ class Create extends Component
             'applicant.identityTypeId' => 'tipo de identidad',
         ]);
         $person = Person::where('identity_number', $this->applicant['identityNumber'])
-            ->where('identity_type_id', $this->applicant['identityTypeId'])->first();
+            ->where('identity_type_id', $this->applicant['identityTypeId'])->latest('updated_at')->first();
         if ($person) {
             $this->applicant['identityTypeId'] = $person->identity_type_id;
             $this->applicant['identityNumber'] = $person->identity_number;
