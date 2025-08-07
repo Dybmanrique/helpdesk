@@ -68,7 +68,7 @@
     <div x-cloak x-show="isOpen || openedWithKeyboard" x-transition x-trap="openedWithKeyboard"
         x-on:click.outside="isOpen = false, openedWithKeyboard = false" x-on:keydown.down.prevent="$focus.wrap().next()"
         x-on:keydown.up.prevent="$focus.wrap().previous()"
-        class="absolute {{ $alignmentClasses }} flex flex-col w-fit {{ $width }} divide-y divide-gray-300 overflow-hidden {{ $roundedMenu }} border border-gray-300 bg-gray-50 dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-900"
+        class="absolute z-10 {{ $alignmentClasses }} flex flex-col w-fit {{ $width }} divide-y divide-gray-300 overflow-hidden {{ $roundedMenu }} border border-gray-300 bg-gray-50 dark:divide-gray-700 dark:border-gray-700 dark:bg-gray-900"
         role="menu">
         {{-- Dropdown Section --}}
         <div class="flex flex-col py-1.5">
