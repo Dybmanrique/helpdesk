@@ -1,7 +1,11 @@
 <x-guest-layout>
+
+    <h1 class="font-medium text-2xl text-gray-800 dark:text-gray-200">Registrarse</h1>
+    <p class="flex gap-2 text-sm text-gray-600 dark:text-gray-400">Completa el siguiente formulario para crear una cuenta.</p>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
-        <div class="grid sm:grid-cols-2 gap-2 mt-3">
+        <div class="grid sm:grid-cols-2 gap-2 mt-6">
             {{-- Tipo de Identificación --}}
             <div class="">
                 <x-input-label for="identity_type_id" :value="__('Tipo Identificación')" />
