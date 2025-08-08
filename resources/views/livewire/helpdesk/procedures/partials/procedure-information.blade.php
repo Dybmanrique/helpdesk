@@ -60,9 +60,24 @@
                     {{ $procedure->state->name }}</p>
             </div>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
+                <div x-data="{ showDescription: false }">
                     <h3 class="text-sm font-light">Asunto</h3>
-                    <p class="font-medium">{{ $procedure->reason }}</p>
+                    <div x-on:click="showDescription = !showDescription"
+                        class="flex items-center justify-between cursor-pointer">
+                        <p class="font-medium ">{{ $procedure->reason }}</p>
+                        <button class="flex items-center gap-2 px-2.5 py-1" type="button" title="Ver descripción">
+                            <span class="transition-transform" x-bind:class="showDescription ? 'rotate-180' : ''">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="size-5">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                    <div x-show="showDescription" x-collapse.duration.300ms class="font-light text-sm border-s">
+                        <p class="px-3 py-1">{{ $procedure->description }}</p>
+                    </div>
                 </div>
                 <div>
                     <h3 class="text-sm font-light">Fecha de registro</h3>
