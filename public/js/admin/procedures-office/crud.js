@@ -174,15 +174,25 @@ import { Utils } from '/js/utils.js';
 
         const filesModal = document.getElementById('filesModal');
         filesModal.innerHTML = '';
-        data.procedure_files.forEach(file => {
+        if (data.procedure_files.length > 0) {
+            data.procedure_files.forEach(file => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `/ver-archivo/${file.id}`;
+                a.target = '_blank';
+                a.textContent = file.name;
+                li.appendChild(a);
+                filesModal.append(li)
+            });
+        } else if (data.procedure_link != null) {
             const li = document.createElement('li');
             const a = document.createElement('a');
-            a.href = `/ver-archivo/${file.id}`;
+            a.href = data.procedure_link;
             a.target = '_blank';
-            a.textContent = file.name;
+            a.textContent = 'Enlace compartido';
             li.appendChild(a);
             filesModal.append(li)
-        });
+        }
 
         const timelineModal = document.getElementById('timelineModal');
         timelineModal.innerHTML = '';

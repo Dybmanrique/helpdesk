@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\LegalRepresentative;
+use App\Models\Person;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,25 +29,35 @@ class ProcedureResource extends JsonResource
             'priority' => $this->priority->name,
             'document_type' => $this->document_type->name,
             'applicant' => $this->whenLoaded('applicant', function () {
-                return [
-                    'type' => class_basename($this->applicant_type),
-                    'id' => $this->applicant->id,
-                    'name' => $this->applicant->name ?? null, // Suponiendo que tiene name
-                    'last_name' => $this->applicant->last_name ?? null, // Suponiendo que tiene name
-                    'second_last_name' => $this->applicant->second_last_name ?? null, // Suponiendo que tiene name
-                    'email' => $this->applicant->email ?? null, // Si aplica
-                    'phone' => $this->applicant->phone ?? null, // Si aplica
-                    // puedes adaptar según el tipo de modelo
-                ];
+                $procedureApplicant = $this->applicant;
+                $applicant = [];
+                if ($procedureApplicant instanceof Person) {
+                    $person = $procedureApplicant;
+                    $applicant['email'] = $person->email;
+                } elseif ($procedureApplicant instanceof LegalRepresentative) {
+                    $person = $procedureApplicant->person;
+                    $applicant['email'] = $person->email;
+                } elseif ($procedureApplicant instanceof User) {
+                    $person = $procedureApplicant->person;
+                    $applicant['email'] = $procedureApplicant->email; // el correo será tomado del usuario
+                }
+                $applicant['type'] = class_basename($this->applicant_type);
+                $applicant['id'] = $this->applicant->id;
+                $applicant['name'] = $person->name ?? null;
+                $applicant['last_name'] = $person->last_name ?? null;
+                $applicant['second_last_name'] = $person->second_last_name ?? null;
+                $applicant['phone'] = $person->phone ?? null;
+                return $applicant;
             }),
             'procedure_files' => $this->procedure_files->map(function ($procedure_file) {
                 return [
-                    'id' => $procedure_file->file->id,
-                    'name' => $procedure_file->file->name,
-                    'path' => $procedure_file->file->path,
-                    'uuid' => $procedure_file->file->uuid,
+                    'id' => $procedure_file->id,
+                    'name' => $procedure_file->name,
+                    'path' => $procedure_file->path,
+                    'uuid' => $procedure_file->uuid,
                 ];
             }),
+            'procedure_link' => $this->procedure_link->url ?? null,
             'actions' => $this->actions->map(function ($action) {
                 return [
                     'id' => $action->id,

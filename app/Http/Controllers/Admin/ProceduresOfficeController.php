@@ -7,9 +7,13 @@ use App\Http\Resources\ProcedureResource;
 use App\Models\ActionFile;
 use App\Models\Derivation;
 use App\Models\File;
+use App\Models\LegalPerson;
+use App\Models\LegalRepresentative;
 use App\Models\Office;
+use App\Models\Person;
 use App\Models\Procedure;
 use App\Models\ProcedureState;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +37,13 @@ class ProceduresOfficeController extends Controller
 
         $query = Derivation::query()
             ->with([
-                'procedure.applicant',
+                'procedure.applicant' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        Person::class => ['identity_type:id,name'],
+                        LegalRepresentative::class => ['person:id,name,last_name,second_last_name,email,identity_number,identity_type_id', 'person.identity_type:id,name', 'legal_person:id,company_name,ruc'],
+                        User::class => ['person:id,name,last_name,second_last_name,email,identity_number,identity_type_id', 'person.identity_type:id,name'],
+                    ]);
+                },
                 'procedure.state',
                 'procedure.category',
                 'procedure.priority',
@@ -46,11 +56,17 @@ class ProceduresOfficeController extends Controller
             ->addColumn('expedient_number', fn($d) => $d->procedure->expedient_number)
             ->addColumn('reason', fn($d) => $d->procedure->reason)
             ->addColumn('applicant_name', function ($d) {
-                $a = $d->procedure->applicant;
-                return trim("{$a->name} {$a->last_name} {$a->second_last_name}");
+                $applicant = $this->getApplicantData($d->procedure);
+                return collect($applicant)['name'];
             })
-            ->addColumn('applicant_email', fn($d) => $d->procedure->applicant->email)
-            ->addColumn('applicant_identity', fn($d) => $d->procedure->applicant->identity_number)
+            ->addColumn('applicant_email', function ($d) {
+                $applicant = $this->getApplicantData($d->procedure);
+                return collect($applicant)['email'];
+            })
+            ->addColumn('applicant_identity', function ($d) {
+                $applicant = $this->getApplicantData($d->procedure);
+                return collect($applicant)['identityNumber'];
+            })
             ->addColumn('document_type', fn($d) => $d->procedure->document_type->name ?? '')
             ->addColumn('procedure_category', fn($d) => $d->procedure->category->name ?? '')
             ->addColumn('procedure_priority', fn($d) => $d->procedure->priority->name ?? '')
@@ -61,7 +77,24 @@ class ProceduresOfficeController extends Controller
             ->toJson();
     }
 
-
+    public function getApplicantData($procedure)
+    {
+        $procedureApplicant = $procedure->applicant;
+        $applicant = [];
+        if ($procedureApplicant instanceof Person) {
+            $person = $procedureApplicant;
+            $applicant['email'] = $person->email;
+        } elseif ($procedureApplicant instanceof LegalRepresentative) {
+            $person = $procedureApplicant->person;
+            $applicant['email'] = $person->email;
+        } elseif ($procedureApplicant instanceof User) {
+            $person = $procedureApplicant->person;
+            $applicant['email'] = $procedureApplicant->email; // el correo será tomado del usuario
+        }
+        $applicant['name'] = $person->full_name;
+        $applicant['identityNumber'] = $person->identity_number;
+        return $applicant;
+    }
 
     public function info_procedure(Request $request)
     {
@@ -74,9 +107,16 @@ class ProceduresOfficeController extends Controller
             'category',
             'priority',
             'document_type',
-            'procedure_files.file',
+            'procedure_files',
+            'procedure_link',
             'actions.action_files',
-            'applicant' // <-- aquí
+            'applicant' => function ($morphTo) {
+                $morphTo->morphWith([
+                    Person::class => ['identity_type:id,name'],
+                    LegalRepresentative::class => ['person:id,name,last_name,second_last_name,email,identity_number,identity_type_id', 'person.identity_type:id,name', 'legal_person:id,company_name,ruc'],
+                    User::class => ['person:id,name,last_name,second_last_name,email,identity_number,identity_type_id', 'person.identity_type:id,name'],
+                ]);
+            },
         ])->find($request->procedure_id);
 
         if (!$procedure) {
