@@ -75,16 +75,26 @@ class ProcedureInformation extends Component
         $this->procedure = Procedure::with($procedureQuery)->find($procedureId);
         if ($this->procedure) {
             // obtener la información del solicitante de la relación polimórfica
-            // teniendo en cuenta que como está autenticado será una instancia de User
             $procedureApplicant = $this->procedure->applicant;
             $legalPerson = null;
-            $person = $procedureApplicant->person;
-            $this->applicant['type'] = 'Persona Natural';
-            $this->applicant['email'] = $procedureApplicant->email;
-            if ($this->procedure->is_juridical) {
-                // obtengo los datos de la persona jurídica
-                $legalPerson = LegalPerson::where('ruc', $this->procedure->company_ruc)->first();
+            if ($procedureApplicant instanceof Person) {
+                $person = $procedureApplicant;
+                $this->applicant['type'] = 'Persona Natural';
+                $this->applicant['email'] = $person->email;
+            } elseif ($procedureApplicant instanceof LegalRepresentative) {
+                $person = $procedureApplicant->person;
+                $legalPerson = $procedureApplicant->legal_person;
                 $this->applicant['type'] = 'Persona Jurídica';
+                $this->applicant['email'] = $person->email;
+            } elseif ($procedureApplicant instanceof User) {
+                $person = $procedureApplicant->person;
+                $this->applicant['type'] = 'Persona Natural';
+                $this->applicant['email'] = $procedureApplicant->email; // el correo será tomado del usuario
+                if ($this->procedure->is_juridical) {
+                    // obtengo los datos de la persona jurídica
+                    $legalPerson = LegalPerson::where('ruc', $this->procedure->company_ruc)->first();
+                    $this->applicant['type'] = 'Persona Jurídica';
+                }
             }
             $this->applicant['name'] = $person->full_name;
             $this->applicant['identityType'] = $person->identity_type->name;

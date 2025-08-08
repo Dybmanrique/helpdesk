@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Helpdesk;
 
+use App\Models\LegalRepresentative;
+use App\Models\Person;
 use App\Models\Procedure;
 use App\Models\ProcedureState;
 use App\Models\User;
@@ -14,6 +16,8 @@ use Livewire\WithPagination;
 class Dashboard extends Component
 {
     use WithPagination, WithoutUrlPagination;
+    public $legalRepresentativeIds;
+    public $personIds;
     public $pendingProcedures = 0;
     public $rejectedProcedures = 0;
     public $archivedProcedures = 0;
@@ -38,7 +42,16 @@ class Dashboard extends Component
         return Procedure::select('id', 'expedient_number', 'reason', 'created_at', 'procedure_state_id')
             ->with('state:id,name')
             ->whereHas('applicant', function ($query) {
-                $query->where('id', Auth::id())->where('applicant_type', User::class);
+                $query->where(function ($query) {
+                    // buscar los trámites relacionados con el usuario autenticado
+                    $query->where('applicant_type', User::class)->where('id', Auth::id());
+                })->orWhere(function ($query) {
+                    // buscar los trámites relacionados con el usuario autenticado, en personas
+                    $query->where('applicant_type', Person::class)->whereIn('id', $this->personIds);
+                })->orWhere(function ($query) {
+                    // buscar los trámites relacionados con el usuario autenticado, en representantes legales
+                    $query->where('applicant_type', LegalRepresentative::class)->whereIn('id', $this->legalRepresentativeIds);
+                });
             })
             ->where(function ($query) {
                 // filtrar con el campo de búsqueda por núm. expediente o asunto
@@ -83,13 +96,31 @@ class Dashboard extends Component
 
     public function mount()
     {
+        // obtener los ids de las personas con los mismos datos de identificación de la actual persona relacionada al usuario
+        $person = Auth::user()->person;
+        $this->personIds = Person::where('identity_type_id', $person->identity_type_id)
+            ->where('identity_number', $person->identity_number)
+            ->where('name', $person->name)
+            ->where('last_name', $person->last_name)
+            ->where('second_last_name', $person->second_last_name)->pluck('id');
+        // obtener los ids de los representantes legales relacionados con las personas relacionadas al usuario autenticado
+        $this->legalRepresentativeIds = LegalRepresentative::whereIn('person_id', $this->personIds)->pluck('id');
         // seleccionar los estados de los trámites que se contarán
         $statesToCount = ProcedureState::whereIn('name', ['Pendiente', 'Rechazado', 'Archivado', 'Concluido'])
             ->pluck('name', 'id');
         // contar los trámites por estado entre los trámites registrados por el usuario
         $proceduresByStates = Procedure::selectRaw('procedure_state_id, COUNT(*) as total')
             ->whereHas('applicant', function ($query) {
-                $query->where('id', Auth::id())->where('applicant_type', User::class);
+                $query->where(function ($query) {
+                    // buscar los trámites relacionados con el usuario autenticado
+                    $query->where('applicant_type', User::class)->where('id', Auth::id());
+                })->orWhere(function ($query) {
+                    // buscar los trámites relacionados con el usuario autenticado, en personas
+                    $query->where('applicant_type', Person::class)->whereIn('id', $this->personIds);
+                })->orWhere(function ($query) {
+                    // buscar los trámites relacionados con el usuario autenticado, en representantes legales
+                    $query->where('applicant_type', LegalRepresentative::class)->whereIn('id', $this->legalRepresentativeIds);
+                });
             })
             ->whereIn('procedure_state_id', $statesToCount->keys())
             ->whereYear('created_at', now()->year)
