@@ -32,13 +32,11 @@ let table;
                 searchable: false,
                 render: function (data, type, row) {
                     let buttonActions = '';
-                    if (can('Resoluciones: Ver')) {
-                        buttonActions += `
+                    buttonActions += `
                             <button class="btn btn-secondary btn-sm fw-bold btn-view">
                                 <i class="fa-solid fa-eye"></i> VER
                             </button>
                         `;
-                    }
                     if (can('Resoluciones: Actualizar')) {
                         buttonActions += `
                             <button class="btn btn-primary btn-sm fw-bold btn-edit" data-coreui-toggle="modal" data-coreui-target="#modal">
@@ -77,7 +75,7 @@ let table;
     $(`#table tbody`).on('click', '.btn-view', function () {
         let data = table.row($(this).parents('tr')).data();
         const uuid = data.file_resolution.uuid;
-        window.open(`/admin/resoluciones/ver-archivo/${uuid}`, '_blank');
+        window.open(`/resoluciones/ver-archivo/${uuid}`, '_blank');
     });
 
     $(`#table tbody`).on('click', '.btn-edit', function () {
@@ -100,7 +98,7 @@ let table;
             fileUpload.innerHTML = '';
             const uploadedFileLink = document.createElement('a');
             fileUpload.classList.remove('d-none');
-            uploadedFileLink.href = `/admin/resoluciones/ver-archivo/${data.file_resolution.uuid}`;
+            uploadedFileLink.href = `/resoluciones/ver-archivo/${data.file_resolution.uuid}`;
             uploadedFileLink.innerHTML = `<i class="fa-solid fa-paperclip"></i> ${data.file_resolution.name}`
             uploadedFileLink.target = '_blank';
             const text = document.createElement('span');
@@ -115,7 +113,7 @@ let table;
 
     $(`#table tbody`).on('click', '.btn-delete', async function () {
         let data = table.row($(this).parents('tr')).data();
-        if (await confirmationMessage("¿Está seguro?","Se eliminará permanentemente")) {
+        if (await confirmationMessage("¿Está seguro?", "Se eliminará permanentemente")) {
             remove(data.id);
         }
     });
@@ -141,7 +139,7 @@ let table;
 
     const btnAdd = document.getElementById('btnAdd');
     btnAdd.addEventListener('click', () => {
-        if(resolution_id){
+        if (resolution_id) {
             form.reset();
             clearErrors()
             resolution_id = null;
@@ -167,15 +165,15 @@ let table;
                 },
                 body: formData
             });
-    
-            
+
+
             if (response.ok) {
                 const result = await response.json();
                 if (!result.success) {
                     Toast.fire({ icon: 'error', 'title': result.message });
                     return;
                 }
-    
+
                 Toast.fire({ icon: 'success', 'title': result.message });
                 table.ajax.reload();
                 form.reset();
@@ -190,11 +188,11 @@ let table;
                             const inputElement = document.getElementById(field);
                             if (inputElement) {
                                 inputElement.classList.add('is-invalid');
-    
+
                                 const errorDiv = document.createElement('div');
                                 errorDiv.classList.add('invalid-feedback');
                                 errorDiv.textContent = result.errors[field][0];
-    
+
                                 inputElement.parentNode.appendChild(errorDiv);
                             }
                         });
@@ -231,7 +229,7 @@ let table;
                 },
                 body: formData
             });
- 
+
             if (response.ok) {
                 console.log('ok');
                 const result = await response.json();

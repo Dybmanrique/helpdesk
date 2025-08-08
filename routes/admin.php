@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ResolutionsController;
 use App\Http\Controllers\Admin\ResolutionStatesController;
 use App\Http\Controllers\Admin\ResolutionTypesController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\FileViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/dashboard', function () {
@@ -62,7 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/resoluciones/data', [ResolutionsController::class, 'data'])->middleware(['can:Resoluciones: Listar'])->name('admin.resolutions.data');
     Route::post('/resoluciones/guardar-resolucion', [ResolutionsController::class, 'store'])->middleware(['can:Resoluciones: Crear'])->name('admin.resolutions.store');
     Route::post('/resoluciones/actualizar-resolucion', [ResolutionsController::class, 'update'])->middleware(['can:Resoluciones: Actualizar'])->name('admin.resolutions.update');
-    Route::get('/resoluciones/ver-archivo/{uuid}', [ResolutionsController::class, 'view_file'])->middleware(['can:Resoluciones: Ver'])->name('admin.resolutions.view_file');
+    // Route::get('/resoluciones/ver-archivo/{uuid}', [FileViewController::class, 'viewResolutionFile'])->name('admin.resolutions.view_file');
     Route::delete('/resoluciones/eliminar-resolucion/{id}', [ResolutionsController::class, 'destroy'])->middleware(['can:Resoluciones: Eliminar'])->name('admin.resolutions.destroy');
 
     Route::get('/usuarios-administrativos', [AdministrativeUsersController::class, 'index'])->middleware(['can:Usuarios: Listar'])->name('admin.administrative_users.index');

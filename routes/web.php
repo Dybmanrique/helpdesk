@@ -14,6 +14,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/perfil', [ProfileController::class, 'deactivate'])->middleware('can:Perfil de Usuario: Desactivar Cuenta')->name('profile.deactivate');
 });
 
-Route::get('/ver-archivo/{file}', [FileViewController::class, 'view'])->name('file_view.view');
+Route::get('/tramites/ver-archivo/{uuid}', [FileViewController::class, 'viewProcedureFile'])->name('file_view.view_procedure_file');
+Route::get('/acciones/ver-archivo/{uuid}', [FileViewController::class, 'viewActionFile'])->name('file_view.view_action_file');
+Route::get('/resoluciones/ver-archivo/{uuid}', [FileViewController::class, 'viewResolutionFile'])->name('file_view.view_resolution_file');
 
 require __DIR__ . '/auth.php';

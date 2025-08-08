@@ -52,14 +52,12 @@
                                         <div class="form-text text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                @can('Resoluciones: Ver')
-                                    <div class="mb-3 d-none" id="fileUpload">
-                                        Archivo subido:
-                                        <a id="uploadedFileLink" target="_blank" class="d-none" href="#">
-                                            Nombre archivo
-                                        </a>
-                                    </div>
-                                @endcan
+                                <div class="mb-3 d-none" id="fileUpload">
+                                    Archivo subido:
+                                    <a id="uploadedFileLink" target="_blank" class="d-none" href="#">
+                                        Nombre archivo
+                                    </a>
+                                </div>
                                 <div class="mb-3">
                                     <label for="resolution_number" class="form-label">Número de resolución (*):</label>
                                     <input type="text" class="form-control" name='resolution_number'
@@ -107,9 +105,7 @@
                                 <th>ID</th>
                                 <th>NÚMERO</th>
                                 <th>ASUNTO/DESCRIPCIÓN</th>
-                                @if (auth()->user()->can('Resoluciones: Ver') ||
-                                        auth()->user()->can('Resoluciones: Actualizar') ||
-                                        auth()->user()->can('Resoluciones: Eliminar'))
+                                @if (auth()->user()->can('Resoluciones: Actualizar') || auth()->user()->can('Resoluciones: Eliminar'))
                                     <th>ACCIONES</th>
                                 @endif
                             </tr>

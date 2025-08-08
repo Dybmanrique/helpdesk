@@ -178,7 +178,7 @@ import { Utils } from '/js/utils.js';
             data.procedure_files.forEach(file => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
-                a.href = `/ver-archivo/${file.id}`;
+                a.href = `/tramites/ver-archivo/${file.uuid}`;
                 a.target = '_blank';
                 a.textContent = file.name;
                 li.appendChild(a);

@@ -43,7 +43,6 @@ class RoleSeeder extends Seeder
                 'Resoluciones: Listar',
                 'Resoluciones: Crear',
                 'Resoluciones: Actualizar',
-                'Resoluciones: Ver',
                 'Resoluciones: Eliminar',
                 // Perfil de Usuario
                 'Perfil de Usuario: Ver',
@@ -105,7 +104,6 @@ class RoleSeeder extends Seeder
                 'Resoluciones: Listar',
                 'Resoluciones: Crear',
                 'Resoluciones: Actualizar',
-                'Resoluciones: Ver',
                 'Resoluciones: Eliminar',
                 // Usuarios
                 'Usuarios: Listar',

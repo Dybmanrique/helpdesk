@@ -111,12 +111,12 @@ class ResolutionsController extends Controller
         // Verificar si se ha enviado un nuevo archivo
         if ($request->hasFile('file')) {
             $file = $resolution->file_resolution;
-            
+
             // Eliminar archivo físico de S3 si existe
             if ($file && Storage::disk('s3')->exists($file->path)) {
                 Storage::disk('s3')->delete($file->path);
             }
-            
+
             $file?->delete();
 
             // Guardar el nuevo archivo
@@ -142,34 +142,6 @@ class ResolutionsController extends Controller
                 'message' => 'Ocurrió un error en el servidor',
                 'success' => false
             ]);
-        }
-    }
-
-
-    public function view_file($uuid)
-    {
-        try {
-            // Buscar archivo por UUID
-            $file = ResolutionFile::where('uuid', $uuid)->firstOrFail();
-
-            // Obtener ruta del archivo en S3
-            $path = $file->path;
-
-            // Verificar si el archivo existe en S3
-            if (!Storage::disk('s3')->exists($path)) {
-                return response()->json(['error' => 'Archivo no encontrado en almacenamiento'], 404);
-            }
-
-            // Generar URL temporal (válida por 15 minutos)
-            $temporaryUrl = Storage::disk('s3')->temporaryUrl(
-                $path,
-                now()->addMinutes(5)
-            );
-
-            // Redirigir a la URL temporal para mostrar el archivo en el navegador
-            return redirect($temporaryUrl);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Archivo no encontrado o UUID inválido'], 404);
         }
     }
 

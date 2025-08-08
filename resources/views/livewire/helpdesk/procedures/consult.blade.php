@@ -47,7 +47,7 @@
                     <div class="sm:flex items-center gap-2 text-sm">
                         <h3>Archivo adjunto:</h3>
                         @if ($procedure->procedure_files->isNotEmpty())
-                            <a href="{{ route('procedures.view_file', $procedure->procedure_files->first()->uuid) }}"
+                            <a href="{{ route('file_view.view_procedure_file', $procedure->procedure_files->first()->uuid) }}"
                                 target="_blank"
                                 class="flex items-center gap-1 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
                                 title="Ver archivo adjunto">
@@ -209,7 +209,7 @@
                                                         <div class="space-y-1">
                                                             @foreach ($action->action_files as $actionFile)
                                                                 <div class="text-sm font-light">
-                                                                    <a href="{{ route('procedures.view_action_file', $actionFile->uuid) }}"
+                                                                    <a href="{{ route('file_view.view_action_file', $actionFile->uuid) }}"
                                                                         target="_blank"
                                                                         class="inline-flex items-center gap-2 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300">
                                                                         <span>
@@ -261,7 +261,7 @@
                                                                     <p class="text-xs">Archivo resolución:</p>
                                                                     @if (!empty($resolution->file_resolution))
                                                                         <div class="text-sm font-light">
-                                                                            <a href="{{ route('procedures.view_resolution_file', $resolution->file_resolution->uuid) }}"
+                                                                            <a href="{{ route('file_view.view_resolution_file', $resolution->file_resolution->uuid) }}"
                                                                                 target="_blank"
                                                                                 class="inline-flex items-center gap-2 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300">
                                                                                 <span>
