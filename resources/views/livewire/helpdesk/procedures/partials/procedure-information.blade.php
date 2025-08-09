@@ -119,10 +119,12 @@
         <div class="space-y-3 mt-3">
             @foreach ($derivations as $derivation)
                 <div
-                    class="rounded-xl border border-l-2 overflow-hidden {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'border-l-green-500' : 'border-l-cyan-500' }}">
-                    <details class="group" name="derivations">
-                        <summary class="flex items-center justify-between cursor-pointer list-none p-4">
-                            <div class="flex items-center space-x-2">
+                    class="rounded-xl border border-l-2 overflow-hidden hover:bg-gray-300/30 dark:hover:bg-gray-950/20 {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'border-l-green-500' : 'border-l-cyan-500' }}">
+                    <details class="group focus-within:bg-gray-300/30 dark:focus-within:bg-gray-950/20"
+                        name="derivations">
+                        <summary
+                            class="flex flex-col-reverse sm:flex-row items-center justify-between gap-2 cursor-pointer list-none p-4 group-open:bg-gray-200/30 dark:group-open:bg-gray-900/20">
+                            <div class="flex items-center justify-start sm:justify-center w-full sm:w-auto space-x-2">
                                 {{-- icono --}}
                                 @if ($loop->iteration < count($derivations) || count($derivations) === 1)
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -148,7 +150,7 @@
                                     <p class="text-sm">{{ $derivation['date'] }}</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center justify-between sm:justify-center w-full sm:w-auto gap-2">
                                 <p
                                     class="rounded-full px-2.5 py-0.5 text-xs capitalize font-semibold whitespace-nowrap border {{ $loop->iteration < count($derivations) || count($derivations) === 1 ? 'text-green-700 dark:text-green-500 border-green-700 dark:border-green-500' : 'text-cyan-700 dark:text-cyan-500 border-cyan-700 dark:border-cyan-500' }}">
                                     {{ $derivation['state'] }}
@@ -163,7 +165,7 @@
                             </div>
                         </summary>
                         {{-- Información de la derivación --}}
-                        <div class="space-y-3 p-4 pt-0">
+                        <div class="space-y-3 p-4 pt-1 group-open:bg-gray-200/30 dark:group-open:bg-gray-900/20">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
                                 <div>
                                     <h3 class="text-sm font-medium">De</h3>
@@ -182,7 +184,7 @@
                                     <h3 class="text-sm font-semibold">Acciones</h3>
                                     <div class="space-y-3">
                                         @foreach ($derivation['actions'] as $action)
-                                            <div class="rounded-xl border px-3 py-2 space-y-3">
+                                            <div class="rounded-xl border border-gray-400 px-3 py-2 space-y-3">
                                                 <div>
                                                     <p class="capitalize font-medium">{{ $action->action }} <span
                                                             class="text-xs font-light ml-1">{{ $action->created_at->format('d-m-Y') }}</span>
