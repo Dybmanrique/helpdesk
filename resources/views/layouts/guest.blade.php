@@ -69,14 +69,7 @@
                 </div>
             </div>
         </main>
-        <footer class="py-6 bg-neutral-300 dark:bg-neutral-900/20 text-gray-800 dark:text-gray-200">
-            <div class="mx-auto w-full max-w-2xl md:max-w-7xl px-6 flex justify-between">
-                <p class="">
-                    Todos los derechos reservados v{{ Illuminate\Foundation\Application::VERSION }} (PHP
-                    v{{ PHP_VERSION }})
-                </p>
-            </div>
-        </footer>
+        @include('layouts.helpdesk-footer')
     </div>
     <!-- Livewire Scripts -->
     @livewireScripts
