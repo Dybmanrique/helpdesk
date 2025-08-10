@@ -149,7 +149,7 @@
                 @click.outside="open = false" class="absolute inset-0 w-[90vw] p-5 bg-gray-50 dark:bg-gray-800">
                 <div class="flex items-center justify-end w-full pb-1 border-b border-gray-400">
                     <button @click="open = false" type="button"
-                        class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-950">
+                        class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500 dark:focus-visible:outline-indigo-600">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="">

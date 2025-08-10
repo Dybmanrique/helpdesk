@@ -5,7 +5,7 @@
                 name="search" class="w-full rounded-l-xl rounded-r-xl" placeholder="Ingrese el código del ticket"
                 aria-label="Buscar por el código del ticket" required autocomplete="off" />
             <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchProcedure"
-                class="sm:flex gap-2 items-center rounded-xl">
+                class="sm:flex gap-2 items-center rounded-xl" title="Buscar trámite">
                 <span wire:loading.class="hidden" wire:target="searchProcedure">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
                         stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"
@@ -51,7 +51,7 @@
                         @if ($procedure->procedure_files->isNotEmpty())
                             <a href="{{ route('file_view.view_procedure_file', $procedure->procedure_files->first()->uuid) }}"
                                 target="_blank"
-                                class="flex items-center gap-1 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                class="flex items-center gap-1 hover:underline hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:underline focus:text-indigo-600 dark:focus:text-indigo-400 transition duration-300"
                                 title="Ver archivo adjunto">
                                 <span
                                     class="whitespace-nowrap truncate">{{ $procedure->procedure_files->first()->name }}</span>
@@ -68,7 +68,7 @@
                             </a>
                         @elseif(!empty($procedure->procedure_link))
                             <a href="{{ $procedure->procedure_link->url }}" target="_blank"
-                                class="flex items-center gap-1 hover:text-gray-600 dark:hover:text-gray-400 transition-colors duration-300"
+                                class="flex items-center gap-1 hover:underline hover:text-indigo-600 dark:hover:text-indigo-400 focus:outline-none focus:underline focus:text-indigo-600 dark:focus:text-indigo-400 transition duration-300"
                                 title="Ver archivo adjunto">
                                 <span class="whitespace-nowrap truncate">Abrir enlace compartido</span>
                                 <span>
@@ -92,10 +92,10 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div x-data="{ showDescription: false }">
                     <h3 class="text-sm font-light">Asunto</h3>
-                    <div x-on:click="showDescription = !showDescription"
-                        class="flex items-center justify-between cursor-pointer">
+                    <div x-on:click="showDescription = !showDescription; $refs.showDescriptionButton.focus();"
+                        class="flex items-center justify-between hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer">
                         <p class="font-medium ">{{ $procedure->reason }}</p>
-                        <button class="flex items-center gap-2 px-2.5 py-1" type="button" title="Ver descripción">
+                        <button x-ref="showDescriptionButton" class="flex items-center gap-2 px-2.5 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800" type="button" title="Ver descripción">
                             <span class="transition-transform" x-bind:class="showDescription ? 'rotate-180' : ''">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -105,7 +105,7 @@
                             </span>
                         </button>
                     </div>
-                    <div x-show="showDescription" x-collapse.duration.300ms class="font-light text-sm border-s">
+                    <div x-show="showDescription" x-collapse.duration.300ms class="font-light text-sm border-s border-s-indigo-400 dark:border-indigo-600">
                         <p class="px-3 py-1">{{ $procedure->description }}</p>
                     </div>
                 </div>

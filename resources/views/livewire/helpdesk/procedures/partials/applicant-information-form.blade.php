@@ -4,12 +4,14 @@
         <div class="mt-3 space-y-2">
             <x-input-label for="applicantType" :value="__('Tipo de solicitante: (*)')" />
             <div class="flex items-center gap-1">
-                <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="0" id="person" class="cursor-pointer">
+                <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="0" id="person"
+                    class="cursor-pointer text-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800">
                 <label for="person" class="cursor-pointer">Persona Natural</label>
             </div>
             <div class="flex items-center gap-1">
                 <input wire:model="applicant.isJuridical" x-model="isJuridical" type="radio" value="1"
-                    id="legalPerson" class="cursor-pointer">
+                    id="legalPerson"
+                    class="cursor-pointer text-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800">
                 <label for="legalPerson" class="cursor-pointer">Persona Jurídica</label>
             </div>
             <x-input-error :messages="$errors->get('applicant.isJuridical')" class="mt-2" />
@@ -19,7 +21,8 @@
             {{-- Tipo de identificación --}}
             <div>
                 <x-input-label for="identityTypeId" :value="__('Tipo de documento de identidad: (*)')" />
-                <x-select wire:model="applicant.identityTypeId" id="identityTypeId" class="block mt-1 w-full cursor-pointer">
+                <x-select wire:model="applicant.identityTypeId" id="identityTypeId"
+                    class="block mt-1 w-full cursor-pointer">
                     <option value="" class="hidden" selected disabled>Seleccione...</option>
                     @foreach ($identityTypes as $identityType)
                         <option value="{{ $identityType->id }}">{{ $identityType->name }}</option>
@@ -31,12 +34,13 @@
             <div>
                 <x-input-label for="identityNumber" :value="__('Num. Identificación: (*)')" />
                 <div class="w-full flex grow items-center justify-center mt-1 gap-1">
-                    <x-number-input wire:keydown.enter="searchPerson" model="applicant.identityNumber" id="identityNumber" class="w-full" type="text"
-                        placeholder="Número de identificación" maxlength="12" />
+                    <x-number-input wire:keydown.enter="searchPerson" model="applicant.identityNumber"
+                        id="identityNumber" class="w-full" type="text" placeholder="Número de identificación"
+                        maxlength="12" />
                     {{-- Botón de búsqueda por Num. Identificación --}}
-                    <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled" wire:click="searchPerson"
-                        type="button"
-                        class="border border-gray-300 dark:border-gray-700 ">
+                    <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled"
+                        wire:click="searchPerson" type="button" class="border border-gray-300 dark:border-gray-700"
+                        title="Buscar persona natural">
                         <span wire:loading.class="hidden" wire:target="searchPerson">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
                                 stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"
@@ -113,12 +117,12 @@
                 <div>
                     <x-input-label for="ruc" :value="__('RUC: (*)')" />
                     <div class="w-full flex grow items-center justify-center mt-1 gap-1">
-                        <x-number-input wire:keydown.enter="searchLegalPerson" model="applicant.ruc" id="ruc" class="w-full" type="text"
-                            placeholder="RUC" maxlength="11" />
+                        <x-number-input wire:keydown.enter="searchLegalPerson" model="applicant.ruc" id="ruc"
+                            class="w-full" type="text" placeholder="RUC" maxlength="11" />
                         {{-- Botón de búsqueda por RUC --}}
                         <x-primary-button wire:loading.class="opacity-50" wire:loading.attr="disabled"
                             wire:click="searchLegalPerson" type="button"
-                            class="border border-gray-300 dark:border-gray-500">
+                            class="border border-gray-300 dark:border-gray-500" title="Buscar persona jurídica">
                             <span wire:loading.class="hidden" wire:target="searchLegalPerson">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                     viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"

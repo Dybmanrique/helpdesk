@@ -1,6 +1,6 @@
 <div class="space-y-4">
     {{-- Conteo de trámites por estado --}}
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mx-2 sm:mx-0">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mx-2 sm:mx-0">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-xl">
             <div class="p-6 text-gray-900 dark:text-gray-100">
                 <p class="text-sm font-medium">
@@ -49,24 +49,26 @@
                     <div class="flex flex-col">
                         <label for="procedureState"
                             class="text-sm font-light text-gray-600 dark:text-gray-400">Estado:</label>
-                        <select wire:model.live="procedureState" id="procedureState"
-                            class="rounded-xl text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                        <x-select wire:model.live="procedureState" id="procedureState" class="rounded-xl"
+                            title="Filtrar por estado">
                             <option value="" selected>Todos</option>
                             @foreach ($procedureStates as $state)
                                 <option value="{{ $state->id }}">{{ $state->name }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
                     <div class="flex flex-col">
                         <label for="startDate"
                             class="text-sm font-light text-gray-600 dark:text-gray-400">Desde:</label>
                         <input wire:model.change="startDate" type="date" id="startDate"
-                            class="rounded-xl text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 dark:bg-gray-900" />
+                            class="rounded-xl text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600"
+                            title="Filtrar por fecha de inicio" />
                     </div>
                     <div class="flex flex-col">
                         <label for="endDate" class="text-sm font-light text-gray-600 dark:text-gray-400">Hasta:</label>
                         <input wire:model.change="endDate" type="date" id="endDate"
-                            class="rounded-xl text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 dark:bg-gray-900" />
+                            class="rounded-xl text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600"
+                            title="Filtrar por fecha de fin" />
                     </div>
                     @if ($procedureState || $startDate || $endDate)
                         <div class="flex items-center justify-end sm:justify-start">
@@ -101,7 +103,8 @@
                         </span>
                         <input wire:model.live.debounce.350ms="search" type="search" placeholder="Buscar"
                             aria-label="Buscar número de expediente o asunto"
-                            class="block w-full py-1.5 pr-5 pl-11 lg:w-80 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900" />
+                            class="block w-full py-1.5 pr-5 pl-11 lg:w-80 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600"
+                            autocomplete="off" title="Buscar" />
                     </div>
                 </div>
             </div>
@@ -120,7 +123,8 @@
                                         class="px-4 py-3.5 text-left text-sm font-normal text-gray-500 dark:text-gray-400">
                                         {{-- Botón para cambiar el orden por fecha --}}
                                         <button wire:click="changeSortDirection" wire:loading.attr="disabled"
-                                            class="flex cursor-pointer items-center gap-x-3 focus:outline-none hover:text-gray-800 dark:hover:text-gray-50">
+                                            class="flex items-center gap-x-3 px-0.5 rounded-md hover:text-gray-800 dark:hover:text-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition duration-300 cursor-pointer"
+                                            title="Ordenar por fecha">
                                             @if ($sortCreatedDateDirection === 'desc')
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -191,7 +195,7 @@
                                                 <button wire:click="getProcedureInformation({{ $procedure->id }})"
                                                     wire:loading.class="opacity-50" wire:loading.attr="disabled"
                                                     type="button"
-                                                    class="flex items-center justify-center space-x-2 rounded-xl px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-200">
+                                                    class="flex items-center justify-center gap-x-2 rounded-xl px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 dark:focus:ring-offset-gray-900 transition duration-300">
                                                     <span wire:loading.class="hidden"
                                                         wire:target="getProcedureInformation({{ $procedure->id }})">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="22"
@@ -259,7 +263,8 @@
             <div class="m-3 flex items-center justify-between text-gray-800 dark:text-gray-200">
                 <h2 class="text-lg font-bold">Información del trámite</h2>
                 <button @click="$dispatch('close-modal', { name: 'procedure-information-modal' })" type="button"
-                    class="rounded-lg p-1 hover:bg-gray-800 hover:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-800 transition-colors duration-300">
+                    class="rounded-lg p-1 hover:bg-gray-800 hover:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition duration-300"
+                    title="Cerrar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="">

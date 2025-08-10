@@ -24,7 +24,7 @@
     {{-- Toggle Button --}}
     <button type="button" x-on:click="isOpen = ! isOpen" x-on:keydown.space.prevent="openedWithKeyboard = true"
         x-on:keydown.enter.prevent="openedWithKeyboard = true" x-on:keydown.down.prevent="openedWithKeyboard = true"
-        {{ $attributes->merge(['class' => 'inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-gray-300 bg-gray-50 p-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:focus-visible:outline-gray-300 ']) }}
+        {{ $attributes->merge(['class' => 'inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-gray-300 bg-gray-50 p-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:focus-visible:outline-indigo-600 ']) }}
         x-bind:class="isOpen || openedWithKeyboard ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300'"
         x-bind:aria-expanded="isOpen || openedWithKeyboard" aria-haspopup="true">
         <span x-show="theme == 'light'">

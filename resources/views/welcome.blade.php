@@ -188,7 +188,7 @@
                         class="absolute inset-0 w-[90vw] p-5 bg-gray-50 dark:bg-gray-800">
                         <div class="flex items-center justify-end w-full pb-1 border-b border-gray-400">
                             <button @click="open = false" type="button"
-                                class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-950">
+                                class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-500 dark:focus-visible:outline-indigo-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" class="">
@@ -333,11 +333,13 @@
                 </div>
             </nav>
         </header>
-        <main class="mx-auto flex w-full max-w-2xl flex-col space-y-16 px-4 sm:px-6 md:max-w-7xl lg:px-8 py-10">
+        <main
+            class="flex flex-col w-full mx-auto max-w-2xl md:max-w-7xl space-y-10 sm:space-y-16 px-4 sm:px-6 lg:px-8 py-5 md:py-10">
             <div class="sm:mt-6 max-w-3xl">
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">Bienvenido(a) al Sistema de
-                    Mesa de
-                    Partes Virtual de la UGEL Asunción</h1>
+                <p class="mt-4 md:text-lg text-gray-800 dark:text-gray-200">Bienvenido(a) al</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">
+                    Sistema de Mesa de Partes Virtual de la UGEL Asunción
+                </h1>
                 <p class="mt-4 text-gray-600 dark:text-gray-400">Aquí podrás registrar y consultar tus trámites de
                     manera rápida y sencilla.</p>
             </div>

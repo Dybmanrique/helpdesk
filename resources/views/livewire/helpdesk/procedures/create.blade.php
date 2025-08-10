@@ -150,9 +150,11 @@
                     En el caso de que el archivo supere los 10 Megabytes (MB), puede subirlo a Google Drive o OneDrive y
                     compartir el enlace aquí.
                 </p>
-                <p class="text-xs italic text-gray-600 dark:text-gray-400 break-all mb-3">Ejemplo: https://drive.google.com/file/d/1234567890/view?usp=sharing</p>
+                <p class="text-xs italic text-gray-600 dark:text-gray-400 break-all mb-3">Ejemplo:
+                    https://drive.google.com/file/d/1234567890/view?usp=sharing</p>
                 <x-text-input wire:model="procedureLink" id="procedure_link" class="block mt-1 w-full"
-                    type="text" placeholder="Enlace del archivo o carpeta de Google Drive o OneDrive" />
+                    type="text" placeholder="Enlace del archivo o carpeta de Google Drive o OneDrive"
+                    autocomplete="off" />
                 <x-input-error :messages="$errors->get('procedureLink')" class="mt-2" />
             </div>
         </section>
