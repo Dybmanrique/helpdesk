@@ -152,6 +152,7 @@ class Dashboard extends Component
     public function resetFilters()
     {
         $this->reset(['procedureState', 'startDate', 'endDate']);
+        $this->resetPage();
     }
 
     public function getProcedureInformation($procedureId)

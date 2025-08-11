@@ -172,7 +172,8 @@
                             <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-900">
                                 @if ($this->procedures->isNotEmpty())
                                     @foreach ($this->procedures as $procedure)
-                                        <tr class="hover:bg-gray-300/50 dark:hover:bg-gray-800/50">
+                                        <tr class="hover:bg-gray-300/50 dark:hover:bg-gray-800/50"
+                                            wire:key="{{ $procedure->id }}">
                                             <td
                                                 class="px-4 py-4 text-sm font-medium whitespace-nowrap text-gray-600 dark:text-gray-400">
                                                 {{ ($this->procedures->currentPage() - 1) * $this->procedures->perPage() + $loop->iteration }}
