@@ -80,10 +80,23 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                             stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
+                                            <rect width="7" height="9" x="3" y="3" rx="1" />
+                                            <rect width="7" height="5" x="14" y="3" rx="1" />
+                                            <rect width="7" height="9" x="14" y="12" rx="1" />
+                                            <rect width="7" height="5" x="3" y="16" rx="1" />
+                                        </svg>
+                                        Panel de trámites
+                                    </x-dropdown-link>
+                                @endcan
+                                @can('Dashboard Administrativo: Ver')
+                                    <x-dropdown-link :href="route('admin.dashboard')" class="flex items-center gap-2" role="menuitem">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="size-4 shrink-0">
                                             <path d="m12 14 4-4" />
                                             <path d="M3.34 19a10 10 0 1 1 17.32 0" />
                                         </svg>
-                                        Panel de control
+                                        Panel administrativo
                                     </x-dropdown-link>
                                 @endcan
                             </div>
@@ -136,14 +149,15 @@
         </div>
 
         <!-- Responsive Navigation Menu -->
-        <div x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-300"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-            x-on:keydown.escape.window="open = false"
+        <div x-show="open" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" x-on:keydown.escape.window="open = false"
             class="block sm:hidden fixed inset-0 w-full h-screen bg-gray-500/75 dark:bg-gray-900/75 z-10">
             <div x-show="open" x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 -translate-x-full"
-                x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-300"
+                x-transition:enter-end="opacity-100 translate-x-0"
+                x-transition:leave="transition ease-in duration-300"
                 x-transition:leave-start="opacity-100 translate-x-0"
                 x-transition:leave-end="opacity-0 -translate-x-full" x-trap.noscroll="open"
                 @click.outside="open = false" class="absolute inset-0 w-[90vw] p-5 bg-gray-50 dark:bg-gray-800">
@@ -225,10 +239,25 @@
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="size-4 shrink-0">
+                                                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                                                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                                                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                                                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                                                </svg>
+                                                Panel de trámites
+                                            </x-dropdown-link>
+                                        @endcan
+                                        @can('Dashboard Administrativo: Ver')
+                                            <x-dropdown-link :href="route('admin.dashboard')" class="flex items-center gap-2"
+                                                role="menuitem">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="size-4 shrink-0">
                                                     <path d="m12 14 4-4" />
                                                     <path d="M3.34 19a10 10 0 1 1 17.32 0" />
                                                 </svg>
-                                                Panel de control
+                                                Panel administrativo
                                             </x-dropdown-link>
                                         @endcan
                                     </div>

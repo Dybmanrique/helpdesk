@@ -22,7 +22,7 @@
                             <svg class="icon icon-lg me-3">
                                 <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-sun') }}">
                                 </use>
-                            </svg>Light
+                            </svg>Claro
                         </button>
                     </li>
                     <li>
@@ -31,7 +31,7 @@
                             <svg class="icon icon-lg me-3">
                                 <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-moon') }}">
                                 </use>
-                            </svg>Dark
+                            </svg>Oscuro
                         </button>
                     </li>
                     <li>
@@ -60,17 +60,21 @@
                     <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold rounded-top mb-2">
                         {{ auth()->user()->person->name }}
                     </div>
-                    <a class="dropdown-item" href="#">
-                        <svg class="icon me-2">
-                            <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
-                        </svg> Profile
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <svg class="icon me-2">
-                            <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-settings') }}">
-                            </use>
-                        </svg> Settings
-                    </a>
+                    @can('Perfil de Usuario: Ver')
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                            <svg class="icon me-2">
+                                <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-user') }}"></use>
+                            </svg> Perfil
+                        </a>
+                    @endcan
+                    @can('Dashboard de Trámites: Ver')
+                        <a class="dropdown-item" href="{{ route('helpdesk.dashboard') }}">
+                            <svg class="icon me-2">
+                                <use xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-apps') }}">
+                                </use>
+                            </svg> Panel de trámites
+                        </a>
+                    @endcan
                     <div class="dropdown-divider"></div>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -80,7 +84,7 @@
                                 <use
                                     xlink:href="{{ asset('coreui/vendors/@coreui/icons/svg/free.svg#cil-account-logout') }}">
                                 </use>
-                            </svg> Logout
+                            </svg> {{ __('Log Out') }}
                         </a>
                     </form>
 
