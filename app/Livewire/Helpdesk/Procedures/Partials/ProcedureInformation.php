@@ -25,12 +25,7 @@ class ProcedureInformation extends Component
     public $allProcedureDerivations;
     public $derivations;
     public $derivationsToShow = 5;
-    public $stateBadgeStyles = [
-        'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800 border border-yellow-600 dark:border-yellow-400',
-        'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800 border border-red-600 dark:border-red-400',
-        'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800 border border-green-600 dark:border-green-400',
-        'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-600 dark:border-gray-400',
-    ];
+    public $procedureStateBadgeStyles;
 
     public function mount($procedureId = null)
     {
@@ -102,8 +97,13 @@ class ProcedureInformation extends Component
             $this->applicant['ruc'] = $legalPerson?->ruc;
             $this->applicant['companyName'] = $legalPerson?->company_name;
 
+            // cargar el estilo del badge del estado del trámite
+            $this->procedureStateBadgeStyles = $this->getStateBadgeStyles($this->procedure->state->name);
+            // contar el número total de derivaciones
+            $totalDerivationsNumber = count($this->procedure->derivations);
+
             // crear un array con los datos que se van a mostrar en las derivaciones
-            $this->allProcedureDerivations = $this->procedure->derivations->map(function ($derivation, $i) {
+            $this->allProcedureDerivations = $this->procedure->derivations->map(function ($derivation, $i) use ($totalDerivationsNumber) {
                 // cada derivación solo guarda la información del destino de la derivación
                 if ($i === 0) {
                     // si es la primera iteración, los datos del origen de la derivación se indican manualmente
@@ -114,7 +114,7 @@ class ProcedureInformation extends Component
                     $fromUser = $this->procedure->derivations[$i - 1]->user->person->full_name;
                     $fromOffice = $this->procedure->derivations[$i - 1]->office->name;
                 }
-                if (count($this->procedure->derivations) === 1) {
+                if ($totalDerivationsNumber === 1) {
                     $state = 'Registrado';
                 } else {
                     $state = $derivation->actions->last()->action ?? 'En espera';
@@ -122,12 +122,14 @@ class ProcedureInformation extends Component
                 $toUser = $derivation->user->person->full_name;
                 $toOffice = $derivation->office->name;
                 return [
+                    'iteration' => $i + 1,
+                    'totalDerivations' => $totalDerivationsNumber,
                     'date' => $derivation->created_at->format('d-m-Y'),
                     'fromUser' => $fromUser,
                     'fromOffice' => $fromOffice,
                     'toUser' => $toUser,
                     'toOffice' => $toOffice,
-                    'state' => $state,
+                    'state' => ucfirst($state),
                     'actions' => $derivation->actions,
                 ];
             });
@@ -138,6 +140,18 @@ class ProcedureInformation extends Component
             $notify_content = ['message' => 'El trámite no fue encontrado.', 'code' => '500'];
         }
         return $this->dispatch('notify', $notify_content);
+    }
+
+    public function getStateBadgeStyles($stateName)
+    {
+        // obtener los estilos para el badge por cada estado del trámite
+        return match ($stateName) {
+            'Pendiente' => 'text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-gray-800 border border-yellow-600 dark:border-yellow-400',
+            'Rechazado' => 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-gray-800 border border-red-600 dark:border-red-400',
+            'Concluido' => 'text-green-600 dark:text-green-400 bg-green-100 dark:bg-gray-800 border border-green-600 dark:border-green-400',
+            'Archivado' => 'text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-600 dark:border-gray-400',
+            default => 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-gray-800 border border-blue-600 dark:border-blue-400',
+        };
     }
 
     public function loadDerivations()
