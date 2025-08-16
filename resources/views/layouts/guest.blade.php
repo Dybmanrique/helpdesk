@@ -15,6 +15,7 @@
     @livewireStyles
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('css')
 </head>
 
 <body class="font-sans text-gray-900 antialiased" x-data="{
@@ -73,6 +74,7 @@
     </div>
     <!-- Livewire Scripts -->
     @livewireScripts
+    @yield('js')
 </body>
 
 </html>

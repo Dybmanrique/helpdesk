@@ -1,10 +1,10 @@
 <x-guest-layout>
 
-    <h1 class="font-medium text-2xl text-gray-800 dark:text-gray-200">Registrarse</h1>
+    <h1 class="font-medium text-2xl text-gray-800 dark:text-gray-200">Termina tu registro</h1>
     <p class="flex gap-2 text-sm text-gray-600 dark:text-gray-400">Completa el siguiente formulario para crear una
         cuenta.</p>
 
-    <form method="POST" action="{{ route('register') }}">
+    <form id="completeRegistrationForm" method="POST" action="{{ route('store_complete_registration') }}">
         @csrf
         <div class="grid sm:grid-cols-2 gap-2 mt-6">
             {{-- Tipo de Identificación --}}
@@ -23,7 +23,7 @@
                 <x-input-label for="identity_number" :value="__('Núm. Identificación')" />
                 <x-number-input id="identity_number" class="block mt-1 w-full" type="text" name="identity_number"
                     :value="old('identity_number')" autocomplete="identity_number" maxlength="12" required />
-                <x-input-error :messages="$errors->get('identity_number')" class="mt-2" />
+                <div id="identity_number-error-container"></div>
             </div>
         </div>
 
@@ -31,23 +31,23 @@
             {{-- Nombre(s) --}}
             <div class="sm:col-span-2 md:col-span-1">
                 <x-input-label for="name" :value="__('Nombre(s)')" />
-                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
+                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name', $name)"
                     autocomplete="off" required />
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                <div id="name-error-container"></div>
             </div>
             {{-- Apellido Paterno --}}
             <div>
                 <x-input-label for="last_name" :value="__('Apellido Paterno')" />
-                <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')"
+                <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name', $last_name)"
                     autocomplete="off" required />
-                <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
+                <div id="last_name-error-container"></div>
             </div>
             {{-- Apellido Materno --}}
             <div>
                 <x-input-label for="second_last_name" :value="__('Apellido Materno')" />
                 <x-text-input id="second_last_name" class="block mt-1 w-full" type="text" name="second_last_name"
-                    :value="old('second_last_name')" autocomplete="off" required />
-                <x-input-error :messages="$errors->get('second_last_name')" class="mt-2" />
+                    :value="old('second_last_name', $second_last_name)" autocomplete="off" required />
+                <div id="second_last_name-error-container"></div>
             </div>
         </div>
 
@@ -57,14 +57,14 @@
                 <x-input-label for="phone" :value="__('Celular')" />
                 <x-number-input id="phone" class="block mt-1 w-full" type="text" name="phone"
                     :value="old('phone')" autocomplete="phone" maxlength="9" required />
-                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                <div id="phone-error-container"></div>
             </div>
             {{-- Dirección --}}
             <div class="">
                 <x-input-label for="address" :value="__('Dirección')" />
                 <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')"
                     autocomplete="address" required />
-                <x-input-error :messages="$errors->get('address')" class="mt-2" />
+                <div id="address-error-container"></div>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
             <x-input-label for="ruc">RUC <span class="text-xs italic">(opcional)</span></x-input-label>
             <x-number-input id="ruc" class="block mt-1 w-full" type="text" name="ruc" :value="old('ruc')"
                 autocomplete="ruc" maxlength="11" />
-            <x-input-error :messages="$errors->get('ruc')" class="mt-2" />
+            <div id="ruc-error-container"></div>
         </div>
         {{-- Razón Social --}}
         <div class="mt-3">
@@ -81,15 +81,15 @@
                     class="text-xs italic">(opcional)</span></x-input-label>
             <x-text-input id="company_name" class="block mt-1 w-full" type="text" name="company_name"
                 :value="old('company_name')" autocomplete="company_name" />
-            <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
+            <div id="company_name-error-container"></div>
         </div>
 
         {{-- Email Address --}}
         <div class="mt-3">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $email)"
                 autocomplete="username" required />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <div id="email-error-container"></div>
         </div>
 
         {{-- Password --}}
@@ -97,7 +97,7 @@
             <x-input-label for="password" :value="__('Password')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" autocomplete="off"
                 required />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <div id="password-error-container"></div>
         </div>
 
         {{-- Confirm Password --}}
@@ -105,7 +105,7 @@
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password"
                 name="password_confirmation" autocomplete="off" required />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            <div id="password_confirmation-error-container"></div>
         </div>
 
         <div class="flex items-center justify-end mt-3">
@@ -119,30 +119,7 @@
             </x-primary-button>
         </div>
     </form>
-    <p class="flex items-center my-5 w-full text-gray-600 dark:text-gray-400">
-        <span class="flex-grow bg-gray-400 dark:bg-gray-600 h-px"></span>
-        <span class="mx-3">o</span>
-        <span class="flex-grow bg-gray-400 dark:bg-gray-600 h-px"></span>
-    </p>
-    <a href="{{ route('auth.google') }}"
-        class="flex items-center justify-center gap-2 my-3 w-full px-3 py-2.5 text-gray-800 dark:text-gray-200 shadow-sm rounded-md border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition duration-300">
-        <span>
-            <svg viewBox="0 0 256 262" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid"
-                class="size-6">
-                <path
-                    d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
-                    fill="#4285F4" />
-                <path
-                    d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
-                    fill="#34A853" />
-                <path
-                    d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782"
-                    fill="#FBBC05" />
-                <path
-                    d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
-                    fill="#EB4335" />
-            </svg>
-        </span>
-        <span>Regístrate con Google</span>
-    </a>
+    @section('js')
+        <script type="module" src="{{ asset('js/auth/complete-registration.js') }}?v={{ env('APP_VERSION') }}"></script>
+    @endsection
 </x-guest-layout>
