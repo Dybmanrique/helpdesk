@@ -215,6 +215,20 @@
                                                 <label for="file" class="form-label">Adjuntar archivo:</label>
                                                 <input type="file" id="file" class="form-control">
                                             </div>
+                                            <div class="form-group mt-2">
+                                                <label for="resolution_id" class="form-label">Adjuntar resolución:</label>
+                                                <select id="resolution_id" class="form-select">
+                                                    @foreach ($resolutions->groupBy('resolution_type.name') as $typeName => $resolutionsByType)
+                                                        <option value="" class="d-none">Seleccione</option>
+                                                        <optgroup label="{{ $typeName }}">
+                                                            @foreach ($resolutionsByType as $resolution)
+                                                                <option value="{{ $resolution->id }}">
+                                                                    {{ $resolution->resolution_number }}</option>
+                                                            @endforeach
+                                                        </optgroup>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                             @can('Trámites de mi Oficina: Crear Acción')
                                                 <button type="button" id="btnSave"
                                                     class="btn btn-primary fw-bold mt-4 w-100"><i

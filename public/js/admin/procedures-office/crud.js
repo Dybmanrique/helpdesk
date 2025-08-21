@@ -1,6 +1,7 @@
 'use strict';
 
 let table;
+import { Forms } from "/js/admin/forms.js";
 import { Utils } from '/js/utils.js';
 
 (function () {
@@ -139,7 +140,6 @@ import { Utils } from '/js/utils.js';
                 Toast.fire({ icon: 'info', title: data.message });
                 return;
             }
-
             completeFieldsProcedure(dataResponse.data);
             showLoader('modalLoader', 'modalContent', false);
 
@@ -226,7 +226,7 @@ import { Utils } from '/js/utils.js';
         if (action.files && action.files.length > 0) {
             let templateFiles = '<ol class="ps-3 mb-2">';
             action.files.forEach(file => {
-                templateFiles += `<li><a target="_blank" href="${file.id}">${file.name}</a></li>`;
+                templateFiles += `<li><a target="_blank" href="/acciones/ver-archivo/${file.uuid}">${file.name}</a></li>`;
             });
             templateFiles += '</ol>';
 
@@ -392,7 +392,10 @@ import { Utils } from '/js/utils.js';
                 confirmButtonColor: "#5856d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sí, continuar",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                customClass: {
+                    container: 'swal2-dark'
+                }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     await saveAction();
@@ -410,6 +413,7 @@ import { Utils } from '/js/utils.js';
         formData.append('office_id', document.getElementById('office_id').value);
         formData.append('user_id', document.getElementById('user_id').value);
         formData.append('comment', document.getElementById('comment').value);
+        formData.append('resolution_id', document.getElementById('resolution_id').value);
 
         const fileInput = document.getElementById('file');
         if (fileInput.files.length > 0) {
@@ -429,10 +433,10 @@ import { Utils } from '/js/utils.js';
 
             if (response.ok) {
                 const result = await response.json();
-                console.log(result);
                 Toast.fire({ icon: 'success', 'title': result.message });
                 table.ajax.reload();
                 form.reset();
+                Forms.clearErrors('formSave');
                 showDerivationSection(false);
 
                 if (result.will_continue_active_derivation) {
@@ -442,7 +446,16 @@ import { Utils } from '/js/utils.js';
                 }
 
             } else {
-                console.error(result);
+                if (response.status === 422) {
+                    Forms.clearErrors('formSave');
+                    const result = await response.json();
+                    if (result.errors) {
+                        Forms.showErrors(result);
+                    }
+                } else {
+                    console.error(result);
+                    Toast.fire({ icon: 'error', 'title': 'Error en el servidor' });
+                }
             }
         } catch (error) {
             console.error("Error inesperado", error);
