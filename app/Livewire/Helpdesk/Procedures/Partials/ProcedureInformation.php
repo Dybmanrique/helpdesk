@@ -115,7 +115,7 @@ class ProcedureInformation extends Component
                     $fromOffice = $this->procedure->derivations[$i - 1]->office->name;
                 }
                 if ($totalDerivationsNumber === 1) {
-                    $state = 'Registrado';
+                    $state = $derivation->actions->last()->action ?? 'Registrado';
                 } else {
                     $state = $derivation->actions->last()->action ?? 'En espera';
                 }

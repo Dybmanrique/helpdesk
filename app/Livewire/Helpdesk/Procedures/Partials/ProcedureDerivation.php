@@ -17,13 +17,26 @@ class ProcedureDerivation extends Component
     {
         $this->derivation = $derivation;
         if ($this->derivation['iteration'] < $this->derivation['totalDerivations'] || $this->derivation['totalDerivations'] === 1) {
-            // estilos del borde
-            $this->borderStyles = 'border-l-green-500';
-            // estilos del icono
-            $icon = $this->getDerivationIcon($this->derivation['state']) ?? 'fa-regular fa-circle-check fa-lg';
-            $this->iconStyles = $icon . ' text-green-600 dark:text-green-400';
-            // estilos del badge
-            $this->badgeStyles = 'text-green-700 dark:text-green-500 border-green-700 dark:border-green-500';
+            // si el estado es Anular, Archivar o Comentar, cargo sus estilos definidos, sino los estilos por defecto
+            if (in_array($this->derivation['state'], ['Anular', 'Archivar', 'Comentar'])) {
+                $derivationStyles = $this->getDerivationStyles($this->derivation['state']);
+                // estilos del borde
+                $this->borderStyles = $derivationStyles['border'];
+                // estilos del icono
+                $icon = $this->getDerivationIcon($this->derivation['state']) ?? 'fa-regular fa-clock fa-lg';
+                $iconStyle = $derivationStyles['icon'];
+                $this->iconStyles = $icon . ' ' . $iconStyle;
+                // estilos del badge
+                $this->badgeStyles = $derivationStyles['badge'];
+            } else {
+                // estilos del borde
+                $this->borderStyles = 'border-l-green-500';
+                // estilos del icono
+                $icon = $this->getDerivationIcon($this->derivation['state']) ?? 'fa-regular fa-circle-check fa-lg';
+                $this->iconStyles = $icon . ' text-green-600 dark:text-green-400';
+                // estilos del badge
+                $this->badgeStyles = 'text-green-700 dark:text-green-500 border-green-700 dark:border-green-500';
+            }
         } else {
             $derivationStyles = $this->getDerivationStyles($this->derivation['state']);
             // estilos del borde
