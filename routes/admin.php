@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/todos-los-tramites', [AllProceduresController::class, 'index'])->middleware(['can:Todos los Trámites: Listar'])->name('admin.all_procedures.index');
     Route::get('/todos-los-tramites/data', [AllProceduresController::class, 'data'])->middleware(['can:Todos los Trámites: Listar'])->name('admin.all_procedures.data');
+    Route::post('/todos-los-tramites/info-tramite', [AllProceduresController::class, 'info_procedure'])->name('admin.all_procedures.info_procedure');
 
     Route::get('/tramites-mi-oficina', [ProceduresOfficeController::class, 'index'])->middleware(['can:Trámites de mi Oficina: Listar'])->name('admin.procedures_office.index');
     Route::get('/tramites-mi-oficina/data', [ProceduresOfficeController::class, 'data'])->middleware(['can:Trámites de mi Oficina: Listar'])->name('admin.procedures_office.data');

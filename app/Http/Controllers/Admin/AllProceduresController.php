@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProcedureResource;
 use App\Models\Procedure;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -165,5 +166,38 @@ class AllProceduresController extends Controller
         ])
             ->rawColumns(['actions'])
             ->make(true);
+    }
+
+    public function info_procedure(Request $request)
+    {
+        $request->validate([
+            'procedure_id' => 'required|integer',
+        ]);
+
+        $procedure = Procedure::with([
+            'state',
+            'category',
+            'priority',
+            'document_type',
+            'procedure_files',
+            'procedure_link',
+            'actions.action_files',
+            'applicant' => function ($morphTo) {
+                $morphTo->morphWith([
+                    Person::class => ['identity_type:id,name'],
+                    LegalRepresentative::class => ['person:id,name,last_name,second_last_name,email,identity_number,identity_type_id', 'person.identity_type:id,name', 'legal_person:id,company_name,ruc'],
+                    User::class => ['person:id,name,last_name,second_last_name,email,identity_number,identity_type_id', 'person.identity_type:id,name'],
+                ]);
+            },
+        ])->find($request->procedure_id);
+
+        if (!$procedure) {
+            return response()->json(['success' => false, 'message' => 'Procedimiento no encontrado'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => new ProcedureResource($procedure)
+        ]);
     }
 }
