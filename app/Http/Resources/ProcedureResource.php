@@ -66,10 +66,10 @@ class ProcedureResource extends JsonResource
                     'created_at' => $action->created_at->toDateTimeString(),
                     'files' => $action->action_files->map(function ($action_file) {
                         return [
-                            'id' => $action_file->file->id,
-                            'name' => $action_file->file->name,
-                            'path' => $action_file->file->path, // suponiendo que tienes un campo o método `url`
-                            'uuid' => $action_file->file->uuid,
+                            'id' => $action_file->id,
+                            'name' => $action_file->name,
+                            'path' => $action_file->path, // suponiendo que tienes un campo o método `url`
+                            'uuid' => $action_file->uuid,
                         ];
                     }),
                 ];

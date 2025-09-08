@@ -55,7 +55,7 @@
                         @endif
                     </div>
                 </div>
-                <p class="rounded-full px-3 py-1 font-bold shadow {{ $procedureStateBadgeStyles }}">
+                <p class="rounded-full px-3 py-1 font-bold shadow whitespace-nowrap {{ $procedureStateBadgeStyles }}">
                     {{ $procedure->state->name }}</p>
             </div>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -65,7 +65,7 @@
                         class="flex items-center justify-between hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer">
                         <p class="font-medium ">{{ $procedure->reason }}</p>
                         <button x-ref="showDescriptionButton"
-                            class="flex items-center gap-2 px-2.5 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                            class="flex items-center gap-2 px-2.5 py-1 rounded-md focus:outline-none focus:text-indigo-600 dark:focus:text-indigo-400 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                             type="button" title="Ver descripción">
                             <span class="transition-transform" x-bind:class="showDescription ? 'rotate-180' : ''">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
