@@ -15,6 +15,7 @@ use App\Models\Procedure;
 use App\Models\ProcedureState;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -235,19 +236,28 @@ class ProceduresOfficeController extends Controller
         if ($request->file) {
             $extension = $request->file->extension();
             $folder = $extension === 'pdf' ? 'pdfs' : 'images'; // Organize files by type
+            $applicant = $derivation->procedure->applicant;
 
             // Store the file in the appropriate directory
-            $path = $request->file->store('helpdesk/procedure_files/auth/' . $derivation->user->id . '/' . $folder);
+            // $path = $request->file->store('helpdesk/procedure_files/auth/' . $derivation->user->id . '/' . $folder);
+            if ($applicant instanceof \App\Models\User) {
+                $path = $request->file->store(
+                    'helpdesk/procedure_files/auth/' . $applicant->id . '/' . $folder,
+                    's3'
+                );
+            } elseif ($applicant instanceof \App\Models\Person) {
+                $path = $request->file->store(
+                    'helpdesk/procedure_files/guest/' . $applicant->id . '/' . $folder,
+                    's3'
+                );
+            }
 
-            // Create file record in database
-            $file = File::create([
-                'name' => $request->file->getClientOriginalName(),
-                'path' => $path,
-            ]);
 
-            ActionFile::create([
+            $actionFile = ActionFile::create([
+                'name'      => $request->file->getClientOriginalName(),
+                'path'      => $path,
+                'uuid'      => Str::uuid(),
                 'action_id' => $action->id,
-                'file_id' => $file->id
             ]);
         }
 

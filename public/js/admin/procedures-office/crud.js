@@ -226,7 +226,7 @@ import { Utils } from '/js/Utils.js';
         if (action.files && action.files.length > 0) {
             let templateFiles = '<ol class="ps-3 mb-2">';
             action.files.forEach(file => {
-                templateFiles += `<li><a target="_blank" href="${file.id}">${file.name}</a></li>`;
+                templateFiles += `<li><a target="_blank" href="/acciones/ver-archivo/${file.uuid}">${file.name}</a></li>`;
             });
             templateFiles += '</ol>';
 
