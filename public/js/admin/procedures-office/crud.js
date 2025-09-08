@@ -1,12 +1,8 @@
 'use strict';
 
 let table;
-<<<<<<< HEAD
-import { Utils } from '/js/Utils.js';
-=======
 import { Forms } from "/js/admin/forms.js";
 import { Utils } from '/js/utils.js';
->>>>>>> ever
 
 (function () {
     initDataTable();
