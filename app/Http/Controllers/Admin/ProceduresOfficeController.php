@@ -240,29 +240,6 @@ class ProceduresOfficeController extends Controller
         if ($request->file) {
             $extension = $request->file->extension();
             $folder = $extension === 'pdf' ? 'pdfs' : 'images'; // Organize files by type
-<<<<<<< HEAD
-            $applicant = $derivation->procedure->applicant;
-
-            // Store the file in the appropriate directory
-            // $path = $request->file->store('helpdesk/procedure_files/auth/' . $derivation->user->id . '/' . $folder);
-            if ($applicant instanceof \App\Models\User) {
-                $path = $request->file->store(
-                    'helpdesk/procedure_files/auth/' . $applicant->id . '/' . $folder,
-                    's3'
-                );
-            } elseif ($applicant instanceof \App\Models\Person) {
-                $path = $request->file->store(
-                    'helpdesk/procedure_files/guest/' . $applicant->id . '/' . $folder,
-                    's3'
-                );
-            }
-
-
-            $actionFile = ActionFile::create([
-                'name'      => $request->file->getClientOriginalName(),
-                'path'      => $path,
-                'uuid'      => Str::uuid(),
-=======
             $procedure = $derivation->procedure;
             // Store the file in the appropriate directory
             $path = $request->file->store('helpdesk/procedure_files/' . now()->year . '/' . ($procedure->applicant instanceof User ? 'auth' : 'guest') . '/' . $procedure->applicant_id . '/action_files/' . $folder, 's3');
@@ -271,7 +248,6 @@ class ProceduresOfficeController extends Controller
             ActionFile::create([
                 'name' => $request->file->getClientOriginalName(),
                 'path' => $path,
->>>>>>> dev
                 'action_id' => $action->id,
             ]);
         }
