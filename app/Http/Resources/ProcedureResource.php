@@ -68,7 +68,7 @@ class ProcedureResource extends JsonResource
                         return [
                             'id' => $action_file->id,
                             'name' => $action_file->name,
-                            'path' => $action_file->path,
+                            'path' => $action_file->path, // suponiendo que tienes un campo o método `url`
                             'uuid' => $action_file->uuid,
                         ];
                     }),

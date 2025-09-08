@@ -13,6 +13,7 @@ use App\Models\Office;
 use App\Models\Person;
 use App\Models\Procedure;
 use App\Models\ProcedureState;
+use App\Models\Resolution;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -29,7 +30,10 @@ class ProceduresOfficeController extends Controller
 
         $offices = Office::where('id', '!=', $userOfficeId)->get();
 
-        return view('admin.procedures-office.index', compact('offices'));
+        $resolutions = Resolution::select('id', 'resolution_number', 'description', 'resolution_type_id')
+            ->with('resolution_type')->get();
+
+        return view('admin.procedures-office.index', compact('offices', 'resolutions'));
     }
 
     public function data()
@@ -188,7 +192,8 @@ class ProceduresOfficeController extends Controller
         $request->validate([
             'derivation_id' => 'required|integer|exists:derivations,id',
             'comment' => 'nullable|string|max:500',
-            'file' => 'nullable|file|max:5120|mimes:pdf,jpg,png'
+            'file' => 'nullable|file|max:10240|mimes:pdf,jpg,png',
+            'resolution_id' => 'nullable|integer|exists:resolutions,id'
         ]);
 
         // Default value for keeping derivation active
@@ -210,7 +215,6 @@ class ProceduresOfficeController extends Controller
             case 'comentar': // Comment action
                 $request->validate([
                     'comment' => 'required|string|max:500',
-                    'file' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,png'
                 ]);
                 $will_continue_active_derivation = 1; // Keep derivation active
                 break;
@@ -236,6 +240,7 @@ class ProceduresOfficeController extends Controller
         if ($request->file) {
             $extension = $request->file->extension();
             $folder = $extension === 'pdf' ? 'pdfs' : 'images'; // Organize files by type
+<<<<<<< HEAD
             $applicant = $derivation->procedure->applicant;
 
             // Store the file in the appropriate directory
@@ -257,6 +262,16 @@ class ProceduresOfficeController extends Controller
                 'name'      => $request->file->getClientOriginalName(),
                 'path'      => $path,
                 'uuid'      => Str::uuid(),
+=======
+            $procedure = $derivation->procedure;
+            // Store the file in the appropriate directory
+            $path = $request->file->store('helpdesk/procedure_files/' . now()->year . '/' . ($procedure->applicant instanceof User ? 'auth' : 'guest') . '/' . $procedure->applicant_id . '/action_files/' . $folder, 's3');
+
+            // Create file record in database
+            ActionFile::create([
+                'name' => $request->file->getClientOriginalName(),
+                'path' => $path,
+>>>>>>> dev
                 'action_id' => $action->id,
             ]);
         }
@@ -285,6 +300,11 @@ class ProceduresOfficeController extends Controller
             $derivation->procedure->update([
                 'procedure_state_id' => $state_id
             ]);
+        }
+
+        // If exists resolution_id, create the relationship with the resolution
+        if ($request->resolution_id) {
+            $action->resolutions()->attach($request->resolution_id);
         }
 
         // Return success response with derivation status

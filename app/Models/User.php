@@ -23,6 +23,8 @@ class User extends Authenticatable
         'password',
         'is_active',
         'person_id',
+        'external_auth_id',
+        'external_auth_provider',
     ];
 
     /**

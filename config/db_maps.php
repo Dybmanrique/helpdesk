@@ -6,7 +6,7 @@ return [
         'comentar' => 'En proceso', 
         'derivar' => 'Derivado',
         'concluir' => 'Concluido', 
-        'anular' => 'Anulado', 
+        'anular' => 'Rechazado', 
         'archivar' => 'Archivado'
     ],
 ];
