@@ -27,7 +27,7 @@ class Create extends Component
     use WithFileUploads;
     public $user;
     public $legalPerson;
-    public $procedureCategoryId = "", $documentTypeId = "", $reason, $description, $procedureFile, $procedureLink;
+    public $procedureCategoryId = "", $numberOfFolios, $documentTypeId = "", $reason, $description, $procedureFile, $procedureLink;
     public $search, $searchBy;
     public $applicant = [
         'isJuridical' => false,
@@ -104,6 +104,7 @@ class Create extends Component
                 'reason' => ['required'],
                 'description' => ['required'],
                 'procedureCategoryId' => ['required'],
+                'numberOfFolios' => ['required', 'numeric', 'min:1'],
                 'documentTypeId' => ['required'],
             ],
             3 => [
@@ -140,6 +141,7 @@ class Create extends Component
             'applicant.companyName' => 'razón social',
             'reason' => 'asunto',
             'procedureCategoryId' => 'categoría',
+            'numberOfFolios' => 'número de folios',
             'documentTypeId' => 'tipo de documento',
             'procedureFile' => 'archivo',
             'procedureLink' => 'link del archivo',
@@ -242,10 +244,12 @@ class Create extends Component
             $expedientNumber = $procedureService->getNextExpedientNumber();
             // generar el número del ticket
             $procedureTicket = $procedureService->generateUniqueProcedureTicket();
+
             $procedure = new Procedure([
                 'expedient_number' => $expedientNumber,
                 'reason' => $this->reason,
                 'description' => $this->description,
+                'number_of_folios' => $this->numberOfFolios ?? 0,
                 'ticket' => $procedureTicket,
                 'is_juridical' => $isJuridical,
                 'year' => now()->year,
@@ -288,7 +292,7 @@ class Create extends Component
         if (!Auth::check()) {
             $this->reset(['applicant']);
         }
-        $this->reset(['reason', 'description', 'procedureCategoryId', 'documentTypeId', 'procedureFile', 'procedureLink', 'currentStep']);
+        $this->reset(['reason', 'description', 'procedureCategoryId', 'numberOfFolios', 'documentTypeId', 'procedureFile', 'procedureLink', 'currentStep']);
         // $this->dispatch('resetInputs');
         $this->dispatch('notify', $notifyContent);
     }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('expedient_number')->nullable();
             $table->string('reason');
             $table->text('description');
+            $table->integer('number_of_folios')->default(0);
             $table->string('ticket')->nullable();
             $table->boolean('is_juridical')->default(0);
             $table->foreignId('procedure_priority_id')->constrained();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->string('company_ruc', 11)->nullable();
             $table->year('year');
             $table->enum('type', ['internal', 'external'])->default('internal');
+            $table->enum('format', ['physical', 'digital'])->default('digital');
             $table->timestamps();
         });
     }

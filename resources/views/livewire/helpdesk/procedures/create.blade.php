@@ -104,6 +104,13 @@
                         </x-select>
                         <x-input-error :messages="$errors->get('procedureCategoryId')" class="mt-2" />
                     </div>
+                    {{-- N de folios --}}
+                    <div>
+                        <x-input-label for="numberOfFolios" :value="__('N de folios: (*)')" />
+                        <x-text-input wire:model="numberOfFolios" id="numberOfFolios" class="block mt-1 w-full" type="number"
+                            name="numberOfFolios" min="1" placeholder="Ingrese el número de folios" autocomplete="off" />
+                        <x-input-error :messages="$errors->get('numberOfFolios')" class="mt-2" />
+                    </div>
                 </div>
                 {{-- Asunto --}}
                 <div class="mt-3">

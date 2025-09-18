@@ -11,6 +11,7 @@ class Procedure extends Model
         'expedient_number',
         'reason',
         'description',
+        'number_of_folios',
         'ticket',
         'is_juridical',
         'year',
@@ -23,6 +24,7 @@ class Procedure extends Model
         'applicant_full_name',
         'applicant_identification',
         'company_ruc',
+        'format'
     ];
 
     public function document_type()
