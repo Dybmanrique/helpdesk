@@ -10,6 +10,10 @@
                         <p>{{ $procedure->expedient_number }}</p>
                     </div>
                     <div class="sm:flex items-center gap-2 text-sm">
+                        <h3>Num. Folios:</h3>
+                        <p>{{ $procedure->number_of_folios }}</p>
+                    </div>
+                    <div class="sm:flex items-center gap-2 text-sm">
                         <h3>Ticket:</h3>
                         <div class="flex gap-2">
                             <p class="whitespace-nowrap truncate">{{ $procedure->ticket }}</p>
