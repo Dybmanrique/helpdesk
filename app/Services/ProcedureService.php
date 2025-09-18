@@ -42,7 +42,7 @@ class ProcedureService
                 'last_number' => 1,
             ]);
         }
-        $expedientNumber = str_pad($procedureCounter->last_number, 10, '0', STR_PAD_LEFT);
+        $expedientNumber = str_pad($procedureCounter->last_number, 7, '0', STR_PAD_LEFT);
         return $expedientNumber;
     }
 
